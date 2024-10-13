@@ -18,25 +18,26 @@ public class User {
     @Column(name = "user_id",unique = true,updatable = false)
     private Long userId;
 
-    @Column(name = "user_name",unique = true,updatable = false)
-    private Long userName;
+    @Column(name = "user_name",updatable = false)
+    private String userName;
 
-    @Column(name = "nick_name",unique = true,updatable = false)
-    private Long nickName;
+    @Column(name = "nick_name",unique = true)
+    private String nickName;
 
     @Column(name = "email",unique = true,updatable = false)
-    private Long email;
+    private String email;
 
-    @Column(name = "created_at",unique = true,updatable = false)
-    private Long createdAt;
+    @Column(name = "created_at",updatable = false)
+    private String createdAt;
 
-    @Column(name = "updated_at",unique = true,updatable = false)
-    private Long updatedAt;
+    @Column(name = "updated_at")
+    private String updatedAt;
 
-    @Column(name = "profile_img",unique = true,updatable = false)
-    private Long profileImg;
+    @Column(name = "profile_img")
+    private String profileImg;
 
-    @Column(name = "user_valid",unique = true,updatable = false)
-    private Long userValid;
+    @Column(name = "user_valid")
+    private boolean userValid;
 
+    //
 }
