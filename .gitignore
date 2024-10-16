@@ -35,3 +35,12 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### macOS template
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# idea 전부 무시
+.idea/**
