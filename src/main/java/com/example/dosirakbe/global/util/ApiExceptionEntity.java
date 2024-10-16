@@ -1,4 +1,4 @@
-package com.example.dosirakbe.util;
+package com.example.dosirakbe.global.util;
 
 import lombok.Builder;
 import lombok.Getter;

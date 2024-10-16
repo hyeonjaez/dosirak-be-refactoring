@@ -1,4 +1,4 @@
-package com.example.dosirakbe.global.user.entity;
+package com.example.dosirakbe.domain.user.entity;
 
 
 import jakarta.persistence.*;
@@ -39,5 +39,5 @@ public class User {
     @Column(name = "user_valid")
     private boolean userValid;
 
-    //
+
 }

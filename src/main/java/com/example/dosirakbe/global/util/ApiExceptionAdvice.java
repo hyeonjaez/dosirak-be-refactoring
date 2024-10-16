@@ -1,4 +1,4 @@
-package com.example.dosirakbe.util;
+package com.example.dosirakbe.global.util;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
