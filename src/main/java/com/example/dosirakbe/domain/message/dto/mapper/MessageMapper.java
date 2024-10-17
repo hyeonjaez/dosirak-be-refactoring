@@ -11,6 +11,6 @@ public interface MessageMapper {
 
     @Mapping(source = "user.userId", target = "userId")
     @Mapping(source = "chatRoom.id", target = "chatRoomId")
-    @Mapping(source = "beforeMessage.id", target = "beforeMessage.id")
+    @Mapping(source = "beforeMessage", target = "beforeMessage")
     MessageResponse mapToMessageResponse(Message message);
 }
