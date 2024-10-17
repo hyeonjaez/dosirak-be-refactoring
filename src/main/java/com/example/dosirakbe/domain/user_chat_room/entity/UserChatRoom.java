@@ -4,6 +4,9 @@ import com.example.dosirakbe.domain.chat_room.entity.ChatRoom;
 import com.example.dosirakbe.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -24,6 +27,10 @@ public class UserChatRoom {
     @JoinColumn(name = "users")
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
+    @Column(name = "created_at")
+    @CreatedDate
+    private LocalDateTime createdAt;
 
     public UserChatRoom(ChatRoom chatRoom, User user) {
         this.chatRoom = chatRoom;
