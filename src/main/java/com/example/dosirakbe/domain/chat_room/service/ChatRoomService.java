@@ -36,7 +36,7 @@ public class ChatRoomService {
     @Transactional(readOnly = true)
     public List<ChatRoomResponse> findAllByUser(Long userId) {  //TODO 이거 join 으로 하나의 쿼리로 가능 할듯?
         User user = userRepository.findById(userId).orElseThrow(); //TODO 예외 처리
-        List<UserChatRoom> allByUserId = userChatRoomRepository.findAllByUserId(user.getUserId());
+        List<UserChatRoom> allByUserId = userChatRoomRepository.findAllByUser(user);
 
         return allByUserId.stream()
                 .map(a -> chatRoomMapper.mapToChatRoomResponse(a.getChatRoom()))
@@ -46,9 +46,12 @@ public class ChatRoomService {
     public ChatRoomResponse joinChatRoom(Long userId, Long chatRoomId) {
         User user = userRepository.findById(userId).orElseThrow(); //TODO 예외처리
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(); //TODO 예외처리
+
+        //TODO 유저가 이미 해당 채팅방에 들어와 있는지 validation 확인
+
         userChatRoomRepository.save(new UserChatRoom(chatRoom, user));
         chatRoom.upPersonCount();
-
+        //TODO 채팅방에 들어왔다는 메세지 넣기
         return chatRoomMapper.mapToChatRoomResponse(chatRoomRepository.save(chatRoom));
     }
 
@@ -56,8 +59,9 @@ public class ChatRoomService {
         User user = userRepository.findById(userId).orElseThrow();
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
 
+        //TODO 채팅방을 떠났다는 메세지 넣기
         UserChatRoom userChatRoom =
-                userChatRoomRepository.findByUserIdAndRoomId(user.getUserId(), chatRoom.getId())
+                userChatRoomRepository.findByUserAndChatRoom(user, chatRoom)
                         .orElseThrow(); //TODO 예외처리
         userChatRoomRepository.delete(userChatRoom);
     }
