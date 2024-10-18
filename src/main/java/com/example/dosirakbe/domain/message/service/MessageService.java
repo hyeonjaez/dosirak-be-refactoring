@@ -6,6 +6,7 @@ import com.example.dosirakbe.domain.message.dto.mapper.MessageMapper;
 import com.example.dosirakbe.domain.message.dto.request.MessageRegisterRequest;
 import com.example.dosirakbe.domain.message.dto.response.MessageResponse;
 import com.example.dosirakbe.domain.message.entity.Message;
+import com.example.dosirakbe.domain.message.entity.MessageType;
 import com.example.dosirakbe.domain.message.repository.MessageRepository;
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
@@ -27,7 +28,7 @@ public class MessageService {
     private final ChatRoomRepository chatRoomRepository;
     private final MessageMapper messageMapper;
     private final UserChatRoomRepository userChatRoomRepository;
-
+    private static final String FIRST_JOIN_MESSAGE = "님이 들어왔습니다.";
 
     public MessageResponse createMessage(MessageRegisterRequest messageRegisterRequest) {
         User user = userRepository.findById(messageRegisterRequest.getUserId()).orElseThrow();  // 예외 처리 필요
@@ -54,5 +55,12 @@ public class MessageService {
         UserChatRoom userChatRoom = userChatRoomRepository.findByUserAndChatRoom(user, chatRoom).orElseThrow();
 
         return messageRepository.findByChatRoomIdAndCreatedAtAfterOrderByCreatedAtAsc(chatRoom.getId(), userChatRoom.getCreatedAt());
+    }
+
+    public MessageResponse firstJoinMessage(User user, ChatRoom chatRoom) {
+        Message message = new Message(user.getNickName() + FIRST_JOIN_MESSAGE, MessageType.JOIN, user, chatRoom, null);
+        Message saveMessage = messageRepository.save(message);
+
+        return messageMapper.mapToMessageResponse(saveMessage);
     }
 }
