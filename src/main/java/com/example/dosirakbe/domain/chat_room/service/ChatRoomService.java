@@ -24,7 +24,6 @@ public class ChatRoomService {
     private final UserChatRoomRepository userChatRoomRepository;
     private final ChatRoomMapper chatRoomMapper;
 
-
     public ChatRoomResponse createChatRoom(ChatRoomRegisterRequest createRequest, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(); //TODO 예외 처리
         ChatRoom chatRoom = new ChatRoom(createRequest.getTitle());
@@ -32,6 +31,28 @@ public class ChatRoomService {
         userChatRoomRepository.save(new UserChatRoom(chatRoom, user));
         return chatRoomMapper.mapToChatRoomResponse(chatRoomRepository.save(chatRoom));
     }
+
+
+    public void joinChatRoom(User user, ChatRoom chatRoom) {
+        if (userChatRoomRepository.existsByUserAndChatRoom(user, chatRoom)) {
+            //TODO 유저가 이미 해당 채팅방에 들어와 있는지 validation 확인
+        }
+
+        userChatRoomRepository.save(new UserChatRoom(chatRoom, user));
+        chatRoom.upPersonCount();
+        chatRoomRepository.save(chatRoom);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isFirstTimeEntry(User user, ChatRoom chatRoom) {
+        return !userChatRoomRepository.existsByUserAndChatRoom(user, chatRoom);
+    }
+
+    @Transactional(readOnly = true)
+    public ChatRoom findChatRoomById(Long chatRoomId) {
+        return chatRoomRepository.findById(chatRoomId).orElseThrow(); //TODO exception 처리
+    }
+
 
     @Transactional(readOnly = true)
     public List<ChatRoomResponse> findAllByUser(Long userId) {  //TODO 이거 join 으로 하나의 쿼리로 가능 할듯?
@@ -41,18 +62,6 @@ public class ChatRoomService {
         return allByUserId.stream()
                 .map(a -> chatRoomMapper.mapToChatRoomResponse(a.getChatRoom()))
                 .toList();
-    }
-
-    public ChatRoomResponse joinChatRoom(Long userId, Long chatRoomId) {
-        User user = userRepository.findById(userId).orElseThrow(); //TODO 예외처리
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(); //TODO 예외처리
-
-        //TODO 유저가 이미 해당 채팅방에 들어와 있는지 validation 확인
-
-        userChatRoomRepository.save(new UserChatRoom(chatRoom, user));
-        chatRoom.upPersonCount();
-        //TODO 채팅방에 들어왔다는 메세지 넣기
-        return chatRoomMapper.mapToChatRoomResponse(chatRoomRepository.save(chatRoom));
     }
 
     public void leaveChatRoom(Long userId, Long chatRoomId) {
@@ -72,4 +81,6 @@ public class ChatRoomService {
                 .map(chatRoomMapper::mapToChatRoomResponse)
                 .toList();
     }
+
+
 }
