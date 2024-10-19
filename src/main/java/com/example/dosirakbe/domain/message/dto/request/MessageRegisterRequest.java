@@ -17,8 +17,6 @@ public class MessageRegisterRequest {
     @NotNull
     private MessageType messageType;
 
-    private Long beforeMessageId;
-
     @NotNull
     @Min(1)
     private Long userId;
