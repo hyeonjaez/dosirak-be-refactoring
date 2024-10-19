@@ -44,15 +44,10 @@ public class Message {
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "before_message")
-    private Message beforeMessage;
-
-    public Message(String content, MessageType messageType, User user, ChatRoom chatRoom, Message beforeMessage) {
+    public Message(String content, MessageType messageType, User user, ChatRoom chatRoom) {
         this.content = content;
         this.messageType = messageType;
         this.user = user;
         this.chatRoom = chatRoom;
-        this.beforeMessage = beforeMessage;
     }
 }
