@@ -44,13 +44,23 @@ public class ChatRoomController {
     }
 
 
-    @GetMapping("{id}/user-list")
+    @GetMapping("/{id}/user-list")
     public ResponseEntity<List<UserChatRoomResponse>> getChatRoomUsers(@PathVariable Long id) {
         List<UserChatRoomResponse> userList = chatRoomService.findUserChatRooms(id);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(userList);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteChatRoom(@PathVariable Long id) {
+        Long userId = 1L; //TODO
+
+        chatRoomService.leaveChatRoom(userId, id);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
 
