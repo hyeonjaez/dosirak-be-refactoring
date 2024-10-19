@@ -1,10 +1,17 @@
 package com.example.dosirakbe.domain.chat_room.service;
 
 import com.example.dosirakbe.domain.chat_room.dto.request.ChatRoomRegisterRequest;
+import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomInformationResponse;
 import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomResponse;
 import com.example.dosirakbe.domain.chat_room.entity.ChatRoom;
 import com.example.dosirakbe.domain.chat_room.dto.mapper.ChatRoomMapper;
 import com.example.dosirakbe.domain.chat_room.repository.ChatRoomRepository;
+import com.example.dosirakbe.domain.message.dto.mapper.MessageMapper;
+import com.example.dosirakbe.domain.message.dto.response.MessageResponse;
+import com.example.dosirakbe.domain.message.entity.Message;
+import com.example.dosirakbe.domain.message.repository.MessageRepository;
+import com.example.dosirakbe.domain.user.dto.mapper.UserMapper;
+import com.example.dosirakbe.domain.user.dto.response.UserChatRoomResponse;
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
 import com.example.dosirakbe.domain.user_chat_room.entity.UserChatRoom;
@@ -23,6 +30,9 @@ public class ChatRoomService {
     private final UserRepository userRepository;
     private final UserChatRoomRepository userChatRoomRepository;
     private final ChatRoomMapper chatRoomMapper;
+    private final MessageRepository messageRepository;
+    private final MessageMapper messageMapper;
+    private final UserMapper userMapper;
 
     public ChatRoomResponse createChatRoom(ChatRoomRegisterRequest createRequest, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(); //TODO 예외 처리
@@ -80,6 +90,21 @@ public class ChatRoomService {
         return chatRoomRepository.findAll().stream()
                 .map(chatRoomMapper::mapToChatRoomResponse)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public ChatRoomInformationResponse findMessagesByChatRoom(Long userId, Long chatRoomId) {
+        User user = userRepository.findById(userId).orElseThrow();  // TODO 예외 처리 필요
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
+        UserChatRoom userChatRoom = userChatRoomRepository.findByUserAndChatRoom(user, chatRoom).orElseThrow();
+
+        List<Message> chatRoomMessageByUser = messageRepository.findByChatRoomIdAndCreatedAtAfterOrderByCreatedAtAsc(chatRoom.getId(), userChatRoom.getCreatedAt());
+        List<MessageResponse> messageList = messageMapper.mapToMessageResponseList(chatRoomMessageByUser);
+
+        List<User> chatRoomUserList = userChatRoomRepository.findAllByChatRoom(chatRoom).stream().map(UserChatRoom::getUser).toList();
+        List<UserChatRoomResponse> userList = userMapper.mapToUserChatRoomResponses(chatRoomUserList);
+
+        return new ChatRoomInformationResponse(messageList, userList);
     }
 
 
