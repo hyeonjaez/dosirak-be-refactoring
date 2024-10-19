@@ -1,14 +1,17 @@
-package com.example.dosirakbe.global.user.entity;
+package com.example.dosirakbe.domain.user.entity;
 
 
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 
 @Table(name = "users")
 @Getter
+@Setter
 @Entity
-@NoArgsConstructor(access= AccessLevel.PROTECTED) //기본생성자
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class User {
@@ -18,26 +21,34 @@ public class User {
     @Column(name = "user_id",unique = true,updatable = false)
     private Long userId;
 
-    @Column(name = "user_name",updatable = false)
+    @Column(name = "name", updatable = false)
+    private String name;
+
+    @Column(name = "user_name",updatable = false, nullable = false)
     private String userName;
 
     @Column(name = "nick_name",unique = true)
     private String nickName;
 
-    @Column(name = "email",unique = true,updatable = false)
+    @Column(name = "email", updatable = false, nullable = false)
     private String email;
 
     @Column(name = "created_at",updatable = false)
-    private String createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    private String updatedAt;
+    private LocalDateTime updatedAt;
 
-    @Column(name = "profile_img")
+    @Column(name = "profile_img", nullable = false)
     private String profileImg;
 
     @Column(name = "user_valid")
     private boolean userValid;
 
-    //
+    @Column(name = "provider", nullable = false)
+    private String provider;
+
+    @Column(name = "provider_id", nullable = false)
+    private String providerId;
+
 }
