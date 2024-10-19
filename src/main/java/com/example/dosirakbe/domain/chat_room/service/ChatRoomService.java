@@ -107,5 +107,16 @@ public class ChatRoomService {
         return new ChatRoomInformationResponse(messageList, userList);
     }
 
+    @Transactional(readOnly = true)
+    public List<UserChatRoomResponse> findUserChatRooms(Long chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(); //TODO exception
+        List<User> userList = userChatRoomRepository.findAllByChatRoom(chatRoom).stream()
+                .map(UserChatRoom::getUser)
+                .toList();
+
+        return userMapper.mapToUserChatRoomResponses(userList);
+
+    }
+
 
 }
