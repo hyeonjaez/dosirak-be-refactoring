@@ -1,6 +1,7 @@
 package com.example.dosirakbe.domain.chat_room.controller;
 
 import com.example.dosirakbe.domain.chat_room.dto.request.ChatRoomRegisterRequest;
+import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomInformationResponse;
 import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomResponse;
 import com.example.dosirakbe.domain.chat_room.service.ChatRoomService;
 import jakarta.validation.Valid;
@@ -8,10 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +28,16 @@ public class ChatRoomController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(chatRoomResponse);
+    }
+
+    @GetMapping("/{id}/information")
+    public ResponseEntity<ChatRoomInformationResponse> getChatRoomInformation(@PathVariable Long id) {
+        Long userId = 1L; //TODO
+        ChatRoomInformationResponse chatRoomInformation = chatRoomService.findMessagesByChatRoom(userId, id);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(chatRoomInformation);
     }
 
 
