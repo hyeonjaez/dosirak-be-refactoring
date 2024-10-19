@@ -4,11 +4,15 @@ import com.example.dosirakbe.domain.message.entity.MessageType;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class MessageRegisterRequest {
 
     @NotBlank
@@ -20,8 +24,4 @@ public class MessageRegisterRequest {
     @NotNull
     @Min(1)
     private Long userId;
-
-    @NotNull
-    @Min(1)
-    private Long chatRoomId;
 }

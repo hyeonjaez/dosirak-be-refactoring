@@ -27,9 +27,9 @@ public class MessageService {
     private final UserChatRoomRepository userChatRoomRepository;
     private static final String FIRST_JOIN_MESSAGE = "님이 들어왔습니다.";
 
-    public MessageResponse createMessage(MessageRegisterRequest messageRegisterRequest) {
+    public MessageResponse createMessage(Long chatRoomId, MessageRegisterRequest messageRegisterRequest) {
         User user = userRepository.findById(messageRegisterRequest.getUserId()).orElseThrow();  // 예외 처리 필요
-        ChatRoom chatRoom = chatRoomRepository.findById(messageRegisterRequest.getChatRoomId()).orElseThrow();
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
 
         if (!userChatRoomRepository.existsByUserAndChatRoom(user, chatRoom)) {
             //TODO throw
