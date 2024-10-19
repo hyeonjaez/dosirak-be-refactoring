@@ -78,7 +78,6 @@ public class ChatRoomService {
         User user = userRepository.findById(userId).orElseThrow();
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
 
-        //TODO 채팅방을 떠났다는 메세지 넣기
         UserChatRoom userChatRoom =
                 userChatRoomRepository.findByUserAndChatRoom(user, chatRoom)
                         .orElseThrow(); //TODO 예외처리
