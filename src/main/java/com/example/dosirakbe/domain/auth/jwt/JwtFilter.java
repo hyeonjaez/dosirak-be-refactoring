@@ -42,12 +42,16 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        String username = jwtUtil.getUserName(token);
+        String userName = jwtUtil.getUserName(token);
         String name = jwtUtil.getName(token);
+        String email = jwtUtil.getEmail(token);
+        String profileImg = jwtUtil.getProfileImg(token);
 
         UserDTO userDTO = new UserDTO();
-        userDTO.setUserName(username);
+        userDTO.setUserName(userName);
         userDTO.setName(name);
+        userDTO.setEmail(email);
+        userDTO.setProfileImg(profileImg);
 
         CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO);
 
