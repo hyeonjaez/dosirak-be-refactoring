@@ -21,7 +21,7 @@ public class User {
     @Column(name = "user_id",unique = true,updatable = false)
     private Long userId;
 
-    @Column(name = "name", updatable = false)
+    @Column(name = "name", updatable = false , nullable = false)
     private String name;
 
     @Column(name = "user_name",updatable = false, nullable = false)
@@ -45,10 +45,5 @@ public class User {
     @Column(name = "user_valid")
     private boolean userValid;
 
-    @Column(name = "provider", nullable = false)
-    private String provider;
-
-    @Column(name = "provider_id", nullable = false)
-    private String providerId;
 
 }

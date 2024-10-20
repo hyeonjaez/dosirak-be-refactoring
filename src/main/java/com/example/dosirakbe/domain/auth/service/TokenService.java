@@ -4,5 +4,5 @@ import com.example.dosirakbe.domain.auth.dto.response.TokenResponse;
 
 public interface TokenService {
 
-    TokenResponse reissueAccessToken(String authorizationHeader);
+    TokenResponse reissueAccessToken();
 }

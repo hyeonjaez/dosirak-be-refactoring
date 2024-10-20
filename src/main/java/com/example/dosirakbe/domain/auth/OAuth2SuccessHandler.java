@@ -49,78 +49,66 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-
-        //OAuth2User
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
-        System.out.println(customUserDetails);
-
         String userName = customUserDetails.getUserName();
         String name = customUserDetails.getName();
+        String email = customUserDetails.getEmail();
+        String profileImg = customUserDetails.getProfileImg();
+
         User user = userRepository.findByUserName(userName);
-        Long userId = user.getUserId();
 
+        //기존유저인경우 바로토큰반환
+        if (user != null) {
+            Long userId = user.getUserId();
+            String accessToken = jwtUtil.createJwt(user.getUserName(), user.getName(), user.getUserId(), 60 * 60 * 1000L);  // 1시간 유효
+            String refreshToken = jwtUtil.createJwt(user.getUserName(), user.getName(), user.getUserId(), 7 * 24 * 60 * 60 * 1000L);  // 7일 유효
 
+            Optional<RefreshToken> existToken = refreshTokenRepository.findByUser_UserId(userId);
+            if (existToken.isPresent()) {
+                RefreshToken existingToken = existToken.get();
+                existingToken.setRefreshToken(refreshToken);
+                refreshTokenRepository.save(existingToken);
+            } else {
+                refreshTokenRepository.save(new RefreshToken(user, refreshToken));
+            }
 
-        //token생성
-        String accessToken = jwtUtil.createJwt(userName, name, userId,60 * 60 * 1000L);  // 1시간 유효
-        String refreshToken = jwtUtil.createJwt(userName, name, userId,7 * 24 * 60 * 60 * 1000L);  // 7일 유효
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("accessToken", accessToken);
+            tokens.put("refreshToken", refreshToken);
 
-        Optional<RefreshToken> existToken = refreshTokenRepository.findByUser_UserId(userId);
+            ApiResult result = ApiResult.builder()
+                    .status("200")
+                    .message("로그인 성공")
+                    .build();
 
-        if (existToken.isPresent()) {
-            // 기존 토큰이 있으면 업데이트
-            RefreshToken existingToken = existToken.get();
-            existingToken.setRefreshToken(refreshToken);
-            refreshTokenRepository.save(existingToken);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(new ObjectMapper().writeValueAsString(Map.of(
+                    "status", result.getStatus(),
+                    "message", result.getMessage(),
+                    "tokens", tokens)));
+
         } else {
-            // 없으면 새로 저장
-            refreshTokenRepository.save(new RefreshToken(user, refreshToken));
+            // 신규 유저일 경우 임시 토큰 발급
+            String tempAccessToken = jwtUtil.createTemporalJwt(userName, name, email, profileImg, 60 * 60 * 1000L ); // 임시 토큰
+
+            ApiResult result = ApiResult.builder()
+                    .status("200")
+                    .message("신규 유저입니다. 임시 토큰 발급")
+                    .build();
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("tempAccessToken", tempAccessToken);
+
+            response.getWriter().write(new ObjectMapper().writeValueAsString(Map.of(
+                    "status", result.getStatus(),
+                    "message", result.getMessage(),
+                    "result", responseBody)));
         }
-
-        // ApiResult로 반환할 데이터 생성
-        ApiResult result = ApiResult.builder()
-                .status("200")
-                .message("소셜 로그인에 성공하였습니다")
-                .exception(null)
-                .build();
-
-        // JSON 형태로 토큰을 response로 반환
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-
-        // JSON 직렬화를 위해 ObjectMapper 사용
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("accessToken", accessToken);
-        tokens.put("refreshToken", refreshToken);
-
-        // 반환할 데이터를 함께 포함시킴
-        response.getWriter().write(objectMapper.writeValueAsString(
-                Map.of("status", result.getStatus(),
-                        "message", result.getMessage(),
-                        "result", tokens)));
-
-        String responseData = objectMapper.writeValueAsString(
-                Map.of("status", result.getStatus(),
-                        "message", result.getMessage(),
-                        "result", tokens));
-
-        log.info("Response Data: {}", responseData);
-
-        //리프레쉬 토큰 쿠키에
-        response.addCookie(createCookie("refreshToken", refreshToken));
-        response.sendRedirect("http://localhost:3000/nickname");
     }
 
-    private Cookie createCookie(String key, String value) {
-
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(60*60*60);
-        //cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-
-        return cookie;
-    }
 
 }
