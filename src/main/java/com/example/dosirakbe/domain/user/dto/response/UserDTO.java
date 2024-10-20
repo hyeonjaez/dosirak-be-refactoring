@@ -10,7 +10,7 @@ public class UserDTO {
 
     private String userName;
     private String name;
-
-
+    private String email;
+    private String profileImg;
 
 }

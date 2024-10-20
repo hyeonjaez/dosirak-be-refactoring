@@ -56,35 +56,32 @@ public class SecurityConfig{
                     }
                 }));
 
-        //csrf disable
         http
                 .csrf((auth) -> auth.disable());
 
-        //From 로그인 방식 disable
         http
                 .formLogin((auth) -> auth.disable());
 
-        //HTTP Basic 인증 방식 disable
         http
                 .httpBasic((auth) -> auth.disable());
 
         http
                 .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
-        //oauth2
+
         http
                 .oauth2Login((oauth2) -> oauth2
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService))
                         .successHandler(oAuth2SuccessHandler));
 
-        //경로별 인가 작업
+
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/", "/nickname", "/reissue/access-token", "/api/check-nickname").permitAll()
                         .anyRequest().authenticated());
 
-        //세션 설정 : STATELESS
+
         http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));

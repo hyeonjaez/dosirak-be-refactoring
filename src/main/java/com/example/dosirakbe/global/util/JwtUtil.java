@@ -1,6 +1,5 @@
 package com.example.dosirakbe.global.util;
 
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -13,6 +12,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 @Slf4j
@@ -52,10 +52,10 @@ public class JwtUtil {
                 .get("userId", Long.class);
     }
 
-    public String createJwt(String username, String name, Long userId, Long expiredMs) {
+    public String createJwt(String userName, String name, Long userId, Long expiredMs) {
 
         return Jwts.builder()
-                .claim("userName", username)
+                .claim("userName", userName)
                 .claim("name", name)
                 .claim("userId", userId)
                 .issuedAt(new Date(System.currentTimeMillis()))
@@ -63,6 +63,21 @@ public class JwtUtil {
                 .signWith(secretKey)
                 .compact();
     }
+
+    public String createTemporalJwt(String userName, String name, String email, String profileImg, Long expiredMs) {
+
+        return Jwts.builder()
+                .claim("userName", userName)
+                .claim("name", name)
+                .claim("email", email)
+                .claim("profileImg", profileImg)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + expiredMs))
+                .signWith(secretKey)
+                .compact();
+    }
+
+
 
     public boolean validToken(String token) {
         try {
@@ -77,7 +92,7 @@ public class JwtUtil {
         }
     }
 
-    private Claims getClaims(String token) {
+    public Claims getClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey)
                 .build()
