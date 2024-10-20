@@ -3,7 +3,9 @@ package com.example.dosirakbe.domain.auth.controller;
 
 import com.example.dosirakbe.domain.auth.dto.response.TokenResponse;
 import com.example.dosirakbe.domain.auth.service.TokenService;
+import com.example.dosirakbe.global.util.ApiExceptionEntity;
 import com.example.dosirakbe.global.util.ApiResult;
+import com.example.dosirakbe.global.util.StatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,17 +18,30 @@ public class TokenController {
 
     private final TokenService tokenService;
 
-    @GetMapping("/reissue/access-token")
+    @GetMapping("/api/token/reissue/access-token")
     public ResponseEntity<ApiResult> reissueAccessToken() {
-        TokenResponse accessToken = tokenService.reissueAccessToken();
+        try {
 
-        ApiResult result = ApiResult.builder()
-                .status("200")
-                .message("토큰 재발급에 성공하였습니다")
-                .exception(null)
-                // .result(accessToken)
-                .build();
+            TokenResponse accessToken = tokenService.reissueAccessToken();
 
-        return new ResponseEntity<>(result, HttpStatus.OK);
+            ApiResult<TokenResponse> result = ApiResult.<TokenResponse>builder()
+                    .status(StatusEnum.SUCCESS)
+                    .message("토큰 재발급에 성공하였습니다")
+                    .data(accessToken)
+                    .exception(null)
+                    .build();
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    ApiResult.builder()
+                            .status(StatusEnum.FAILURE)
+                            .message("토큰 재발급에 실패하였습니다")
+                            .build()
+            );
+
+        }
     }
 }

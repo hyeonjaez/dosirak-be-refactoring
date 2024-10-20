@@ -10,6 +10,7 @@ import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
 import com.example.dosirakbe.global.util.ApiResult;
 import com.example.dosirakbe.global.util.JwtUtil;
+import com.example.dosirakbe.global.util.StatusEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletOutputStream;
@@ -76,37 +77,31 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             tokens.put("accessToken", accessToken);
             tokens.put("refreshToken", refreshToken);
 
-            ApiResult result = ApiResult.builder()
-                    .status("200")
-                    .message("로그인 성공")
+            ApiResult<Map<String, String>> result = ApiResult.<Map<String, String>>builder()
+                    .status(StatusEnum.SUCCESS)
+                    .message("기존유저 로그인 성공 후 토큰 반환")
+                    .data(tokens)
                     .build();
 
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(new ObjectMapper().writeValueAsString(Map.of(
-                    "status", result.getStatus(),
-                    "message", result.getMessage(),
-                    "tokens", tokens)));
+            response.getWriter().write(new ObjectMapper().writeValueAsString(result));
 
+            //신규유저인 경우 임시토큰발급(유효시간짧은걸루)
         } else {
-            // 신규 유저일 경우 임시 토큰 발급
-            String tempAccessToken = jwtUtil.createTemporalJwt(userName, name, email, profileImg, 60 * 60 * 1000L ); // 임시 토큰
 
-            ApiResult result = ApiResult.builder()
-                    .status("200")
+            String tempAccessToken = jwtUtil.createTemporalJwt(userName, name, email, profileImg, 10 * 60 * 1000L ); // 임시 토큰(10분 유효)
+
+            ApiResult<Map<String, String>> result = ApiResult.<Map<String, String>>builder()
+                    .status(StatusEnum.SUCCESS)
                     .message("신규 유저입니다. 임시 토큰 발급")
+                    .data(Map.of("tempAccessToken", tempAccessToken))
                     .build();
 
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
-            Map<String, String> responseBody = new HashMap<>();
-            responseBody.put("tempAccessToken", tempAccessToken);
-
-            response.getWriter().write(new ObjectMapper().writeValueAsString(Map.of(
-                    "status", result.getStatus(),
-                    "message", result.getMessage(),
-                    "result", responseBody)));
+            response.getWriter().write(new ObjectMapper().writeValueAsString(result));
         }
     }
 

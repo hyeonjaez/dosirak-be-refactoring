@@ -1,12 +1,15 @@
 package com.example.dosirakbe.domain.user.controller;
 
 
+import com.example.dosirakbe.domain.auth.entity.RefreshToken;
+import com.example.dosirakbe.domain.auth.repository.RefreshTokenRepository;
 import com.example.dosirakbe.domain.user.dto.request.NickNameRequest;
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.generator.NickNameGenerator;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
 import com.example.dosirakbe.global.util.ApiResult;
 import com.example.dosirakbe.global.util.JwtUtil;
+import com.example.dosirakbe.global.util.StatusEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +28,14 @@ public class UserController {
 
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    @GetMapping("/api/check-nickname")
+    @GetMapping("/api/user/check-nickname")
     public ResponseEntity<?> checkNickname(@RequestParam("nickName") String nickName) {
         boolean exists = userRepository.existsByNickName(nickName);
         if (exists) {
             ApiResult result = ApiResult.builder()
-                    .status("fail")
+                    .status(StatusEnum.FAILURE)
                     .message("중복된 닉네임입니다.")
                     .exception(null)
                     .build();
@@ -39,13 +43,13 @@ public class UserController {
         }
 
         ApiResult result = ApiResult.builder()
-                .status("200")
+                .status(StatusEnum.SUCCESS)
                 .message("사용 가능한 닉네임입니다.")
                 .exception(null)
                 .build();
         return ResponseEntity.ok(result);
     }
-    @PostMapping("/nickName")
+    @PostMapping("/api/user/register")
     public ResponseEntity<?> completeRegistration(HttpServletRequest request, @RequestBody NickNameRequest nickNameRequest) {
         //String tempAccessToken = nickNameRequest.getTempAccessToken();
 
@@ -103,14 +107,15 @@ public class UserController {
         tokens.put("accessToken", accessToken);
         tokens.put("refreshToken", refreshToken);
 
-        ApiResult result = ApiResult.builder()
-                .status("200")
-                .message("닉네임 설정 완료 후 최종 토큰이 발급되었습니다")
+        RefreshToken refreshTokenEntity = new RefreshToken(user, refreshToken);
+        refreshTokenRepository.save(refreshTokenEntity);
+
+        ApiResult<Map<String, String>> result = ApiResult.<Map<String, String>>builder()
+                .status(StatusEnum.SUCCESS)
+                .message("소셜 로그인 완료 후 최종 토큰이 발급")
+                .data(tokens)
                 .build();
 
-        return ResponseEntity.ok(Map.of(
-                "status", result.getStatus(),
-                "message", result.getMessage(),
-                "tokens", tokens));
+        return ResponseEntity.ok(result);
     }
 }

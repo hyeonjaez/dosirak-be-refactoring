@@ -8,15 +8,19 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @ToString
-public class ApiResult{
-    private String status;
+public class ApiResult<T>{
+    private StatusEnum status;
     private String message;
+    private T data;
     private ApiExceptionEntity exception;
 
+
     @Builder
-    public ApiResult(String status, String message, ApiExceptionEntity exception) {
+    public ApiResult(StatusEnum status, String message, T data, ApiExceptionEntity exception) {
         this.status = status;
         this.message = message;
+        this.data = data;
         this.exception = exception;
     }
+
 }
