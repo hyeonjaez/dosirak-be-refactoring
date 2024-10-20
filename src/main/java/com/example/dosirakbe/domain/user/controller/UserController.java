@@ -1,6 +1,7 @@
 package com.example.dosirakbe.domain.user.controller;
 
 
+import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.auth.entity.RefreshToken;
 import com.example.dosirakbe.domain.auth.repository.RefreshTokenRepository;
 import com.example.dosirakbe.domain.user.dto.request.NickNameRequest;
@@ -13,6 +14,8 @@ import com.example.dosirakbe.global.util.StatusEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -50,22 +53,24 @@ public class UserController {
         return ResponseEntity.ok(result);
     }
     @PostMapping("/api/user/register")
-    public ResponseEntity<?> completeRegistration(HttpServletRequest request, @RequestBody NickNameRequest nickNameRequest) {
+    public ResponseEntity<?> completeRegistration(@RequestBody NickNameRequest nickNameRequest) {
         //String tempAccessToken = nickNameRequest.getTempAccessToken();
 
-        String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.badRequest().body("토큰이 없습니다.");
         }
 
-        String tempAccessToken = jwtUtil.getTokenFromHeader(authorizationHeader);
         String nickName = nickNameRequest.getNickName();
 
-        Map<String, Object> claims = jwtUtil.getClaims(tempAccessToken);
-        String userName = (String) claims.get("userName");
-        String name = (String) claims.get("name");
-        String email = (String) claims.get("email");
-        String profileImg = (String) claims.get("profileImg");
+        CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
+
+        String userName = customUserDetails.getUserName();
+        String name = customUserDetails.getName();
+        String email = customUserDetails.getEmail();
+        String profileImg = customUserDetails.getProfileImg();
+
 
 
         if (nickName == null || nickName.isEmpty()) {
@@ -74,7 +79,7 @@ public class UserController {
 
             while (attempts < 5) {
                 NickNameGenerator generator = new NickNameGenerator();
-                nickName = generator.getNickname();
+                nickName = generator.getNickName();
                 if (!userRepository.existsByNickName(nickName)) {
                     nicknameGenerated = true;
                     break;
