@@ -47,10 +47,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
 
 
-        String username = oAuth2UserInfo.getProvider() + " " + oAuth2UserInfo.getProviderId();
+        String userName = oAuth2UserInfo.getProvider() + " " + oAuth2UserInfo.getProviderId();
 
         UserDTO userDTO = new UserDTO();
-        userDTO.setUserName(username);
+        userDTO.setUserName(userName);
         userDTO.setName(oAuth2UserInfo.getName());
         userDTO.setEmail(oAuth2UserInfo.getEmail());
         userDTO.setProfileImg(oAuth2UserInfo.getProfileImg());
