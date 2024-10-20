@@ -19,11 +19,10 @@ public class ApiExceptionAdvice {
                 .build();
 
         //e.printStackTrace();
-
         return ResponseEntity
                 .status(e.getError().getStatus())
                 .body(ApiResult.builder()
-                        .status("error")
+                        .status(StatusEnum.ERROR)
                         .message("")
                         .exception(apiExceptionEntity)
                         .build());
@@ -42,7 +41,7 @@ public class ApiExceptionAdvice {
         return ResponseEntity
                 .status(ExceptionEnum.RUNTIME_EXCEPTION.getStatus())
                 .body(ApiResult.builder()
-                        .status("error")
+                        .status(StatusEnum.ERROR)
                         .message("")
                         .exception(apiExceptionEntity)
                         .build());
@@ -61,7 +60,7 @@ public class ApiExceptionAdvice {
         return ResponseEntity
                 .status(ExceptionEnum.ACCESS_DENIED_EXCEPTION.getStatus())
                 .body(ApiResult.builder()
-                        .status("error")
+                        .status(StatusEnum.ERROR)
                         .message("")
                         .exception(apiExceptionEntity)
                         .build());
@@ -80,7 +79,7 @@ public class ApiExceptionAdvice {
         return ResponseEntity
                 .status(ExceptionEnum.INTERNAL_SERVER_ERROR.getStatus())
                 .body(ApiResult.builder()
-                        .status("error")
+                        .status(StatusEnum.ERROR)
                         .message("")
                         .exception(apiExceptionEntity)
                         .build());
