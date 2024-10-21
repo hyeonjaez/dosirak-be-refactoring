@@ -31,6 +31,7 @@ public class SecurityConfig{
     private final CustomOAuth2UserService customOAuth2UserService;
     private final JwtUtil jwtUtil;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final OAuth2FailureHandler oAuth2FailureHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -73,12 +74,13 @@ public class SecurityConfig{
                 .oauth2Login((oauth2) -> oauth2
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService))
-                        .successHandler(oAuth2SuccessHandler));
+                        .successHandler(oAuth2SuccessHandler)
+                        .failureHandler(oAuth2FailureHandler));
 
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/","/api/user/check-nickname","/api/token/reissue/access-token").permitAll()
+                        .requestMatchers("/","/api/user/check-nickname","/api/token/reissue/access-token", "/api/user/register", "/login", "/api/valid-token").permitAll()
                         .anyRequest().authenticated());
 
 
