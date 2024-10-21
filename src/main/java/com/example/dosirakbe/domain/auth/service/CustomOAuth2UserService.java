@@ -10,6 +10,7 @@ import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -29,7 +30,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
-        System.out.println("getAccessToken: " + userRequest.getAccessToken());
+        System.out.println("getAccessToken: "+userRequest.getAccessToken());
         OAuth2User oAuth2User = super.loadUser(userRequest);
         System.out.println(oAuth2User);
 
@@ -38,27 +39,66 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (registrationId.equals("naver")) {
 
             oAuth2UserInfo = new NaverUserInfo(oAuth2User.getAttributes());
-        } else if (registrationId.equals("google")) {
+        }
+        else if (registrationId.equals("google")) {
 
             oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
-        } else if (registrationId.equals("kakao")) {
+        }
+        else if (registrationId.equals("kakao")) {
 
             oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
         }
 
 
-        String userName = oAuth2UserInfo.getProvider() + " " + oAuth2UserInfo.getProviderId();
+        String username = oAuth2UserInfo.getProvider()+" "+oAuth2UserInfo.getProviderId();
+        User existData = userRepository.findByUserName(username);
+        System.out.println(existData);
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUserName(userName);
-        userDTO.setName(oAuth2UserInfo.getName());
-        userDTO.setEmail(oAuth2UserInfo.getEmail());
-        userDTO.setProfileImg(oAuth2UserInfo.getProfileImg());
+        if (existData == null) {
+
+            log.info("신규 유저입니다. 등록을 진행합니다.");
+
+            User user = new User();
+            user.setUserName(username);
+            user.setEmail(oAuth2UserInfo.getEmail());
+            user.setProfileImg(oAuth2UserInfo.getProfileImg());
+            user.setName(oAuth2UserInfo.getName());
+            user.setCreatedAt(LocalDateTime.now());
+            user.setUpdatedAt(LocalDateTime.now());
+            user.setUserValid(true);
+            user.setNickName(null);
+            log.info("Save 호출 전: user.getId() = {}", user.getUserId());
+            userRepository.save(user);
+
+            log.info("Save 호출 후: user.getId() = {}", user.getUserId());
+
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUserId(user.getUserId());
+            userDTO.setUserName(username);
+            userDTO.setName(oAuth2UserInfo.getName());
+            userDTO.setEmail(oAuth2UserInfo.getEmail());
+            userDTO.setProfileImg(oAuth2UserInfo.getProfileImg());
+
+            return new CustomOAuth2User(userDTO);
+        }
+        else {
+
+            log.info("기존 유저입니다. 데이터 변경");
+
+            existData.setEmail(oAuth2UserInfo.getEmail());
+            existData.setName(oAuth2UserInfo.getName());
+            existData.setProfileImg(oAuth2UserInfo.getProfileImg());
+
+            userRepository.save(existData);
+
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUserName(username);
+            userDTO.setName(oAuth2UserInfo.getName());
 
 
-        return new CustomOAuth2User(userDTO);
+            return new CustomOAuth2User(userDTO);
+        }
     }
-
 
 
 
