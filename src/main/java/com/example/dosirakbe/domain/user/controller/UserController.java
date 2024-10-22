@@ -43,11 +43,15 @@ public class UserController {
         Long userId = customUser.getUserDTO().getUserId();
 
         try {
-            userService.updateNickname(userId, nickNameRequest.getNickName());
+            User updatedUser = userService.updateNickname(userId, nickNameRequest.getNickName());
+
+            Map<String, String> responseData = new HashMap<>();
+            responseData.put("nickName", updatedUser.getNickName());
 
             ApiResult result = ApiResult.builder()
                     .status(StatusEnum.SUCCESS)
                     .message("닉네임이 성공적으로 저장되었습니다.")
+                    .data(responseData)
                     .exception(null)
                     .build();
             return ResponseEntity.ok(result);
