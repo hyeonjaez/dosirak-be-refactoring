@@ -1,5 +1,6 @@
 package com.example.dosirakbe.domain.chat_room.entity;
 
+import com.example.dosirakbe.domain.zone_category.entity.ZoneCategory;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -31,8 +32,18 @@ public class ChatRoom {
     @Column(name = "person_count")
     private Long personCount;
 
-    public ChatRoom(String title) {
+    @Column(columnDefinition = "TEXT")
+    private String explanation;
+
+    @JoinColumn(name = "zone_category_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ZoneCategory zoneCategory;
+
+
+    public ChatRoom(String title, String explanation, ZoneCategory zoneCategory) {
         this.title = title;
+        this.explanation = explanation;
+        this.zoneCategory = zoneCategory;
     }
 
     @PrePersist
