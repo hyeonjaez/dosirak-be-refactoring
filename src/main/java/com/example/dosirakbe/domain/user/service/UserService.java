@@ -30,7 +30,8 @@ public class UserService {
 
         user.setNickName(nickname);
         user.setUpdatedAt(LocalDateTime.now());
-        return userRepository.save(user);
+        userRepository.save(user);
+        return user;
     }
 
     private String generateNickname() {
