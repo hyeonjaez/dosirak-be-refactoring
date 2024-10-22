@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+
+
 public class CustomOAuth2User implements OAuth2User {
 
     private final UserDTO userDTO;
@@ -50,6 +52,12 @@ public class CustomOAuth2User implements OAuth2User {
     public String getProfileImg() {
 
         return userDTO.getProfileImg();
+    }
+
+
+
+    public UserDTO getUserDTO() {
+        return this.userDTO;
     }
 
 

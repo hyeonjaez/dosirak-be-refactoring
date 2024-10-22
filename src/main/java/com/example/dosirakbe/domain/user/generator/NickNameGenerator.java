@@ -2,12 +2,14 @@ package com.example.dosirakbe.domain.user.generator;
 
 
 import lombok.Getter;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 @Getter
+@Component
 public class NickNameGenerator {
 
     private String nickName;
