@@ -8,7 +8,7 @@ on:
 env:
   DOCKER_IMAGE_NAME: kanepark/app
   EC2_HOST: ec2-3-35-214-67.ap-northeast-2.compute.amazonaws.com
-  EC2_SSH_USER: ec2-user
+  EC2_SSH_USER: ubuntu
   PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
 
 jobs:
