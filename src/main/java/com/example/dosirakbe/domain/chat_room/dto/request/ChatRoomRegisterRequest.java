@@ -11,4 +11,12 @@ public class ChatRoomRegisterRequest {
     @NotBlank
     @Size(min = 1, max = 50)
     private String title;
+
+    @NotBlank
+    @Size(min = 1)
+    private String explanation;
+
+    @NotBlank
+    @Size(min = 1, max = 20)
+    private String zoneCategoryName;
 }
