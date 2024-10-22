@@ -20,6 +20,14 @@ public class OAuth2FailureHandler extends SimpleUrlAuthenticationFailureHandler 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         log.error("LOGIN FAILED : {}", exception.getMessage());
-        super.onAuthenticationFailure(request, response, exception);
+
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        String jsonErrorResponse = "{\"status\": false, \"message\": \"" + exception.getMessage() + "\"}";
+        response.getWriter().write(jsonErrorResponse);
+
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 }
