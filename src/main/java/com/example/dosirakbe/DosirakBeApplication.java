@@ -11,9 +11,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class DosirakBeApplication {
 
     public static void main(String[] args) {
-        System.out.println();
-
-
 
         SpringApplication.run(DosirakBeApplication.class, args);
     }
