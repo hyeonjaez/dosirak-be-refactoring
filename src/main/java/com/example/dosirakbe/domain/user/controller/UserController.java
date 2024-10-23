@@ -66,4 +66,9 @@ public class UserController {
             return ResponseEntity.badRequest().body(result);
         }
     }
+
+    @GetMapping("/api/test")
+    public String test(){
+        return "테스트 성공";
+    }
 }
