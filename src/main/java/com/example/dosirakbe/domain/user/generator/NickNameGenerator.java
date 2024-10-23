@@ -14,8 +14,8 @@ public class NickNameGenerator {
 
     private String nickName;
 
-    List<String> adjective = Arrays.asList("용기있는", "노력하는", "친환경적인", "에너지를절약하는", "지속가능한");
-    List<String> object = Arrays.asList("북극곰" ,"바다물범", "사자", "판다", "호랑이", "표범", "강아지", "고양이");
+    List<String> adjective = Arrays.asList("용기있는", "노력하는", "친환경적인", "에너지를절약하는", "지속가능한", "실천하는");
+    List<String> object = Arrays.asList("북극곰" ,"바다물범", "사자", "판다", "호랑이", "표범", "강아지", "고양이", "햄스터", "오리", "펭귄", "백호");
     public NickNameGenerator(){
 
         String number = (int)(Math.random() * 99)+1 +"";
