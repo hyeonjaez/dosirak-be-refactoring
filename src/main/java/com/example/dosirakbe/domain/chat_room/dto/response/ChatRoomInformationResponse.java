@@ -10,6 +10,8 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class ChatRoomInformationResponse {
+    private Long personCount;
+    private String explanation;
     private List<MessageResponse> messageList;
     private List<UserChatRoomResponse> userList;
 }
