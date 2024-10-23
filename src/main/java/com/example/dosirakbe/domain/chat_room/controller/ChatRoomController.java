@@ -1,6 +1,9 @@
 package com.example.dosirakbe.domain.chat_room.controller;
 
 import com.example.dosirakbe.domain.chat_room.dto.request.ChatRoomRegisterRequest;
+import com.example.dosirakbe.domain.chat_room.dto.request.ChatRoomSortFilterRequest;
+import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomBriefResponse;
+import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomByUserResponse;
 import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomInformationResponse;
 import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomResponse;
 import com.example.dosirakbe.domain.chat_room.service.ChatRoomService;
@@ -61,6 +64,36 @@ public class ChatRoomController {
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
+    }
+
+    @GetMapping("/zone-category/{zoneCategoryName}")
+    public ResponseEntity<List<ChatRoomBriefResponse>> chatRoomByZoneCategory(@PathVariable String zoneCategoryName) {
+        Long userId = 1L;
+        List<ChatRoomBriefResponse> chatRoomByZoneCategory = chatRoomService.findChatRoomByZoneCategory(userId, zoneCategoryName);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(chatRoomByZoneCategory);
+    }
+
+
+    @GetMapping
+    public ResponseEntity<List<ChatRoomBriefResponse>> getAllChatRooms(@RequestParam(required = false, defaultValue = "recent") String sort,
+                                                                       @RequestParam(required = false) String search) {
+        List<ChatRoomBriefResponse> allChatRoomBySearchAndSort = chatRoomService.findAllChatRoomBySearchAndSort(sort, search);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(allChatRoomBySearchAndSort);
+    }
+
+    @GetMapping("/by-user")
+    public ResponseEntity<List<ChatRoomByUserResponse>> myChatRoomList() {
+        Long userId = 1L; //TODO
+        List<ChatRoomByUserResponse> allByUser = chatRoomService.findAllByUser(userId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(allByUser);
     }
 
 
