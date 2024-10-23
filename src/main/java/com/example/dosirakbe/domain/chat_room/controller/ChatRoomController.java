@@ -78,9 +78,13 @@ public class ChatRoomController {
 
 
     @GetMapping
-    public ResponseEntity<List<ChatRoomBriefResponse>> getAllChatRooms(@Valid @ModelAttribute ChatRoomSortFilterRequest chatRoomSortFilterRequest,
-                                                                       BindingResult bindingResult) {
-        return null;
+    public ResponseEntity<List<ChatRoomBriefResponse>> getAllChatRooms(@RequestParam(required = false, defaultValue = "recent") String sort,
+                                                                       @RequestParam(required = false) String search) {
+        List<ChatRoomBriefResponse> allChatRoomBySearchAndSort = chatRoomService.findAllChatRoomBySearchAndSort(sort, search);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(allChatRoomBySearchAndSort);
     }
 
     @GetMapping("/by-user")
