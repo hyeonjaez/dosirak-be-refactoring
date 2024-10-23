@@ -22,10 +22,12 @@ import com.example.dosirakbe.domain.user_chat_room.repository.UserChatRoomReposi
 import com.example.dosirakbe.domain.zone_category.entity.ZoneCategory;
 import com.example.dosirakbe.domain.zone_category.repository.ZoneCategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -137,8 +139,23 @@ public class ChatRoomService {
     }
 
     @Transactional(readOnly = true)
-    public List<ChatRoomBriefResponse> findAllChatRoom() {
-        return null;
+    public List<ChatRoomBriefResponse> findAllChatRoomBySearchAndSort(String sort, String search) {
+        List<ChatRoom> chatRooms;
+        Sort sorting;
+
+        if ("popular".equalsIgnoreCase(sort)) {
+            sorting = Sort.by(Sort.Direction.DESC, "personCount");
+        } else {
+            sorting = Sort.by(Sort.Direction.DESC, "createdAt");
+        }
+
+        if (Objects.nonNull(search) && !search.isEmpty()) {
+            chatRooms = chatRoomRepository.findByTitleContainingIgnoreCase(search, sorting);
+        } else {
+            chatRooms = chatRoomRepository.findAll(sorting);
+        }
+
+        return chatRoomMapper.mapToChatRoomBriefResponseList(chatRooms);
     }
 
     @Transactional(readOnly = true)
