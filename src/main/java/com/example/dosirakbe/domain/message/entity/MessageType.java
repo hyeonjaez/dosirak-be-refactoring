@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 public enum MessageType {
-    CHAT, JOIN, LEAVE;
+    CHAT, JOIN; //LEAVE;
 
     public static Optional<MessageType> fromString(String type) {
         if (Objects.isNull(type) || type.isBlank()) {

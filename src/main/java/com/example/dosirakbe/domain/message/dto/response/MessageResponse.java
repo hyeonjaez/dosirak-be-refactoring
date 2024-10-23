@@ -15,5 +15,4 @@ public class MessageResponse {
     private LocalDateTime createdAt;
     private Long userId;
     private Long chatRoomId;
-    private MessageResponse beforeMessage;
 }
