@@ -7,6 +7,8 @@ import com.example.dosirakbe.domain.message.dto.response.MessageResponse;
 import com.example.dosirakbe.domain.message.service.MessageService;
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
+import com.example.dosirakbe.global.util.ApiException;
+import com.example.dosirakbe.global.util.ExceptionEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -37,7 +39,7 @@ public class WebSocketEventListener {
         String chatRoomIdHeader = headerAccessor.getFirstNativeHeader("chatRoomId");
 
         if (Objects.isNull(chatRoomIdHeader) || Objects.isNull(userIdHeader)) {
-            throw new RuntimeException(""); //TODO
+            throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
         }
 
         Long userId = Long.parseLong(userIdHeader);
@@ -45,7 +47,9 @@ public class WebSocketEventListener {
 
         ChatRoom chatRoom = chatRoomService.findChatRoomById(chatRoomId);
 
-        User user = userRepository.findById(userId).orElseThrow();
+        User user = userRepository.findById(userId)
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
         // 유저가 처음 입장했는지 확인
         if (chatRoomService.isFirstTimeEntry(user, chatRoom)) {
@@ -67,18 +71,18 @@ public class WebSocketEventListener {
         String chatRoomIdHeader = headerAccessor.getFirstNativeHeader("chatRoomId");
 
         if (Objects.isNull(chatRoomIdHeader) || Objects.isNull(userIdHeader)) {
-            throw new RuntimeException(""); //TODO
+            throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
         }
 
         Long userId = Long.parseLong(userIdHeader);
         Long chatRoomId = Long.parseLong(chatRoomIdHeader);
 
         if (!chatRoomRepository.existsById(chatRoomId)) {
-            throw new RuntimeException(""); //TODO
+            throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
         }
 
         if (!userRepository.existsById(userId)) {
-            throw new RuntimeException(""); //TODO
+            throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
         }
 
 

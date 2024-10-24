@@ -11,6 +11,8 @@ import com.example.dosirakbe.domain.message.repository.MessageRepository;
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
 import com.example.dosirakbe.domain.user_chat_room.repository.UserChatRoomRepository;
+import com.example.dosirakbe.global.util.ApiException;
+import com.example.dosirakbe.global.util.ExceptionEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,11 +30,14 @@ public class MessageService {
     private static final String FIRST_JOIN_MESSAGE = "님이 들어왔습니다.";
 
     public MessageResponse createMessage(Long chatRoomId, MessageRegisterRequest messageRegisterRequest) {
-        User user = userRepository.findById(messageRegisterRequest.getUserId()).orElseThrow();  // 예외 처리 필요
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
+        User user = userRepository.findById(messageRegisterRequest.getUserId())
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(() -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
         if (!userChatRoomRepository.existsByUserAndChatRoom(user, chatRoom)) {
-            //TODO throw
+            throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
         }
 
         Message message = new Message(messageRegisterRequest.getContent(), messageRegisterRequest.getMessageType(), user, chatRoom);
