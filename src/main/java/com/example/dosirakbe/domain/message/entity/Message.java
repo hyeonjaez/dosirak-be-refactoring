@@ -3,10 +3,7 @@ package com.example.dosirakbe.domain.message.entity;
 import com.example.dosirakbe.domain.chat_room.entity.ChatRoom;
 import com.example.dosirakbe.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -16,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "messages")
-@NoArgsConstructor
+@NoArgsConstructor(access= AccessLevel.PROTECTED) //기본생성자
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Message {
@@ -25,7 +22,7 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "type")
@@ -44,15 +41,10 @@ public class Message {
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "before_message")
-    private Message beforeMessage;
-
-    public Message(String content, MessageType messageType, User user, ChatRoom chatRoom, Message beforeMessage) {
+    public Message(String content, MessageType messageType, User user, ChatRoom chatRoom) {
         this.content = content;
         this.messageType = messageType;
         this.user = user;
         this.chatRoom = chatRoom;
-        this.beforeMessage = beforeMessage;
     }
 }

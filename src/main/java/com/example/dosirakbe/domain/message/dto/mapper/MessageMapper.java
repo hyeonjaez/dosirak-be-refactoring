@@ -6,11 +6,15 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface MessageMapper {
 
     @Mapping(source = "user.userId", target = "userId")
     @Mapping(source = "chatRoom.id", target = "chatRoomId")
-    @Mapping(source = "beforeMessage", target = "beforeMessage")
     MessageResponse mapToMessageResponse(Message message);
+
+
+    List<MessageResponse> mapToMessageResponseList(List<Message> messages);
 }
