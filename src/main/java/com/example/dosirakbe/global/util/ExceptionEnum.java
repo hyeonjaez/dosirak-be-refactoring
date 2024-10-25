@@ -16,7 +16,9 @@ public enum ExceptionEnum {
     // Custom Exception
     SECURITY(HttpStatus.UNAUTHORIZED, "CE0001", "로그인이 필요합니다"),
     DATA_NOT_FOUND(HttpStatus.NOT_FOUND, "CE0002", "데이터를 찾을 수 없습니다"),
-    PERMISSION_DENIED(HttpStatus.FORBIDDEN, "CE0003", "권한이 없습니다");
+    PERMISSION_DENIED(HttpStatus.FORBIDDEN, "CE0003", "권한이 없습니다"),
+    INVALID_REQUEST(HttpStatus.BAD_REQUEST, "CE0004", "잘못된 요청입니다");
+
 
     private final HttpStatus status;
     private final String code;
