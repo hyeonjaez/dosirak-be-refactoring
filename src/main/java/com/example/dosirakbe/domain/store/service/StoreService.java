@@ -26,7 +26,7 @@ public class StoreService {
     private final MenuRepository menuRepository;
 
     public List<StoreResponse> searchStores(String keyword) {
-        List<Store> stores = storeRepository.findByStoreNameContaining(keyword);
+        List<Store> stores = storeRepository.searchStoresByKeyword(keyword);
 
         if (stores.isEmpty()) {
             throw new ApiException(ExceptionEnum.DATA_NOT_FOUND);

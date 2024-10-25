@@ -12,7 +12,8 @@ import java.util.List;
 @Repository
 public interface StoreRepository extends JpaRepository<Store, Long> {
 
-    List<Store> findByStoreNameContaining(String keyword);
+    @Query("SELECT s FROM Store s WHERE s.storeName LIKE %:keyword%")
+    List<Store> searchStoresByKeyword(@Param("keyword") String keyword);
 
     List<Store> findByStoreCategory(String storeCategory);
 
