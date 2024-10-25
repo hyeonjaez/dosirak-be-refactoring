@@ -21,6 +21,8 @@ import com.example.dosirakbe.domain.user_chat_room.entity.UserChatRoom;
 import com.example.dosirakbe.domain.user_chat_room.repository.UserChatRoomRepository;
 import com.example.dosirakbe.domain.zone_category.entity.ZoneCategory;
 import com.example.dosirakbe.domain.zone_category.repository.ZoneCategoryRepository;
+import com.example.dosirakbe.global.util.ApiException;
+import com.example.dosirakbe.global.util.ExceptionEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -45,8 +47,12 @@ public class ChatRoomService {
     private final ZoneCategoryRepository zoneCategoryRepository;
 
     public ChatRoomResponse createChatRoom(ChatRoomRegisterRequest createRequest, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(); //TODO 예외 처리
-        ZoneCategory zoneCategory = zoneCategoryRepository.findByName(createRequest.getZoneCategoryName()).orElseThrow();
+        User user = userRepository.findById(userId)
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+        ZoneCategory zoneCategory = zoneCategoryRepository.findByName(createRequest.getZoneCategoryName())
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
         ChatRoom chatRoom = new ChatRoom(createRequest.getTitle(), createRequest.getExplanation(), zoneCategory);
 
@@ -54,10 +60,9 @@ public class ChatRoomService {
         return chatRoomMapper.mapToChatRoomResponse(chatRoomRepository.save(chatRoom));
     }
 
-
     public void joinChatRoom(User user, ChatRoom chatRoom) {
         if (userChatRoomRepository.existsByUserAndChatRoom(user, chatRoom)) {
-            //TODO 유저가 이미 해당 채팅방에 들어와 있는지 validation 확인
+            throw new ApiException(ExceptionEnum.CONFLICT);
         }
 
         userChatRoomRepository.save(new UserChatRoom(chatRoom, user));
@@ -72,13 +77,16 @@ public class ChatRoomService {
 
     @Transactional(readOnly = true)
     public ChatRoom findChatRoomById(Long chatRoomId) {
-        return chatRoomRepository.findById(chatRoomId).orElseThrow(); //TODO exception 처리
+        return chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
     }
-
 
     @Transactional(readOnly = true)
     public List<ChatRoomByUserResponse> findAllByUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(); //TODO 예외 처리
+        User user = userRepository.findById(userId)
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
         List<UserChatRoom> allByUserId = userChatRoomRepository.findAllByUser(user);
 
         return allByUserId.stream()
@@ -95,28 +103,32 @@ public class ChatRoomService {
     }
 
     public void leaveChatRoom(Long userId, Long chatRoomId) {
-        User user = userRepository.findById(userId).orElseThrow();
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
+        User user = userRepository.findById(userId)
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
-        UserChatRoom userChatRoom =
-                userChatRoomRepository.findByUserAndChatRoom(user, chatRoom)
-                        .orElseThrow(); //TODO 예외처리
+        UserChatRoom userChatRoom = userChatRoomRepository.findByUserAndChatRoom(user, chatRoom)
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+
         userChatRoomRepository.delete(userChatRoom);
         chatRoom.downPersonCount();
     }
 
     @Transactional(readOnly = true)
-    public List<ChatRoomResponse> findAllChatRooms() { // TODO 내가 참여하고 있는 방 filter 처리를 해줘야겠지?
-        return chatRoomRepository.findAll().stream()
-                .map(chatRoomMapper::mapToChatRoomResponse)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
     public ChatRoomInformationResponse findMessagesByChatRoom(Long userId, Long chatRoomId) {
-        User user = userRepository.findById(userId).orElseThrow();  // TODO 예외 처리 필요
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
-        UserChatRoom userChatRoom = userChatRoomRepository.findByUserAndChatRoom(user, chatRoom).orElseThrow();
+        User user = userRepository.findById(userId)
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+        UserChatRoom userChatRoom = userChatRoomRepository.findByUserAndChatRoom(user, chatRoom)
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
         List<Message> chatRoomMessageByUser = messageRepository.findByChatRoomIdAndCreatedAtAfterOrderByCreatedAtAsc(chatRoom.getId(), userChatRoom.getCreatedAt());
         List<User> chatRoomUserList = userChatRoomRepository.findAllByChatRoom(chatRoom).stream().map(UserChatRoom::getUser).toList();
@@ -129,13 +141,14 @@ public class ChatRoomService {
 
     @Transactional(readOnly = true)
     public List<UserChatRoomResponse> findUserChatRooms(Long chatRoomId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(); //TODO exception
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
         List<User> userList = userChatRoomRepository.findAllByChatRoom(chatRoom).stream()
                 .map(UserChatRoom::getUser)
                 .toList();
 
         return userMapper.mapToUserChatRoomResponses(userList);
-
     }
 
     @Transactional(readOnly = true)
@@ -160,13 +173,14 @@ public class ChatRoomService {
 
     @Transactional(readOnly = true)
     public List<ChatRoomBriefResponse> findChatRoomByZoneCategory(Long userId, String zoneCategoryName) {
-        User user = userRepository.findById(userId).orElseThrow();  // TODO 예외 처리 필요
-        ZoneCategory zoneCategory = zoneCategoryRepository.findByName(zoneCategoryName).orElseThrow();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+
+        ZoneCategory zoneCategory = zoneCategoryRepository.findByName(zoneCategoryName)
+                .orElseThrow(() -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
         List<ChatRoom> chatRoomsByZoneCategoryAndNotJoinedByUser = chatRoomRepository.findChatRoomsByZoneCategoryAndNotJoinedByUser(zoneCategory, user);
 
         return chatRoomMapper.mapToChatRoomBriefResponseList(chatRoomsByZoneCategoryAndNotJoinedByUser);
     }
-
-
 }
