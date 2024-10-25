@@ -6,12 +6,14 @@ import com.example.dosirakbe.domain.message.entity.Message;
 import com.example.dosirakbe.domain.message.entity.MessageType;
 import com.example.dosirakbe.domain.user.entity.User;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-23T18:52:12+0900",
+    date = "2024-10-25T13:24:22+0900",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.12 (Oracle Corporation)"
 )
 @Component
@@ -25,7 +27,6 @@ public class MessageMapperImpl implements MessageMapper {
 
         Long userId = null;
         Long chatRoomId = null;
-        MessageResponse beforeMessage = null;
         Long id = null;
         String content = null;
         MessageType messageType = null;
@@ -33,15 +34,28 @@ public class MessageMapperImpl implements MessageMapper {
 
         userId = messageUserUserId( message );
         chatRoomId = messageChatRoomId( message );
-        beforeMessage = mapToMessageResponse( message.getBeforeMessage() );
         id = message.getId();
         content = message.getContent();
         messageType = message.getMessageType();
         createdAt = message.getCreatedAt();
 
-        MessageResponse messageResponse = new MessageResponse( id, content, messageType, createdAt, userId, chatRoomId, beforeMessage );
+        MessageResponse messageResponse = new MessageResponse( id, content, messageType, createdAt, userId, chatRoomId );
 
         return messageResponse;
+    }
+
+    @Override
+    public List<MessageResponse> mapToMessageResponseList(List<Message> messages) {
+        if ( messages == null ) {
+            return null;
+        }
+
+        List<MessageResponse> list = new ArrayList<MessageResponse>( messages.size() );
+        for ( Message message : messages ) {
+            list.add( mapToMessageResponse( message ) );
+        }
+
+        return list;
     }
 
     private Long messageUserUserId(Message message) {
