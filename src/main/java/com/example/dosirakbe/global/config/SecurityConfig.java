@@ -4,6 +4,7 @@ import com.example.dosirakbe.domain.auth.OAuth2FailureHandler;
 import com.example.dosirakbe.domain.auth.OAuth2SuccessHandler;
 import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.auth.jwt.JwtFilter;
+import com.example.dosirakbe.domain.auth.oauth2.CustomRequestEntityConverter;
 import com.example.dosirakbe.domain.auth.service.CustomOAuth2UserService;
 import com.example.dosirakbe.global.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +16,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -32,9 +36,14 @@ public class SecurityConfig{
     private final JwtUtil jwtUtil;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final OAuth2FailureHandler oAuth2FailureHandler;
+    private final CustomRequestEntityConverter customRequestEntityConverter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        DefaultAuthorizationCodeTokenResponseClient tokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
+        tokenResponseClient.setRequestEntityConverter(customRequestEntityConverter);
+
 
         http
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
@@ -72,6 +81,8 @@ public class SecurityConfig{
 
         http
                 .oauth2Login((oauth2) -> oauth2
+                        .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig
+                                .accessTokenResponseClient(tokenResponseClient))
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService))
                         .successHandler(oAuth2SuccessHandler)
@@ -80,7 +91,8 @@ public class SecurityConfig{
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/","/api/user/check-nickname","/api/token/reissue/access-token", "/api/user/register", "/login", "/api/valid-token").permitAll()
+                        .requestMatchers("/","/api/user/check-nickname","/api/token/reissue/access-token", "/api/user/register", "/login", "/api/valid-token"
+                        ,"/api/guide/stores/search", "/api/guide/stores/filter", "/api/guide/stores/nearby", "/api/guide/stores/all").permitAll()
                         .anyRequest().authenticated());
 
 
