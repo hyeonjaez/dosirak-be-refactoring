@@ -28,6 +28,10 @@ public class StoreService {
     public List<StoreResponse> searchStores(String keyword) {
         List<Store> stores = storeRepository.searchStoresByKeyword(keyword);
 
+        if (keyword == null || keyword.trim().isEmpty()) {
+            throw new ApiException(ExceptionEnum.INVALID_REQUEST);
+        }
+
         if (stores.isEmpty()) {
             throw new ApiException(ExceptionEnum.DATA_NOT_FOUND);
         }
