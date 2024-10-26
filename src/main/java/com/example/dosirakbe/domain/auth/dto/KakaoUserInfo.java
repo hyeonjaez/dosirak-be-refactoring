@@ -3,7 +3,6 @@ package com.example.dosirakbe.domain.auth.dto;
 import lombok.AllArgsConstructor;
 
 import java.util.Map;
-
 @AllArgsConstructor
 public class KakaoUserInfo implements OAuth2UserInfo{
 
