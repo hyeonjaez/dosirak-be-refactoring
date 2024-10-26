@@ -6,16 +6,21 @@ import com.example.dosirakbe.domain.auth.oauth2.CustomRequestEntityConverter;
 import com.example.dosirakbe.domain.user.dto.response.UserDTO;
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
+import com.example.dosirakbe.global.util.ApiException;
+import com.example.dosirakbe.global.util.ExceptionEnum;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.*;
 import org.springframework.cglib.core.Local;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -29,99 +34,53 @@ import java.util.Map;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
+    private final RestTemplate restTemplate;
 
-
-    @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-
-        System.out.println("getAccessToken: "+userRequest.getAccessToken());
-        // oAuth2User = super.loadUser(userRequest);
-        //System.out.println(oAuth2User);
-
-        String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        OAuth2UserInfo oAuth2UserInfo = null;
-        if (registrationId.equals("apple")) {
-            String idToken = userRequest.getAdditionalParameters().get("id_token").toString();
-            oAuth2UserInfo = new AppleUserInfo(decodeJwtTokenPayload(idToken));
-        } else {
-            OAuth2User oAuth2User = super.loadUser(userRequest);
-
-            if (registrationId.equals("naver")) {
-                oAuth2UserInfo = new NaverUserInfo(oAuth2User.getAttributes());
-            } else if (registrationId.equals("google")) {
-                oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
-            } else if (registrationId.equals("kakao")) {
-                oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
-            }
-        }
-
-
-        String username = oAuth2UserInfo.getProvider()+" "+oAuth2UserInfo.getProviderId();
-        User existData = userRepository.findByUserName(username);
-        System.out.println(existData);
-
-        if (existData == null) {
-
-            log.info("신규 유저입니다. 등록을 진행합니다.");
-
-            User user = new User();
-            user.setUserName(username);
-            user.setEmail(oAuth2UserInfo.getEmail());
-            user.setProfileImg(oAuth2UserInfo.getProfileImg());
-            user.setName(oAuth2UserInfo.getName());
-            user.setCreatedAt(LocalDateTime.now());
-            user.setUpdatedAt(LocalDateTime.now());
-            user.setUserValid(true);
-            user.setNickName(null);
-            userRepository.save(user);
-
-
-            UserDTO userDTO = new UserDTO();
-            userDTO.setUserId(user.getUserId());
-            userDTO.setUserName(username);
-            userDTO.setName(oAuth2UserInfo.getName());
-            userDTO.setEmail(oAuth2UserInfo.getEmail());
-            userDTO.setProfileImg(oAuth2UserInfo.getProfileImg());
-
-            return new CustomOAuth2User(userDTO);
-        }
-        else {
-
-            log.info("기존 유저입니다. 데이터 변경");
-
-            existData.setEmail(oAuth2UserInfo.getEmail());
-            existData.setName(oAuth2UserInfo.getName());
-            existData.setProfileImg(oAuth2UserInfo.getProfileImg());
-
-            userRepository.save(existData);
-
-            UserDTO userDTO = new UserDTO();
-            userDTO.setUserName(username);
-            userDTO.setName(oAuth2UserInfo.getName());
-
-
-            return new CustomOAuth2User(userDTO);
-        }
+    public KakaoUserInfo processKakaoToken(String kakaoAccessToken) {
+        return getUserInfoFromKakao(kakaoAccessToken);
     }
 
-    public Map<String, Object> decodeJwtTokenPayload(String jwtToken) {
-        Map<String, Object> jwtClaims = new HashMap<>();
+    private KakaoUserInfo getUserInfoFromKakao(String accessToken) {
+        String url = "https://kapi.kakao.com/v2/user/me";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
         try {
-            String[] parts = jwtToken.split("\\.");
-            Base64.Decoder decoder = Base64.getUrlDecoder();
-
-            byte[] decodedBytes = decoder.decode(parts[1].getBytes(StandardCharsets.UTF_8));
-            String decodedString = new String(decodedBytes, StandardCharsets.UTF_8);
-            ObjectMapper mapper = new ObjectMapper();
-
-            Map<String, Object> map = mapper.readValue(decodedString, Map.class);
-            jwtClaims.putAll(map);
-
-        } catch (JsonProcessingException e) {
-//        logger.error("decodeJwtToken: {}-{} / jwtToken : {}", e.getMessage(), e.getCause(), jwtToken);
+            ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+            return new KakaoUserInfo(response.getBody());
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                throw new ApiException(ExceptionEnum.INVALID_ACCESS_TOKEN);
+            }
+            throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
         }
-        return jwtClaims;
     }
+
+    public NaverUserInfo processNaverToken(String naverAccessToken) {
+        return getUserInfoFromNaver(naverAccessToken);
+    }
+
+    private NaverUserInfo getUserInfoFromNaver(String accessToken) {
+        String url = "https://openapi.naver.com/v1/nid/me";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+            return new NaverUserInfo(response.getBody());
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                throw new ApiException(ExceptionEnum.INVALID_ACCESS_TOKEN);
+            }
+            throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
+        }
+    }
+
+
+
+
 
 
 
