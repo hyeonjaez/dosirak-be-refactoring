@@ -21,12 +21,14 @@ import com.example.dosirakbe.domain.user_chat_room.entity.UserChatRoom;
 import com.example.dosirakbe.domain.user_chat_room.repository.UserChatRoomRepository;
 import com.example.dosirakbe.domain.zone_category.entity.ZoneCategory;
 import com.example.dosirakbe.domain.zone_category.repository.ZoneCategoryRepository;
+import com.example.dosirakbe.global.config.S3Uploader;
 import com.example.dosirakbe.global.util.ApiException;
 import com.example.dosirakbe.global.util.ExceptionEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -45,20 +47,29 @@ public class ChatRoomService {
     private final MessageMapper messageMapper;
     private final UserMapper userMapper;
     private final ZoneCategoryRepository zoneCategoryRepository;
+    private final S3Uploader s3Uploader;
 
-    public ChatRoomResponse createChatRoom(ChatRoomRegisterRequest createRequest, Long userId) {
+    public ChatRoomResponse createChatRoom(MultipartFile file, ChatRoomRegisterRequest createRequest, Long userId) {
+        validationFile(file, createRequest);
+
         User user = userRepository.findById(userId)
                 .orElseThrow(
                         () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
         ZoneCategory zoneCategory = zoneCategoryRepository.findByName(createRequest.getZoneCategoryName())
                 .orElseThrow(
                         () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+        String imageUrl = createRequest.getDefaultImage();
 
-        ChatRoom chatRoom = new ChatRoom(createRequest.getTitle(), createRequest.getExplanation(), zoneCategory);
+        if (Objects.nonNull(file)) {
+            imageUrl = s3Uploader.saveFile(file);
+        }
+
+        ChatRoom chatRoom = new ChatRoom(createRequest.getTitle(), createRequest.getExplanation(), zoneCategory, imageUrl);
 
         userChatRoomRepository.save(new UserChatRoom(chatRoom, user));
         return chatRoomMapper.mapToChatRoomResponse(chatRoomRepository.save(chatRoom));
     }
+
 
     public void joinChatRoom(User user, ChatRoom chatRoom) {
         if (userChatRoomRepository.existsByUserAndChatRoom(user, chatRoom)) {
@@ -182,5 +193,14 @@ public class ChatRoomService {
         List<ChatRoom> chatRoomsByZoneCategoryAndNotJoinedByUser = chatRoomRepository.findChatRoomsByZoneCategoryAndNotJoinedByUser(zoneCategory, user);
 
         return chatRoomMapper.mapToChatRoomBriefResponseList(chatRoomsByZoneCategoryAndNotJoinedByUser);
+    }
+
+    private void validationFile(MultipartFile file, ChatRoomRegisterRequest createRequest) {
+        if (Objects.isNull(createRequest.getDefaultImage()) && (Objects.isNull(file) || file.isEmpty())) {
+            throw new ApiException(ExceptionEnum.INVALID_REQUEST);
+        }
+        if (Objects.nonNull(createRequest.getDefaultImage()) && Objects.nonNull(file)) {
+            throw new ApiException(ExceptionEnum.INVALID_REQUEST);
+        }
     }
 }
