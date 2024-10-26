@@ -74,18 +74,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String createTemporalJwt(String userName, String name, String email, String profileImg, Long expiredMs) {
-
-        return Jwts.builder()
-                .claim("userName", userName)
-                .claim("name", name)
-                .claim("email", email)
-                .claim("profileImg", profileImg)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiredMs))
-                .signWith(secretKey)
-                .compact();
-    }
 
 
 
