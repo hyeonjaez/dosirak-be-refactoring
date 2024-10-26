@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,11 +37,10 @@ public class UserController {
 
 
     @PostMapping("/api/user/register")
-    public ResponseEntity<?> completeRegistration(@RequestBody NickNameRequest nickNameRequest) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<?> completeRegistration(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                  @RequestBody NickNameRequest nickNameRequest) {
 
-        CustomOAuth2User customUser = (CustomOAuth2User) authentication.getPrincipal();
-        Long userId = customUser.getUserDTO().getUserId();
+        Long userId = customOAuth2User.getUserDTO().getUserId();
 
         try {
             User updatedUser = userService.updateNickname(userId, nickNameRequest.getNickName());
@@ -67,8 +67,4 @@ public class UserController {
         }
     }
 
-    @GetMapping("/api/test")
-    public String test(){
-        return "테스트 성공";
-    }
 }
