@@ -10,6 +10,7 @@ import lombok.Setter;
 public class ChatRoomByUserResponse {
     private Long id;
     private String title;
+    private String image;
     private Long personCount;
     private String lastMessage;
 }
