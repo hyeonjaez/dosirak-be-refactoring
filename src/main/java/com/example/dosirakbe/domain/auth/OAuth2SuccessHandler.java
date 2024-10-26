@@ -104,11 +104,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                         "message", result.getMessage(),
                         "result", tokens));
 
-        log.info("Response Data: {}", responseData);
+        clearAuthenticationAttributes(request);
 
-        //리프레쉬 토큰 쿠키에
-        //response.addCookie(createCookie("refreshToken", refreshToken));
-        //response.sendRedirect("http://localhost:3000/nickname");
+
     }
 
     private Cookie createCookie(String key, String value) {
