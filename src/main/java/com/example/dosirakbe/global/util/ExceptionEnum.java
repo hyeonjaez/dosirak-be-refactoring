@@ -23,7 +23,8 @@ public enum ExceptionEnum {
     FAIL_DELETE(HttpStatus.INTERNAL_SERVER_ERROR, "CE0006", "파일 삭제에 실패했습니다."),
     FAIL_UPLOAD(HttpStatus.INTERNAL_SERVER_ERROR, "CE0007", "파일 업로드에 실패했습니다."),
     NOT_IMAGE_EXTENSION(HttpStatus.BAD_REQUEST, "CE0008", "허용되지 않는 파일 확장자입니다."),
-    INVALID_REQUEST(HttpStatus.BAD_REQUEST, "CE0004", "잘못된 요청입니다");
+    INVALID_REQUEST(HttpStatus.BAD_REQUEST, "CE0004", "잘못된 요청입니다"),
+    INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "CE0004", "유효하지 않은 accessToken입니다.");
 
 
     private final HttpStatus status;
