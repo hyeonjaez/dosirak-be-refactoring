@@ -57,6 +57,9 @@ dependencies {
     implementation 'org.bouncycastle:bcpkix-jdk18on:1.72'
     implementation 'commons-io:commons-io:2.11.0'
 
+
+    implementation'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
 }
 
 tasks.named('test') {
