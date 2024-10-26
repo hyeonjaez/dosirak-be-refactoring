@@ -92,7 +92,7 @@ public class SecurityConfig{
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/","/api/user/check-nickname","/api/token/reissue/access-token", "/api/user/register", "/login", "/api/valid-token"
-                        ,"/api/guide/stores/search", "/api/guide/stores/filter", "/api/guide/stores/nearby", "/api/guide/stores/all","/api/images/**").permitAll()
+                        ,"/api/guide/stores/search", "/api/guide/stores/filter", "/api/guide/stores/nearby", "/api/guide/stores/all","/api/images/**", "/login/oauth2/code/kakao").permitAll()
                         .anyRequest().authenticated());
 
 
