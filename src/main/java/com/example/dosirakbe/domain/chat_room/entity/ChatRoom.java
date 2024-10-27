@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -39,16 +40,19 @@ public class ChatRoom {
     @ManyToOne(fetch = FetchType.LAZY)
     private ZoneCategory zoneCategory;
 
+    @Column
+    private String image;
 
-    public ChatRoom(String title, String explanation, ZoneCategory zoneCategory) {
+    public ChatRoom(String title, String explanation, ZoneCategory zoneCategory, String image) {
         this.title = title;
         this.explanation = explanation;
         this.zoneCategory = zoneCategory;
+        this.image = image;
     }
 
     @PrePersist
     public void prePersist() {
-        if (this.personCount == null) {
+        if (Objects.isNull(this.personCount)) {
             this.personCount = 1L;
         }
     }

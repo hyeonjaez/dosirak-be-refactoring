@@ -8,6 +8,7 @@ import lombok.Getter;
 public class ChatRoomBriefResponse {
     private Long id;
     private String title;
+    private String image;
     private Long personCount;
     private String explanation;
 }
