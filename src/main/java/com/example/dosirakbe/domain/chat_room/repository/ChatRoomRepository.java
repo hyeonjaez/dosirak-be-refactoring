@@ -15,11 +15,12 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
     @Query("SELECT cr FROM ChatRoom cr " +
             "LEFT JOIN UserChatRoom ucr ON cr.id = ucr.chatRoom.id AND ucr.user = :user " +
-            "WHERE cr.zoneCategory = :zoneCategory AND ucr.id IS NULL")
+            "WHERE cr.zoneCategory = :zoneCategory AND ucr.id IS NULL " +
+            "AND (:search IS NULL OR LOWER(cr.title) LIKE LOWER(CONCAT('%', :search, '%')))")
     List<ChatRoom> findChatRoomsByZoneCategoryAndNotJoinedByUser(@Param("zoneCategory") ZoneCategory zoneCategory,
-                                                                 @Param("user") User user);
-
-    List<ChatRoom> findByTitleContainingIgnoreCase(String title, Sort sort);
+                                                                 @Param("user") User user,
+                                                                 @Param("search") String search,
+                                                                 Sort sort);
 
     List<ChatRoom> findAll(Sort sort);
 }
