@@ -35,7 +35,7 @@ jobs:
       - name: Build with Gradle
         env:
           JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}  # GitHub Secrets에서 비밀번호 가져오기
-        run: ./gradlew build -Djasypt.encryptor.password=${{ secrets.JASYPT_PASSWORD }}
+        run: ./gradlew build -Djasypt.encryptor.password=${{ secrets.JASYPT_PASSWORD }} --info
 
 
       - name: Build the Docker image
