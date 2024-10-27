@@ -14,10 +14,12 @@ import com.example.dosirakbe.global.util.ValidationUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -27,14 +29,18 @@ import java.util.List;
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
 
-    @PostMapping
+    private static final String REQUEST_PART_CHATROOM = "chatRoom";
+    private static final String REQUEST_PART_FILE = "file";
+
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ApiResult<ChatRoomResponse>> createChatRoom(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                                      @Valid @RequestBody ChatRoomRegisterRequest createRequest,
+                                                                      @Valid @RequestPart(REQUEST_PART_CHATROOM) ChatRoomRegisterRequest createRequest,
+                                                                      @RequestPart(value = REQUEST_PART_FILE, required = false) MultipartFile file,
                                                                       BindingResult bindingResult) {
         ValidationUtils.validationRequest(bindingResult);
 
         Long userId = getUserIdByOAuth(customOAuth2User);
-        ChatRoomResponse chatRoomResponse = chatRoomService.createChatRoom(createRequest, userId);
+        ChatRoomResponse chatRoomResponse = chatRoomService.createChatRoom(file, createRequest, userId);
 
         ApiResult<ChatRoomResponse> result = ApiResult.<ChatRoomResponse>builder()
                 .status(StatusEnum.SUCCESS)
