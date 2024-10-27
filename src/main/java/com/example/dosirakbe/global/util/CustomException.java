@@ -1,8 +1,6 @@
 package com.example.dosirakbe.global.util;
 
 
-
-import com.example.dosirakbe.global.util.ExceptionEnum;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
