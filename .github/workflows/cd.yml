@@ -33,7 +33,10 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build
+        env:
+          JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}  # GitHub Secrets에서 비밀번호 가져오기
+        run: ./gradlew build -Djasypt.encryptor.password=${{ secrets.JASYPT_PASSWORD }}
+
 
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag ${{ env.DOCKER_IMAGE_NAME }}:latest
