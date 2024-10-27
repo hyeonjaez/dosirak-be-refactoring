@@ -64,7 +64,7 @@ dependencies {
 
     //jasypt
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
-
+    testImplementation 'org.jasypt:jasypt:1.9.3'  // Jasypt 의존성 (테스트용)
 
 
 }
