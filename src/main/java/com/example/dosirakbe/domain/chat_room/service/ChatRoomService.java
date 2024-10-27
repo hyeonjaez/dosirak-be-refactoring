@@ -1,10 +1,7 @@
 package com.example.dosirakbe.domain.chat_room.service;
 
 import com.example.dosirakbe.domain.chat_room.dto.request.ChatRoomRegisterRequest;
-import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomBriefResponse;
-import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomByUserResponse;
-import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomInformationResponse;
-import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomResponse;
+import com.example.dosirakbe.domain.chat_room.dto.response.*;
 import com.example.dosirakbe.domain.chat_room.entity.ChatRoom;
 import com.example.dosirakbe.domain.chat_room.dto.mapper.ChatRoomMapper;
 import com.example.dosirakbe.domain.chat_room.repository.ChatRoomRepository;
@@ -94,7 +91,7 @@ public class ChatRoomService {
     }
 
     @Transactional(readOnly = true)
-    public List<ChatRoomByUserResponse> findAllByUser(Long userId) {
+    public List<UserChatRoomParticipationResponse> findAllByUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(
                         () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
@@ -105,12 +102,31 @@ public class ChatRoomService {
                     ChatRoom chatRoom = userChatRoom.getChatRoom();
                     Optional<Message> lastMessage =
                             messageRepository.findFirstByChatRoomIdAndMessageTypeOrderByCreatedAtDesc(chatRoom.getId(), MessageType.CHAT);
-                    ChatRoomByUserResponse chatRoomByUserResponse =
-                            chatRoomMapper.mapToChatRoomByUserResponse(chatRoom);
-                    lastMessage.ifPresent(message -> chatRoomByUserResponse.setLastMessage(message.getContent()));
+                    UserChatRoomParticipationResponse userChatRoomParticipationResponse =
+                            chatRoomMapper.mapToUserChatRoomParticipationResponse(chatRoom);
+                    lastMessage.ifPresent(message -> userChatRoomParticipationResponse.setLastMessageTime(message.getCreatedAt()));
 
-                    return chatRoomByUserResponse;
+                    return userChatRoomParticipationResponse;
                 }).toList();
+    }
+
+    public List<UserChatRoomBriefParticipationResponse> findAllBriefByUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+        List<UserChatRoom> allByUserId = userChatRoomRepository.findAllByUser(user);
+
+        return allByUserId.stream().map(userChatRoom -> {
+            ChatRoom chatRoom = userChatRoom.getChatRoom();
+            Optional<Message> lastMessage =
+                    messageRepository.findFirstByChatRoomIdAndMessageTypeOrderByCreatedAtDesc(chatRoom.getId(), MessageType.CHAT);
+            UserChatRoomBriefParticipationResponse userChatRoomBriefParticipationResponse =
+                    chatRoomMapper.mapToUserChatRoomBriefParticipationResponse(chatRoom);
+            lastMessage.ifPresent(message -> userChatRoomBriefParticipationResponse.setLastMessage(message.getContent()));
+
+            return userChatRoomBriefParticipationResponse;
+        }).toList();
+
     }
 
     public void leaveChatRoom(Long userId, Long chatRoomId) {
@@ -163,36 +179,21 @@ public class ChatRoomService {
     }
 
     @Transactional(readOnly = true)
-    public List<ChatRoomBriefResponse> findAllChatRoomBySearchAndSort(String sort, String search) {
-        List<ChatRoom> chatRooms;
-        Sort sorting;
-
-        if ("popular".equalsIgnoreCase(sort)) {
-            sorting = Sort.by(Sort.Direction.DESC, "personCount");
-        } else {
-            sorting = Sort.by(Sort.Direction.DESC, "createdAt");
-        }
-
-        if (Objects.nonNull(search) && !search.isEmpty()) {
-            chatRooms = chatRoomRepository.findByTitleContainingIgnoreCase(search, sorting);
-        } else {
-            chatRooms = chatRoomRepository.findAll(sorting);
-        }
-
-        return chatRoomMapper.mapToChatRoomBriefResponseList(chatRooms);
-    }
-
-    @Transactional(readOnly = true)
-    public List<ChatRoomBriefResponse> findChatRoomByZoneCategory(Long userId, String zoneCategoryName) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+    public List<ChatRoomBriefResponse> findAllChatRoomBySearchAndSort(Long userId, String zoneCategoryName, String sort, String search) {
+        Sort sorting = "popular".equalsIgnoreCase(sort)
+                ? Sort.by(Sort.Direction.DESC, "personCount")
+                : Sort.by(Sort.Direction.DESC, "createdAt");
 
         ZoneCategory zoneCategory = zoneCategoryRepository.findByName(zoneCategoryName)
                 .orElseThrow(() -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
-        List<ChatRoom> chatRoomsByZoneCategoryAndNotJoinedByUser = chatRoomRepository.findChatRoomsByZoneCategoryAndNotJoinedByUser(zoneCategory, user);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
-        return chatRoomMapper.mapToChatRoomBriefResponseList(chatRoomsByZoneCategoryAndNotJoinedByUser);
+        List<ChatRoom> chatRooms = chatRoomRepository.findChatRoomsByZoneCategoryAndNotJoinedByUser(
+                zoneCategory, user, search.trim(), sorting);
+
+        return chatRoomMapper.mapToChatRoomBriefResponseList(chatRooms);
     }
 
     private void validationFile(MultipartFile file, ChatRoomRegisterRequest createRequest) {

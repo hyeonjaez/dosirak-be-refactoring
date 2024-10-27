@@ -2,10 +2,7 @@ package com.example.dosirakbe.domain.chat_room.controller;
 
 import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.chat_room.dto.request.ChatRoomRegisterRequest;
-import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomBriefResponse;
-import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomByUserResponse;
-import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomInformationResponse;
-import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomResponse;
+import com.example.dosirakbe.domain.chat_room.dto.response.*;
 import com.example.dosirakbe.domain.chat_room.service.ChatRoomService;
 import com.example.dosirakbe.domain.user.dto.response.UserChatRoomResponse;
 import com.example.dosirakbe.global.util.ApiResult;
@@ -102,26 +99,12 @@ public class ChatRoomController {
     }
 
     @GetMapping("/zone-category/{zoneCategoryName}")
-    public ResponseEntity<ApiResult<List<ChatRoomBriefResponse>>> chatRoomByZoneCategory(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                                                         @PathVariable String zoneCategoryName) {
-        Long userId = getUserIdByOAuth(customOAuth2User);
-        List<ChatRoomBriefResponse> chatRoomByZoneCategory = chatRoomService.findChatRoomByZoneCategory(userId, zoneCategoryName);
-
-        ApiResult<List<ChatRoomBriefResponse>> result = ApiResult.<List<ChatRoomBriefResponse>>builder()
-                .status(StatusEnum.SUCCESS)
-                .message("Chat rooms by zone category retrieved successfully")
-                .data(chatRoomByZoneCategory)
-                .build();
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(result);
-    }
-
-    @GetMapping
-    public ResponseEntity<ApiResult<List<ChatRoomBriefResponse>>> getAllChatRooms(@RequestParam(required = false, defaultValue = "recent") String sort,
+    public ResponseEntity<ApiResult<List<ChatRoomBriefResponse>>> getAllChatRooms(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                                                  @PathVariable String zoneCategoryName,
+                                                                                  @RequestParam(required = false, defaultValue = "recent") String sort,
                                                                                   @RequestParam(required = false) String search) {
-        List<ChatRoomBriefResponse> allChatRoomBySearchAndSort = chatRoomService.findAllChatRoomBySearchAndSort(sort, search);
+        Long userId = getUserIdByOAuth(customOAuth2User);
+        List<ChatRoomBriefResponse> allChatRoomBySearchAndSort = chatRoomService.findAllChatRoomBySearchAndSort(userId, zoneCategoryName, sort, search);
 
         ApiResult<List<ChatRoomBriefResponse>> result = ApiResult.<List<ChatRoomBriefResponse>>builder()
                 .status(StatusEnum.SUCCESS)
@@ -135,14 +118,30 @@ public class ChatRoomController {
     }
 
     @GetMapping("/by-user")
-    public ResponseEntity<ApiResult<List<ChatRoomByUserResponse>>> myChatRoomList(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+    public ResponseEntity<ApiResult<List<UserChatRoomParticipationResponse>>> myChatRoomList(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
         Long userId = getUserIdByOAuth(customOAuth2User);
-        List<ChatRoomByUserResponse> allByUser = chatRoomService.findAllByUser(userId);
+        List<UserChatRoomParticipationResponse> allByUser = chatRoomService.findAllByUser(userId);
 
-        ApiResult<List<ChatRoomByUserResponse>> result = ApiResult.<List<ChatRoomByUserResponse>>builder()
+        ApiResult<List<UserChatRoomParticipationResponse>> result = ApiResult.<List<UserChatRoomParticipationResponse>>builder()
                 .status(StatusEnum.SUCCESS)
                 .message("Chat rooms by user retrieved successfully")
                 .data(allByUser)
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(result);
+    }
+
+    @GetMapping("/main/by-user")
+    public ResponseEntity<ApiResult<List<UserChatRoomBriefParticipationResponse>>> mainChatRoomByUser(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        Long userId = getUserIdByOAuth(customOAuth2User);
+        List<UserChatRoomBriefParticipationResponse> allBriefByUser = chatRoomService.findAllBriefByUser(userId);
+
+        ApiResult<List<UserChatRoomBriefParticipationResponse>> result = ApiResult.<List<UserChatRoomBriefParticipationResponse>>builder()
+                .status(StatusEnum.SUCCESS)
+                .message("chatting main page user participate chatting room list successfully")
+                .data(allBriefByUser)
                 .build();
 
         return ResponseEntity
