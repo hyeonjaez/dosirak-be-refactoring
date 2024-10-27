@@ -2,7 +2,6 @@ package com.example.dosirakbe.global.config;
 
 import com.example.dosirakbe.domain.auth.OAuth2FailureHandler;
 import com.example.dosirakbe.domain.auth.OAuth2SuccessHandler;
-import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.auth.jwt.JwtFilter;
 import com.example.dosirakbe.domain.auth.oauth2.CustomRequestEntityConverter;
 import com.example.dosirakbe.domain.auth.service.CustomOAuth2UserService;
@@ -11,14 +10,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -87,18 +82,12 @@ public class SecurityConfig{
                                 .userService(customOAuth2UserService))
                         .successHandler(oAuth2SuccessHandler)
                         .failureHandler(oAuth2FailureHandler));
-
-
         http
                 .authorizeHttpRequests((auth) -> auth
-<<<<<<< HEAD
-                        .requestMatchers("/","/api/user/check-nickname","/api/token/reissue/access-token", "/api/user/register", "/login", "/api/valid-token","/api/images/**").permitAll()
-=======
-                        .requestMatchers("/","/api/user/check-nickname","/api/token/reissue/access-token", "/api/user/register", "/login", "/api/valid-token"
-                        ,"/api/guide/stores/search", "/api/guide/stores/filter", "/api/guide/stores/nearby", "/api/guide/stores/all").permitAll()
->>>>>>> 07a997392f8bb5585fb155bb4e8ef4b0dc6f96b4
-                        .anyRequest().authenticated());
 
+                        .requestMatchers("/","/api/user/check-nickname","/api/token/reissue/access-token", "/api/user/register", "/login", "/api/valid-token"
+                        ,"/api/guide/stores/search", "/api/guide/stores/filter", "/api/guide/stores/nearby", "/api/guide/stores/all","api/images/**").permitAll()
+                        .anyRequest().authenticated());
 
         http
                 .sessionManagement((session) -> session
