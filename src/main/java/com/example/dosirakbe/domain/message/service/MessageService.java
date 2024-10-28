@@ -29,8 +29,8 @@ public class MessageService {
     private final UserChatRoomRepository userChatRoomRepository;
     private static final String FIRST_JOIN_MESSAGE = "님이 들어왔습니다.";
 
-    public MessageResponse createMessage(Long chatRoomId, MessageRegisterRequest messageRegisterRequest) {
-        User user = userRepository.findById(messageRegisterRequest.getUserId())
+    public MessageResponse createMessage(Long userId, Long chatRoomId, MessageRegisterRequest messageRegisterRequest) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(
                         () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
