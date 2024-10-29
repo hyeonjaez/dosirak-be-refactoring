@@ -20,34 +20,34 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long storeId;
 
-    @Column(name = "store_name")
+    @Column(name = "store_name", nullable = false)
     private String storeName;
 
-    @Column(name = "tel_number")
+    @Column(name = "tel_number", nullable = false)
     private String telNumber;
 
-    @Column(name = "address")
+    @Column(name = "address", nullable = false)
     private String address;
 
-    @Column(name = "operation_time")
+    @Column(name = "operation_time", nullable = false)
     private String operationTime;
 
     @Column(name = "store_category")
     private String storeCategory;
 
-    @Column(name = "store_img")
+    @Column(name = "store_img", nullable = false)
     private String storeImg;
 
-    @Column(name = "map_x")
+    @Column(name = "map_x", nullable = false)
     private double mapX;
 
-    @Column(name = "map_y")
+    @Column(name = "map_y", nullable = false)
     private double mapY;
 
-    @Column(name = "if_valid")
+    @Column(name = "if_valid", nullable = false)
     private String ifValid;
 
-    @Column(name = "if_reward")
+    @Column(name = "if_reward", nullable = false)
     private String ifReward;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)

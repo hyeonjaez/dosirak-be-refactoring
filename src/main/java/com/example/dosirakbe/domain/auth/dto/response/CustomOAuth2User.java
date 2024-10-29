@@ -19,12 +19,12 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public Map<String, Object> getAttributes() {
-        return null; // Attributes는 필요에 따라 설정
+        return null;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new ArrayList<>(); // 권한 리스트를 설정할 수 있음
+        return new ArrayList<>();
     }
 
     @Override
@@ -51,4 +51,5 @@ public class CustomOAuth2User implements OAuth2User {
     public Long getUserId() {
         return userDTO.getUserId();
     }
+
 }
