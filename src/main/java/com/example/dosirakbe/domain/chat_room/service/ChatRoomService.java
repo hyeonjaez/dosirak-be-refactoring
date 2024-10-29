@@ -1,10 +1,7 @@
 package com.example.dosirakbe.domain.chat_room.service;
 
 import com.example.dosirakbe.domain.chat_room.dto.request.ChatRoomRegisterRequest;
-import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomBriefResponse;
-import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomByUserResponse;
-import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomInformationResponse;
-import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomResponse;
+import com.example.dosirakbe.domain.chat_room.dto.response.*;
 import com.example.dosirakbe.domain.chat_room.entity.ChatRoom;
 import com.example.dosirakbe.domain.chat_room.dto.mapper.ChatRoomMapper;
 import com.example.dosirakbe.domain.chat_room.repository.ChatRoomRepository;
@@ -21,12 +18,14 @@ import com.example.dosirakbe.domain.user_chat_room.entity.UserChatRoom;
 import com.example.dosirakbe.domain.user_chat_room.repository.UserChatRoomRepository;
 import com.example.dosirakbe.domain.zone_category.entity.ZoneCategory;
 import com.example.dosirakbe.domain.zone_category.repository.ZoneCategoryRepository;
+import com.example.dosirakbe.global.config.S3Uploader;
 import com.example.dosirakbe.global.util.ApiException;
 import com.example.dosirakbe.global.util.ExceptionEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -45,20 +44,29 @@ public class ChatRoomService {
     private final MessageMapper messageMapper;
     private final UserMapper userMapper;
     private final ZoneCategoryRepository zoneCategoryRepository;
+    private final S3Uploader s3Uploader;
 
-    public ChatRoomResponse createChatRoom(ChatRoomRegisterRequest createRequest, Long userId) {
+    public ChatRoomResponse createChatRoom(MultipartFile file, ChatRoomRegisterRequest createRequest, Long userId) {
+        validationFile(file, createRequest);
+
         User user = userRepository.findById(userId)
                 .orElseThrow(
                         () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
         ZoneCategory zoneCategory = zoneCategoryRepository.findByName(createRequest.getZoneCategoryName())
                 .orElseThrow(
                         () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+        String imageUrl = createRequest.getDefaultImage();
 
-        ChatRoom chatRoom = new ChatRoom(createRequest.getTitle(), createRequest.getExplanation(), zoneCategory);
+        if (Objects.nonNull(file)) {
+            imageUrl = s3Uploader.saveFile(file);
+        }
+
+        ChatRoom chatRoom = new ChatRoom(createRequest.getTitle(), createRequest.getExplanation(), zoneCategory, imageUrl);
 
         userChatRoomRepository.save(new UserChatRoom(chatRoom, user));
         return chatRoomMapper.mapToChatRoomResponse(chatRoomRepository.save(chatRoom));
     }
+
 
     public void joinChatRoom(User user, ChatRoom chatRoom) {
         if (userChatRoomRepository.existsByUserAndChatRoom(user, chatRoom)) {
@@ -83,7 +91,7 @@ public class ChatRoomService {
     }
 
     @Transactional(readOnly = true)
-    public List<ChatRoomByUserResponse> findAllByUser(Long userId) {
+    public List<UserChatRoomParticipationResponse> findAllByUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(
                         () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
@@ -94,12 +102,31 @@ public class ChatRoomService {
                     ChatRoom chatRoom = userChatRoom.getChatRoom();
                     Optional<Message> lastMessage =
                             messageRepository.findFirstByChatRoomIdAndMessageTypeOrderByCreatedAtDesc(chatRoom.getId(), MessageType.CHAT);
-                    ChatRoomByUserResponse chatRoomByUserResponse =
-                            chatRoomMapper.mapToChatRoomByUserResponse(chatRoom);
-                    lastMessage.ifPresent(message -> chatRoomByUserResponse.setLastMessage(message.getContent()));
+                    UserChatRoomParticipationResponse userChatRoomParticipationResponse =
+                            chatRoomMapper.mapToUserChatRoomParticipationResponse(chatRoom);
+                    lastMessage.ifPresent(message -> userChatRoomParticipationResponse.setLastMessageTime(message.getCreatedAt()));
 
-                    return chatRoomByUserResponse;
+                    return userChatRoomParticipationResponse;
                 }).toList();
+    }
+
+    public List<UserChatRoomBriefParticipationResponse> findAllBriefByUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+        List<UserChatRoom> allByUserId = userChatRoomRepository.findAllByUser(user);
+
+        return allByUserId.stream().map(userChatRoom -> {
+            ChatRoom chatRoom = userChatRoom.getChatRoom();
+            Optional<Message> lastMessage =
+                    messageRepository.findFirstByChatRoomIdAndMessageTypeOrderByCreatedAtDesc(chatRoom.getId(), MessageType.CHAT);
+            UserChatRoomBriefParticipationResponse userChatRoomBriefParticipationResponse =
+                    chatRoomMapper.mapToUserChatRoomBriefParticipationResponse(chatRoom);
+            lastMessage.ifPresent(message -> userChatRoomBriefParticipationResponse.setLastMessage(message.getContent()));
+
+            return userChatRoomBriefParticipationResponse;
+        }).toList();
+
     }
 
     public void leaveChatRoom(Long userId, Long chatRoomId) {
@@ -152,35 +179,29 @@ public class ChatRoomService {
     }
 
     @Transactional(readOnly = true)
-    public List<ChatRoomBriefResponse> findAllChatRoomBySearchAndSort(String sort, String search) {
-        List<ChatRoom> chatRooms;
-        Sort sorting;
-
-        if ("popular".equalsIgnoreCase(sort)) {
-            sorting = Sort.by(Sort.Direction.DESC, "personCount");
-        } else {
-            sorting = Sort.by(Sort.Direction.DESC, "createdAt");
-        }
-
-        if (Objects.nonNull(search) && !search.isEmpty()) {
-            chatRooms = chatRoomRepository.findByTitleContainingIgnoreCase(search, sorting);
-        } else {
-            chatRooms = chatRoomRepository.findAll(sorting);
-        }
-
-        return chatRoomMapper.mapToChatRoomBriefResponseList(chatRooms);
-    }
-
-    @Transactional(readOnly = true)
-    public List<ChatRoomBriefResponse> findChatRoomByZoneCategory(Long userId, String zoneCategoryName) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+    public List<ChatRoomBriefResponse> findAllChatRoomBySearchAndSort(Long userId, String zoneCategoryName, String sort, String search) {
+        Sort sorting = "popular".equalsIgnoreCase(sort)
+                ? Sort.by(Sort.Direction.DESC, "personCount")
+                : Sort.by(Sort.Direction.DESC, "createdAt");
 
         ZoneCategory zoneCategory = zoneCategoryRepository.findByName(zoneCategoryName)
                 .orElseThrow(() -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
-        List<ChatRoom> chatRoomsByZoneCategoryAndNotJoinedByUser = chatRoomRepository.findChatRoomsByZoneCategoryAndNotJoinedByUser(zoneCategory, user);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
-        return chatRoomMapper.mapToChatRoomBriefResponseList(chatRoomsByZoneCategoryAndNotJoinedByUser);
+        List<ChatRoom> chatRooms = chatRoomRepository.findChatRoomsByZoneCategoryAndNotJoinedByUser(
+                zoneCategory, user, search.trim(), sorting);
+
+        return chatRoomMapper.mapToChatRoomBriefResponseList(chatRooms);
+    }
+
+    private void validationFile(MultipartFile file, ChatRoomRegisterRequest createRequest) {
+        if (Objects.isNull(createRequest.getDefaultImage()) && (Objects.isNull(file) || file.isEmpty())) {
+            throw new ApiException(ExceptionEnum.INVALID_REQUEST);
+        }
+        if (Objects.nonNull(createRequest.getDefaultImage()) && Objects.nonNull(file)) {
+            throw new ApiException(ExceptionEnum.INVALID_REQUEST);
+        }
     }
 }

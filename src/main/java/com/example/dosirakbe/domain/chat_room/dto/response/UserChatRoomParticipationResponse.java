@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
-public class ChatRoomByUserResponse {
+public class UserChatRoomParticipationResponse {
     private Long id;
     private String title;
     private String image;
-    private Long personCount;
-    private String lastMessage;
+    private String explanation;
+    private LocalDateTime lastMessageTime;
 }
