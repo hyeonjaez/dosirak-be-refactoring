@@ -94,4 +94,20 @@ public class JwtFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
+    //@Override
+    //protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    //    String path = request.getRequestURI();
+    //    return path.startsWith("/api/user/check-nickname") ||
+    //            path.startsWith("/api/token/reissue/access-token") ||
+    //            path.startsWith("/api/user/register") ||
+    //            path.startsWith("/login") ||
+    //            path.startsWith("/api/valid-token") ||
+    //            path.startsWith("/api/guide/stores/search") ||
+    //            path.startsWith("/api/guide/stores/filter") ||
+    //            path.startsWith("/api/guide/stores/nearby") ||
+    //            path.startsWith("/api/guide/stores/all") ||
+    //            path.startsWith("/api/images/**");
+    //}
+
 }
