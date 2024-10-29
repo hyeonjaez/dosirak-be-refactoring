@@ -70,10 +70,8 @@ public class UserService {
         long accessTokenExpiration = 24 * 60 * 60 * 1000L;
         String accessToken = jwtUtil.createJwt(user.getUserName(), user.getName(), user.getUserId(), accessTokenExpiration);
 
-        long refreshTokenExpiration = 7 * 24 * 60 * 60 * 1000L;
-        String refreshToken = jwtUtil.createJwt(user.getUserName(), user.getName(), user.getUserId(), refreshTokenExpiration);
 
-        saveOrUpdateRefreshToken(user, refreshToken);
+        String refreshToken = getRefreshToken(user);
 
         Map<String, String> tokens = new HashMap<>();
         tokens.put("accessToken", accessToken);
@@ -82,11 +80,29 @@ public class UserService {
         return tokens;
     }
 
-    private void saveOrUpdateRefreshToken(User user, String refreshToken) {
-        RefreshToken token = refreshTokenRepository.findByUser_UserId(user.getUserId())
-                .orElse(new RefreshToken(user, refreshToken));
-        token.setRefreshToken(refreshToken);
-        refreshTokenRepository.save(token);
+    private String getRefreshToken(User user) {
+        return refreshTokenRepository.findByUser_UserId(user.getUserId())
+                .map(existingToken -> {
+                    if (jwtUtil.validToken(existingToken.getRefreshToken())) {
+                        return existingToken.getRefreshToken();
+                    } else {
+                        String newRefreshToken = createNewRefreshToken(user);
+                        existingToken.setRefreshToken(newRefreshToken);
+                        refreshTokenRepository.save(existingToken);
+                        return newRefreshToken;
+                    }
+                })
+                .orElseGet(() -> {
+                    String newRefreshToken = createNewRefreshToken(user);
+                    RefreshToken newTokenEntity = new RefreshToken(user, newRefreshToken);
+                    refreshTokenRepository.save(newTokenEntity);
+                    return newRefreshToken;
+                });
+    }
+
+    private String createNewRefreshToken(User user) {
+        long refreshTokenExpiration = 7 * 24 * 60 * 60 * 1000L;
+        return jwtUtil.createJwt(user.getUserName(), user.getName(), user.getUserId(), refreshTokenExpiration);
     }
 
 

@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 
@@ -50,8 +51,7 @@ public class SecurityConfig{
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
                         configuration.setMaxAge(3600L);
 
-                        configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
-                        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authorization"));
 
                         return configuration;
                     }
@@ -80,7 +80,7 @@ public class SecurityConfig{
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/","/api/user/check-nickname","/api/token/reissue/access-token", "/api/user/register", "/login", "/api/valid-token"
+                        .requestMatchers("/api/user/check-nickname","/api/token/reissue/access-token", "/api/user/register", "/login", "/api/valid-token"
                         ,"/api/guide/stores/search", "/api/guide/stores/filter", "/api/guide/stores/nearby", "/api/guide/stores/all","/api/images/**").permitAll()
                         .anyRequest().authenticated());
 
