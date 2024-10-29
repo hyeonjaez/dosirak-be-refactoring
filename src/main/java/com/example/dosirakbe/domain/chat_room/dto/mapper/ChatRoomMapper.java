@@ -1,8 +1,6 @@
 package com.example.dosirakbe.domain.chat_room.dto.mapper;
 
-import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomBriefResponse;
-import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomByUserResponse;
-import com.example.dosirakbe.domain.chat_room.dto.response.ChatRoomResponse;
+import com.example.dosirakbe.domain.chat_room.dto.response.*;
 import com.example.dosirakbe.domain.chat_room.entity.ChatRoom;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -20,4 +18,10 @@ public interface ChatRoomMapper {
     ChatRoomBriefResponse mapToChatRoomBriefResponse(ChatRoom chatRoom);
 
     List<ChatRoomBriefResponse> mapToChatRoomBriefResponseList(List<ChatRoom> chatRooms);
+
+    @Mapping(target = "lastMessageTime", ignore = true)
+    UserChatRoomParticipationResponse mapToUserChatRoomParticipationResponse(ChatRoom chatRoom);
+
+    @Mapping(target = "lastMessage", ignore = true)
+    UserChatRoomBriefParticipationResponse mapToUserChatRoomBriefParticipationResponse(ChatRoom chatRoom);
 }

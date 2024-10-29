@@ -4,13 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Getter
 @Setter
 @AllArgsConstructor
-public class ChatRoomByUserResponse {
+public class UserChatRoomBriefParticipationResponse {
     private Long id;
-    private String title;
     private String image;
-    private Long personCount;
     private String lastMessage;
 }
