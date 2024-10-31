@@ -11,7 +11,9 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface MessageMapper {
 
-    @Mapping(source = "user.userId", target = "userId")
+    @Mapping(source = "user.userId", target = "userChatRoomResponse.userId")
+    @Mapping(source = "user.nickName", target = "userChatRoomResponse.nickName")
+    @Mapping(source = "user.profileImg", target = "userChatRoomResponse.profileImg")
     @Mapping(source = "chatRoom.id", target = "chatRoomId")
     MessageResponse mapToMessageResponse(Message message);
 
