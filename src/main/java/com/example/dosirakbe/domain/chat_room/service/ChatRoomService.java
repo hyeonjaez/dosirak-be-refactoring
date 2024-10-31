@@ -190,8 +190,10 @@ public class ChatRoomService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
+        String searchQuery = (Objects.nonNull(search)) ? search.trim() : null;
+
         List<ChatRoom> chatRooms = chatRoomRepository.findChatRoomsByZoneCategoryAndNotJoinedByUser(
-                zoneCategory, user, search.trim(), sorting);
+                zoneCategory, user, searchQuery, sorting);
 
         return chatRoomMapper.mapToChatRoomBriefResponseList(chatRooms);
     }
