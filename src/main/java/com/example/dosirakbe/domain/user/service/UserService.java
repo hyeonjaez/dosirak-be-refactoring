@@ -142,7 +142,7 @@ public class UserService {
                     .orElseThrow(() -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
             user.setUserValid(false);
-            user.setUserName("deleted " + user.getUserName());
+            user.setUserName("delete " + user.getUserName());
             userRepository.save(user);
 
             refreshTokenRepository.deleteByUser_UserId(userId);
