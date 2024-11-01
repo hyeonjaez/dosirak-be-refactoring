@@ -4,6 +4,7 @@ import com.example.dosirakbe.domain.chat_room.entity.ChatRoom;
 import com.example.dosirakbe.domain.message.dto.response.MessageResponse;
 import com.example.dosirakbe.domain.message.entity.Message;
 import com.example.dosirakbe.domain.message.entity.MessageType;
+import com.example.dosirakbe.domain.user.dto.response.UserChatRoomResponse;
 import com.example.dosirakbe.domain.user.entity.User;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-29T23:50:14+0900",
+    date = "2024-11-01T14:56:05+0900",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.12 (Oracle Corporation)"
 )
 @Component
@@ -25,21 +26,21 @@ public class MessageMapperImpl implements MessageMapper {
             return null;
         }
 
-        Long userId = null;
+        UserChatRoomResponse userChatRoomResponse = null;
         Long chatRoomId = null;
         Long id = null;
         String content = null;
         MessageType messageType = null;
         LocalDateTime createdAt = null;
 
-        userId = messageUserUserId( message );
+        userChatRoomResponse = userToUserChatRoomResponse( message.getUser() );
         chatRoomId = messageChatRoomId( message );
         id = message.getId();
         content = message.getContent();
         messageType = message.getMessageType();
         createdAt = message.getCreatedAt();
 
-        MessageResponse messageResponse = new MessageResponse( id, content, messageType, createdAt, userId, chatRoomId );
+        MessageResponse messageResponse = new MessageResponse( id, content, messageType, createdAt, userChatRoomResponse, chatRoomId );
 
         return messageResponse;
     }
@@ -58,19 +59,22 @@ public class MessageMapperImpl implements MessageMapper {
         return list;
     }
 
-    private Long messageUserUserId(Message message) {
-        if ( message == null ) {
-            return null;
-        }
-        User user = message.getUser();
+    protected UserChatRoomResponse userToUserChatRoomResponse(User user) {
         if ( user == null ) {
             return null;
         }
-        Long userId = user.getUserId();
-        if ( userId == null ) {
-            return null;
-        }
-        return userId;
+
+        Long userId = null;
+        String nickName = null;
+        String profileImg = null;
+
+        userId = user.getUserId();
+        nickName = user.getNickName();
+        profileImg = user.getProfileImg();
+
+        UserChatRoomResponse userChatRoomResponse = new UserChatRoomResponse( userId, nickName, profileImg );
+
+        return userChatRoomResponse;
     }
 
     private Long messageChatRoomId(Message message) {
