@@ -1,7 +1,6 @@
 package com.example.dosirakbe.global.config;
 
 import com.example.dosirakbe.domain.auth.jwt.JwtFilter;
-import com.example.dosirakbe.domain.auth.oauth2.CustomRequestEntityConverter;
 import com.example.dosirakbe.domain.auth.service.CustomOAuth2UserService;
 import com.example.dosirakbe.global.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 
@@ -28,13 +26,12 @@ public class SecurityConfig{
 
     private final CustomOAuth2UserService customOAuth2UserService;
     private final JwtUtil jwtUtil;
-    private final CustomRequestEntityConverter customRequestEntityConverter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         DefaultAuthorizationCodeTokenResponseClient tokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
-        tokenResponseClient.setRequestEntityConverter(customRequestEntityConverter);
+        //tokenResponseClient.setRequestEntityConverter(customRequestEntityConverter);
 
 
         http
@@ -81,8 +78,9 @@ public class SecurityConfig{
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/user/check-nickname","/api/token/reissue/access-token", "/api/user/register", "/login", "/api/valid-token"
-                        ,"/api/guide/stores/search", "/api/guide/stores/filter", "/api/guide/stores/nearby", "/api/guide/stores/all","/api/images/**").permitAll()
+                        .requestMatchers("/api/user/check-nickName","/api/token/reissue/access-token", "/api/user/register", "/login", "/api/valid-token"
+                        ,"/api/guide/stores/search", "/api/guide/stores/filter", "/api/guide/stores/nearby", "/api/guide/stores/all","/api/images/**", "/api/user/withdraw",
+                                "/api/user/logout").permitAll()
                         .anyRequest().authenticated());
 
 

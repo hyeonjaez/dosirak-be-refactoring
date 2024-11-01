@@ -104,7 +104,6 @@ public class JwtUtil {
             throw new IllegalArgumentException("유효하지 않은 헤더");
         }
 
-        // 실제 토큰 부분 추출
         return authorizationHeader.substring(7);
     }
 

@@ -10,7 +10,6 @@ import com.example.dosirakbe.domain.store.entity.Store;
 import com.example.dosirakbe.domain.store.repository.StoreRepository;
 import com.example.dosirakbe.global.util.ApiException;
 import com.example.dosirakbe.global.util.ExceptionEnum;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,16 +25,14 @@ public class StoreService {
     private final MenuRepository menuRepository;
 
     public List<StoreResponse> searchStores(String keyword) {
-        List<Store> stores = storeRepository.searchStoresByKeyword(keyword);
 
         if (keyword == null || keyword.trim().isEmpty()) {
             throw new ApiException(ExceptionEnum.INVALID_REQUEST);
         }
-
+        List<Store> stores = storeRepository.searchStoresByKeyword(keyword);
         if (stores.isEmpty()) {
             throw new ApiException(ExceptionEnum.DATA_NOT_FOUND);
         }
-
         return stores.stream()
                 .map(this::changeToStoreResponse)
                 .collect(Collectors.toList());
@@ -73,11 +70,9 @@ public class StoreService {
         double longitude = storeRequest.getCurrentMapY();
 
         List<Store> stores = storeRepository.findStoresIn1Km(latitude, longitude);
-
         if (stores.isEmpty()) {
             throw new ApiException(ExceptionEnum.DATA_NOT_FOUND);
         }
-
         return stores;
     }
 
