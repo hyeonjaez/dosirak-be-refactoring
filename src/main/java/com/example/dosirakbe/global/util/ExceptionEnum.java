@@ -24,7 +24,8 @@ public enum ExceptionEnum {
     FAIL_UPLOAD(HttpStatus.INTERNAL_SERVER_ERROR, "CE0007", "파일 업로드에 실패했습니다."),
     NOT_IMAGE_EXTENSION(HttpStatus.BAD_REQUEST, "CE0008", "허용되지 않는 파일 확장자입니다."),
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "CE0004", "잘못된 요청입니다"),
-    INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "CE0004", "유효하지 않은 accessToken입니다.");
+    INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "CE0009", "유효하지 않은 accessToken입니다."),
+    DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "CE00010", "중복된 닉네임입니다");
 
 
     private final HttpStatus status;

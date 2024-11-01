@@ -12,4 +12,6 @@ public interface UserMapper {
     UserChatRoomResponse mapToUserChatRoomResponse(User user);
 
     List<UserChatRoomResponse> mapToUserChatRoomResponses(List<User> users);
+
+
 }

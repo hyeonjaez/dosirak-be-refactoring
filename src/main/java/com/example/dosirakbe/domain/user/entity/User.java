@@ -24,7 +24,7 @@ public class User {
     @Column(name = "name", updatable = false , nullable = false)
     private String name;
 
-    @Column(name = "user_name",updatable = false, nullable = false)
+    @Column(name = "user_name", nullable = false)
     private String userName;
 
     @Column(name = "nick_name",unique = true)
@@ -44,6 +44,9 @@ public class User {
 
     @Column(name = "user_valid")
     private boolean userValid;
+
+    @Column(name = "reward")
+    private Integer reward;
 
 
 
