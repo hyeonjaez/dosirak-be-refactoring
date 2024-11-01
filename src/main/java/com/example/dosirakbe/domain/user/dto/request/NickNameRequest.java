@@ -6,5 +6,4 @@ import lombok.Getter;
 public class NickNameRequest {
 
     private String nickName;
-    //private String tempAccessToken;
 }
