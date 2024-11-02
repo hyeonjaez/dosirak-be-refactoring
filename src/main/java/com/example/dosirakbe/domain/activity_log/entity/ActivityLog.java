@@ -32,6 +32,9 @@ public class ActivityLog {
     @Column(name = "content_id")
     private Long contentId;
 
+    @Column
+    private String comment;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
