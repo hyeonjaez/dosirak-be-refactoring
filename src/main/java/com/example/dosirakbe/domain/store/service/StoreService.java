@@ -54,8 +54,8 @@ public class StoreService {
         return new StoreResponse(
                 store.getStoreId(),
                 store.getStoreName(),
-                store.getStoreImg(),
                 store.getStoreCategory(),
+                store.getStoreImg(),
                 store.getIfValid(),
                 store.getIfReward(),
                 store.getOperationTime(),
