@@ -10,6 +10,6 @@ public class MenuResponse {
     private Long menuId;
     private String menuName;
     private String menuImg;
-    private String menuPrice;
+    private Integer menuPrice;
     private String menuPackSize;
 }
