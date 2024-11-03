@@ -52,7 +52,7 @@ public class StoreService {
 
     private StoreResponse changeToStoreResponse(Store store) {
         return new StoreResponse(
-                store.getStoreId().toString(),
+                store.getStoreId(),
                 store.getStoreName(),
                 store.getStoreImg(),
                 store.getStoreCategory(),
@@ -88,7 +88,7 @@ public class StoreService {
 
 
         return new StoreDetailResponse(
-                store.getStoreId().toString(),
+                store.getStoreId(),
                 store.getStoreName(),
                 store.getStoreCategory(),
                 store.getStoreImg(),
