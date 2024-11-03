@@ -21,7 +21,7 @@ public class Menu {
     private String menuImg;
 
     @Column(name = "menu_price")
-    private String menuPrice;
+    private Integer menuPrice;
 
     @Column(name = "menu_pack_size")
     private String menuPackSize;
