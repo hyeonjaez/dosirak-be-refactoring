@@ -24,12 +24,28 @@ import java.util.List;
 public class ActivityLogController {
     private final ActivityLogService activityLogService;
 
+    @GetMapping("/today")
+    public ResponseEntity<ApiResult<List<ActivityLogResponse>>> getTodayActivityLog(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        Long userId = getUserIdByOAuth(customOAuth2User);
+        List<ActivityLogResponse> activityLogs = activityLogService.getTodayDateActivityLog(userId);
+
+        ApiResult<List<ActivityLogResponse>> result = ApiResult.<List<ActivityLogResponse>>builder()
+                .status(StatusEnum.SUCCESS)
+                .message("Activity history for today retrieved successfully")
+                .data(activityLogs)
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(result);
+    }
+
     @GetMapping("/daily/{date}")
     public ResponseEntity<ApiResult<List<ActivityLogResponse>>> getActivityLogForDate(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                                                       @PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
         Long userId = getUserIdByOAuth(customOAuth2User);
-        List<ActivityLogResponse> activityLogs = activityLogService.getTodayActivityLog(userId, date);
+        List<ActivityLogResponse> activityLogs = activityLogService.getThatDateActivityLog(userId, date);
 
         ApiResult<List<ActivityLogResponse>> result = ApiResult.<List<ActivityLogResponse>>builder()
                 .status(StatusEnum.SUCCESS)
