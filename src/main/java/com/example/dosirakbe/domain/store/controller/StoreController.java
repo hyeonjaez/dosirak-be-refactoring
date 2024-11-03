@@ -57,10 +57,10 @@ public class StoreController {
     }
 
     @GetMapping("/api/guide/stores/nearby")
-    public ResponseEntity<ApiResult<List<Store>>> getNearbyStores(@RequestBody StoreRequest storeRequest) {
-        List<Store> stores = storeService.getStoresWithinRadius(storeRequest);
+    public ResponseEntity<ApiResult<List<StoreResponse>>> getNearbyStores(@RequestBody StoreRequest storeRequest) {
+        List<StoreResponse> stores = storeService.getStoresWithinRadius(storeRequest);
         return ResponseEntity.ok(
-                ApiResult.<List<Store>>builder()
+                ApiResult.<List<StoreResponse>>builder()
                         .status(StatusEnum.SUCCESS)
                         .message("근처 스토어 반환")
                         .data(stores)
