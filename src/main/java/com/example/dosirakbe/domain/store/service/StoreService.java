@@ -50,6 +50,21 @@ public class StoreService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<StoreResponse> getStoresWithinRadius(StoreRequest storeRequest) {
+        double latitude = storeRequest.getCurrentMapX();
+        double longitude = storeRequest.getCurrentMapY();
+
+        List<Store> stores = storeRepository.findStoresIn1Km(latitude, longitude);
+        if (stores.isEmpty()) {
+            throw new ApiException(ExceptionEnum.DATA_NOT_FOUND);
+        }
+
+        return stores.stream()
+                .map(this::changeToStoreResponse)
+                .collect(Collectors.toList());
+    }
+
     private StoreResponse changeToStoreResponse(Store store) {
         return new StoreResponse(
                 store.getStoreId(),
@@ -64,17 +79,7 @@ public class StoreService {
         );
     }
 
-    @Transactional(readOnly = true)
-    public List<Store> getStoresWithinRadius(StoreRequest storeRequest) {
-        double latitude = storeRequest.getCurrentMapX();
-        double longitude = storeRequest.getCurrentMapY();
 
-        List<Store> stores = storeRepository.findStoresIn1Km(latitude, longitude);
-        if (stores.isEmpty()) {
-            throw new ApiException(ExceptionEnum.DATA_NOT_FOUND);
-        }
-        return stores;
-    }
 
     public StoreDetailResponse getStoreDetail(Long storeId) {
         Store store = storeRepository.findById(storeId)
