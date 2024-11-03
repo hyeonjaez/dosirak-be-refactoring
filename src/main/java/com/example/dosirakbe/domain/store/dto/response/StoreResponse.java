@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class StoreResponse {
 
-    private String storeId;
+    private Long storeId;
     private String storeName;
     private String storeCategory;
     private String storeImg;
@@ -18,7 +18,7 @@ public class StoreResponse {
     private double mapY;
 
 
-    public StoreResponse(String storeId, String storeName, String storeCategory, String storeImg, String ifValid, String ifReward, String operationTime, double mapX, double mapY) {
+    public StoreResponse(Long storeId, String storeName, String storeCategory, String storeImg, String ifValid, String ifReward, String operationTime, double mapX, double mapY) {
         this.storeId = storeId;
         this.storeName = storeName;
         this.storeCategory = storeCategory;

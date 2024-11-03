@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 public class StoreDetailResponse {
 
-    private String storeId;
+    private Long storeId;
     private String storeName;
     private String storeCategory;
     private String storeImg;
