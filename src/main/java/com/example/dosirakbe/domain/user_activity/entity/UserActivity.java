@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -32,8 +33,18 @@ public class UserActivity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public UserActivity(Integer commitCount, User user) {
-        this.commitCount = commitCount;
+    public UserActivity(User user) {
         this.user = user;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (Objects.isNull(this.commitCount)) {
+            this.commitCount = 1;
+        }
+    }
+
+    public void addCommitCount() {
+        this.commitCount++;
     }
 }

@@ -10,4 +10,5 @@ import java.time.LocalDateTime;
 public class ActivityLogResponse {
     private LocalDateTime createdAt;
     private String activityMessage;
+    private String createAtTime;
 }

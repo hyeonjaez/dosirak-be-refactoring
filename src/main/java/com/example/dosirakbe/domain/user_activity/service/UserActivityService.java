@@ -1,6 +1,7 @@
 package com.example.dosirakbe.domain.user_activity.service;
 
 
+import com.example.dosirakbe.domain.activity_log.entity.ActivityType;
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
 import com.example.dosirakbe.domain.user_activity.dto.mapper.UserActivityMapper;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,5 +37,23 @@ public class UserActivityService {
         List<UserActivity> byUserAndCreatedAtBetweenOrderByCreatedAtAsc = userActivityRepository.findByUserAndCreatedAtBetweenOrderByCreatedAtAsc(user, startDate, endDate);
 
         return userActivityMapper.mapToUserActivityResponseList(byUserAndCreatedAtBetweenOrderByCreatedAtAsc);
+    }
+
+    @Transactional
+    public void createOrIncrementUserActivity(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+
+        Optional<UserActivity> userActivityOptional = userActivityRepository.findByUserAndCreatedAt(user, LocalDate.now());
+        UserActivity userActivity;
+        if (userActivityOptional.isPresent()) {
+            userActivity = userActivityOptional.get();
+            userActivity.addCommitCount();
+        } else {
+            userActivity = new UserActivity(user);
+            userActivityRepository.save(userActivity);
+        }
+
     }
 }
