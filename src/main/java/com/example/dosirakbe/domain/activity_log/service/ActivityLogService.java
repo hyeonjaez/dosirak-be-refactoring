@@ -3,6 +3,7 @@ package com.example.dosirakbe.domain.activity_log.service;
 import com.example.dosirakbe.domain.activity_log.dto.mapper.ActivityLogMapper;
 import com.example.dosirakbe.domain.activity_log.dto.response.ActivityLogResponse;
 import com.example.dosirakbe.domain.activity_log.entity.ActivityLog;
+import com.example.dosirakbe.domain.activity_log.entity.ActivityType;
 import com.example.dosirakbe.domain.activity_log.repository.ActivityLogRepository;
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
@@ -51,4 +52,16 @@ public class ActivityLogService {
 
         return activityLogMapper.mapToActivityLogResponseList(activityLogList);
     }
+
+    @Transactional
+    public void addActivityLog(Long userId, Long contentId, ActivityType activityType) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+
+        ActivityLog activityLog = new ActivityLog(contentId, user, activityType);
+        activityLogRepository.save(activityLog);
+    }
+
+
 }
