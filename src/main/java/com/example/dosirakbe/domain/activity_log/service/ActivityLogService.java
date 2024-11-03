@@ -26,7 +26,20 @@ public class ActivityLogService {
     private final UserRepository userRepository;
     private final ActivityLogMapper activityLogMapper;
 
-    public List<ActivityLogResponse> getTodayActivityLog(Long userId, LocalDate today) {
+    public List<ActivityLogResponse> getTodayDateActivityLog(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+        LocalDate localDate = LocalDate.now();
+        LocalDateTime startOfDay = localDate.atStartOfDay();
+        LocalDateTime endOfDay = localDate.atTime(LocalTime.MAX);
+
+        List<ActivityLog> activityLogList = activityLogRepository.findByUserAndCreatedAtBetweenOrderByCreatedAtAsc(user, startOfDay, endOfDay);
+        return activityLogMapper.mapToActivityLogResponseList(activityLogList);
+    }
+
+
+    public List<ActivityLogResponse> getThatDateActivityLog(Long userId, LocalDate today) {
         User user = userRepository.findById(userId)
                 .orElseThrow(
                         () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
