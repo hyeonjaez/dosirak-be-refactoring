@@ -31,6 +31,10 @@ public class UserActivityService {
                 .orElseThrow(
                         () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
+        if (Obejcts.isNull()) {
+            month = LocalDate.now();
+        }
+
         LocalDate startDate = month.withDayOfMonth(1);
         LocalDate endDate = month.withDayOfMonth(month.lengthOfMonth());
 
