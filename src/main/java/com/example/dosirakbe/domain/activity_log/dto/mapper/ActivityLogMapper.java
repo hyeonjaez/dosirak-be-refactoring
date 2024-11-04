@@ -15,6 +15,7 @@ import java.util.List;
 public interface ActivityLogMapper {
 
     @Mapping(source = "activityType.message", target = "activityMessage")
+    @Mapping(source = "activityType.iconImageUrl", target = "iconImageUrl")
     @Mapping(source = "createdAt", target = "createAtTime", qualifiedByName = "formatDateTime")
     ActivityLogResponse mapToActivityLogResponse(ActivityLog activityLog);
 
