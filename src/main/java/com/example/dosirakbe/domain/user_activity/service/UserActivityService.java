@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class UserActivityService {
                 .orElseThrow(
                         () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
-        if (Obejcts.isNull()) {
+        if (Objects.isNull(month)) {
             month = LocalDate.now();
         }
 
