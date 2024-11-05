@@ -27,7 +27,7 @@ public class UserActivityController {
 
     @GetMapping("/monthly")
     public ResponseEntity<ApiResult<List<UserActivityResponse>>> getMonthlyActivitySummary(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                                                           @RequestParam("month") @DateTimeFormat(pattern = "yyyy-MM") LocalDate month) {
+                                                                                           @RequestParam(value = "month", required = false)  @DateTimeFormat(pattern = "yyyy-MM") LocalDate month) {
         Long userId = getUserIdByOAuth(customOAuth2User);
         List<UserActivityResponse> monthlySummary = userActivityService.getUserActivityList(userId, month);
 

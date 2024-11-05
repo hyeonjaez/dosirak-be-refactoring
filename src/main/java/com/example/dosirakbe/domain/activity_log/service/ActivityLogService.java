@@ -3,6 +3,7 @@ package com.example.dosirakbe.domain.activity_log.service;
 import com.example.dosirakbe.domain.activity_log.dto.mapper.ActivityLogMapper;
 import com.example.dosirakbe.domain.activity_log.dto.response.ActivityLogResponse;
 import com.example.dosirakbe.domain.activity_log.entity.ActivityLog;
+import com.example.dosirakbe.domain.activity_log.entity.ActivityType;
 import com.example.dosirakbe.domain.activity_log.repository.ActivityLogRepository;
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
@@ -25,7 +26,20 @@ public class ActivityLogService {
     private final UserRepository userRepository;
     private final ActivityLogMapper activityLogMapper;
 
-    public List<ActivityLogResponse> getTodayActivityLog(Long userId, LocalDate today) {
+    public List<ActivityLogResponse> getTodayDateActivityLog(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+        LocalDate localDate = LocalDate.now();
+        LocalDateTime startOfDay = localDate.atStartOfDay();
+        LocalDateTime endOfDay = localDate.atTime(LocalTime.MAX);
+
+        List<ActivityLog> activityLogList = activityLogRepository.findByUserAndCreatedAtBetweenOrderByCreatedAtAsc(user, startOfDay, endOfDay);
+        return activityLogMapper.mapToActivityLogResponseList(activityLogList);
+    }
+
+
+    public List<ActivityLogResponse> getThatDateActivityLog(Long userId, LocalDate today) {
         User user = userRepository.findById(userId)
                 .orElseThrow(
                         () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
@@ -51,4 +65,16 @@ public class ActivityLogService {
 
         return activityLogMapper.mapToActivityLogResponseList(activityLogList);
     }
+
+    @Transactional
+    public void addActivityLog(Long userId, Long contentId, ActivityType activityType) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(
+                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+
+        ActivityLog activityLog = new ActivityLog(contentId, user, activityType);
+        activityLogRepository.save(activityLog);
+    }
+
+
 }

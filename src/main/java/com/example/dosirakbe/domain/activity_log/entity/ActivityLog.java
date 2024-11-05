@@ -1,6 +1,5 @@
 package com.example.dosirakbe.domain.activity_log.entity;
 
-import com.example.dosirakbe.domain.activity_type.entity.ActivityType;
 import com.example.dosirakbe.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -37,7 +36,13 @@ public class ActivityLog {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "activity_type_id")
+    @Column(name = "activity_type")
+    @Enumerated(EnumType.STRING)
     private ActivityType activityType;
+
+    public ActivityLog(Long contentId, User user, ActivityType activityType) {
+        this.contentId = contentId;
+        this.user = user;
+        this.activityType = activityType;
+    }
 }
