@@ -81,4 +81,16 @@ public class StoreController {
         );
     }
 
+    @GetMapping("/api/guide/stores/operate/{storeId}")
+    public ResponseEntity<ApiResult<Boolean>> isStoreOpen(@PathVariable("storeId") Long storeId) {
+        boolean open = storeService.isStoreOpen(storeId);
+        return ResponseEntity.ok(
+                ApiResult.<Boolean>builder()
+                        .status(StatusEnum.SUCCESS)
+                        .message("스토어 운영 상태 반환")
+                        .data(open)
+                        .build()
+        );
+    }
+
 }
