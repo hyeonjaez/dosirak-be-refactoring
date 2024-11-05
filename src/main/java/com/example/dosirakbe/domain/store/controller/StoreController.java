@@ -20,7 +20,7 @@ public class StoreController {
     private final StoreService storeService;
 
 
-    @GetMapping("/api/guide/stores/operation/{storeId}")
+    @GetMapping("/api/operation-hour/{storeId}")
     public ResponseEntity<ApiResult<Boolean>> isStoreOpen(@PathVariable("storeId") Long storeId) {
         boolean open = storeService.isStoreOpen(storeId);
         return ResponseEntity.ok(
