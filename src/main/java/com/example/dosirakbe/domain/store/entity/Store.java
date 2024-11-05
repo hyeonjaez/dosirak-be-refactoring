@@ -1,10 +1,14 @@
 package com.example.dosirakbe.domain.store.entity;
 
 import com.example.dosirakbe.domain.menu.entity.Menu;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Table(name = "stores")
 @Entity
@@ -13,7 +17,6 @@ import java.util.List;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Store {
-
 
     @Id
     @Column(name = "store_id",unique = true,updatable = false)
@@ -52,6 +55,12 @@ public class Store {
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private List<Menu> menus;
+
+    public List<Map<String, String>> changeOperationTime() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(operationTime, new TypeReference<List<Map<String, String>>>() {});
+    }
+
 
 
 }
