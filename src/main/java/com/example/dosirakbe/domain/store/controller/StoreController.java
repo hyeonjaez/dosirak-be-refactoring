@@ -4,7 +4,6 @@ package com.example.dosirakbe.domain.store.controller;
 import com.example.dosirakbe.domain.store.dto.request.StoreRequest;
 import com.example.dosirakbe.domain.store.dto.response.StoreDetailResponse;
 import com.example.dosirakbe.domain.store.dto.response.StoreResponse;
-import com.example.dosirakbe.domain.store.entity.Store;
 import com.example.dosirakbe.domain.store.service.StoreService;
 import com.example.dosirakbe.global.util.ApiResult;
 import com.example.dosirakbe.global.util.StatusEnum;
@@ -19,6 +18,19 @@ import java.util.List;
 public class StoreController {
 
     private final StoreService storeService;
+
+
+    @GetMapping("/api/guide/stores/operation/{storeId}")
+    public ResponseEntity<ApiResult<Boolean>> isStoreOpen(@PathVariable("storeId") Long storeId) {
+        boolean open = storeService.isStoreOpen(storeId);
+        return ResponseEntity.ok(
+                ApiResult.<Boolean>builder()
+                        .status(StatusEnum.SUCCESS)
+                        .message("스토어 운영 상태 반환")
+                        .data(open)
+                        .build()
+        );
+    }
 
     @GetMapping("/api/guide/stores/{storeId}")
     public ResponseEntity<ApiResult<StoreDetailResponse>> getStoreDetail(@PathVariable("storeId") Long storeId) {
@@ -81,16 +93,6 @@ public class StoreController {
         );
     }
 
-    @GetMapping("/api/guide/stores/operate/{storeId}")
-    public ResponseEntity<ApiResult<Boolean>> isStoreOpen(@PathVariable("storeId") Long storeId) {
-        boolean open = storeService.isStoreOpen(storeId);
-        return ResponseEntity.ok(
-                ApiResult.<Boolean>builder()
-                        .status(StatusEnum.SUCCESS)
-                        .message("스토어 운영 상태 반환")
-                        .data(open)
-                        .build()
-        );
-    }
+
 
 }
