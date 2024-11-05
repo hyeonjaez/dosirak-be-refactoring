@@ -10,11 +10,17 @@ import com.example.dosirakbe.domain.store.entity.Store;
 import com.example.dosirakbe.domain.store.repository.StoreRepository;
 import com.example.dosirakbe.global.util.ApiException;
 import com.example.dosirakbe.global.util.ExceptionEnum;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -128,6 +134,63 @@ public class StoreService {
                 .map(this::changeToStoreResponse)
                 .collect(Collectors.toList());
     }
+
+    public boolean isStoreOpen(Long storeId) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+
+        try {
+            List<Map<String, String>> operationHourList = store.changeOperationTime();
+            LocalDateTime now = LocalDateTime.now();
+
+            String currentDay = getDay(now.getDayOfWeek().getValue());
+            String operatingHours = "정보없음";
+
+            for (Map<String, String> dayInfo : operationHourList) {
+                if (dayInfo.containsKey(currentDay)) {
+                    operatingHours = dayInfo.get(currentDay);
+                    break;
+                }
+            }
+
+            if (operatingHours.contains("정보없음") || operatingHours.contains("정기휴무")) {
+                return false;
+            }
+
+            String[] hours = operatingHours.split(" - ");
+            LocalTime openTime = LocalTime.parse(hours[0], DateTimeFormatter.ofPattern("HH:mm"));
+            LocalTime closeTime = hours[1].equals("24:00")
+                    ? LocalTime.of(23, 59, 59)
+                    : LocalTime.parse(hours[1], DateTimeFormatter.ofPattern("HH:mm"));
+
+            if (closeTime.isBefore(openTime)) {
+                return LocalTime.now().isAfter(openTime) || LocalTime.now().isBefore(closeTime);
+            } else {
+                return LocalTime.now().isAfter(openTime) && LocalTime.now().isBefore(closeTime);
+            }
+
+        } catch (JsonProcessingException e) {
+            throw new ApiException(ExceptionEnum.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private String getDay(int day) {
+        switch (day) {
+            case 1: return "월";
+            case 2: return "화";
+            case 3: return "수";
+            case 4: return "목";
+            case 5: return "금";
+            case 6: return "토";
+            case 7: return "일";
+            default: throw new IllegalArgumentException("없는 요일");
+        }
+    }
+
+
+
+
+
 }
 
 
