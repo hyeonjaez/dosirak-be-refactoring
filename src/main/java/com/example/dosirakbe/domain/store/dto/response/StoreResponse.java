@@ -1,5 +1,6 @@
 package com.example.dosirakbe.domain.store.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -13,13 +14,12 @@ public class StoreResponse {
     private String storeImg;
     private String ifValid;
     private String ifReward;
-    private String operationTime;
     private double mapX;
     private double mapY;
-    private boolean isOpen;
+    private boolean Operating;
 
 
-    public StoreResponse(Long storeId, String storeName, String storeCategory, String storeImg, String ifValid, String ifReward, double mapX, double mapY, boolean isOpen) {
+    public StoreResponse(Long storeId, String storeName, String storeCategory, String storeImg, String ifValid, String ifReward, double mapX, double mapY, boolean Operating) {
         this.storeId = storeId;
         this.storeName = storeName;
         this.storeCategory = storeCategory;
@@ -28,6 +28,6 @@ public class StoreResponse {
         this.ifReward = ifReward;
         this.mapX = mapX;
         this.mapY = mapY;
-        this.isOpen = isOpen;
+        this.Operating = Operating;
     }
 }

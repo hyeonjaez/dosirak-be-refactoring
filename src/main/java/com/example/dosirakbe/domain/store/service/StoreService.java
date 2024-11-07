@@ -12,7 +12,6 @@ import com.example.dosirakbe.global.util.ApiException;
 import com.example.dosirakbe.global.util.ExceptionEnum;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,7 +71,7 @@ public class StoreService {
     }
 
     private StoreResponse changeToStoreResponse(Store store) {
-        boolean isOpen = isStoreOpen(store.getStoreId());
+        boolean Operating = isStoreOpen(store.getStoreId());
         return new StoreResponse(
                 store.getStoreId(),
                 store.getStoreName(),
@@ -82,7 +81,7 @@ public class StoreService {
                 store.getIfReward(),
                 store.getMapX(),
                 store.getMapY(),
-                isOpen
+                Operating
         );
     }
 
