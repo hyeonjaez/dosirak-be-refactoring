@@ -2,10 +2,8 @@ package com.example.dosirakbe.domain.salestore.controller;
 
 import com.example.dosirakbe.domain.salestore.entity.SaleStore;
 import com.example.dosirakbe.domain.salestore.service.SaleStoreService;
-import com.example.dosirakbe.global.util.ApiException;
 import com.example.dosirakbe.global.util.ApiResult;
 import com.example.dosirakbe.global.util.StatusEnum;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +28,11 @@ public class SaleStoreController {
                             .data(stores)
                             .build()
             );
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("테스트");
     }
 
 
