@@ -1,6 +1,5 @@
 package com.example.dosirakbe.domain.store.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
