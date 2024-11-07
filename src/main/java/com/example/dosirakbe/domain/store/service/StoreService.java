@@ -72,7 +72,6 @@ public class StoreService {
 
     private StoreResponse changeToStoreResponse(Store store) {
         boolean Operating = isStoreOpen(store.getStoreId());
-        System.out.println("Store ID: " + store.getStoreId() + ", isOpen: " + Operating);
         return new StoreResponse(
                 store.getStoreId(),
                 store.getStoreName(),
