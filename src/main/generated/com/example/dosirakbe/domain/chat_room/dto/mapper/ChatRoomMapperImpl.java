@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-29T23:50:14+0900",
+    date = "2024-11-06T03:52:36+0900",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.12 (Oracle Corporation)"
 )
 @Component
@@ -129,14 +129,16 @@ public class ChatRoomMapperImpl implements ChatRoomMapper {
         }
 
         Long id = null;
+        String title = null;
         String image = null;
 
         id = chatRoom.getId();
+        title = chatRoom.getTitle();
         image = chatRoom.getImage();
 
         String lastMessage = null;
 
-        UserChatRoomBriefParticipationResponse userChatRoomBriefParticipationResponse = new UserChatRoomBriefParticipationResponse( id, image, lastMessage );
+        UserChatRoomBriefParticipationResponse userChatRoomBriefParticipationResponse = new UserChatRoomBriefParticipationResponse( id, title, image, lastMessage );
 
         return userChatRoomBriefParticipationResponse;
     }

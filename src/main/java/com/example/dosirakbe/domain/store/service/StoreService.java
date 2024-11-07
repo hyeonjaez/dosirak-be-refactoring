@@ -72,6 +72,7 @@ public class StoreService {
     }
 
     private StoreResponse changeToStoreResponse(Store store) {
+        boolean isOpen = isStoreOpen(store.getStoreId());
         return new StoreResponse(
                 store.getStoreId(),
                 store.getStoreName(),
@@ -79,9 +80,9 @@ public class StoreService {
                 store.getStoreImg(),
                 store.getIfValid(),
                 store.getIfReward(),
-                store.getOperationTime(),
                 store.getMapX(),
-                store.getMapY()
+                store.getMapY(),
+                isOpen
         );
     }
 
