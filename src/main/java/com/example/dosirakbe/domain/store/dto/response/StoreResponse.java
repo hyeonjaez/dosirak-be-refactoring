@@ -16,17 +16,18 @@ public class StoreResponse {
     private String operationTime;
     private double mapX;
     private double mapY;
+    private boolean isOpen;
 
 
-    public StoreResponse(Long storeId, String storeName, String storeCategory, String storeImg, String ifValid, String ifReward, String operationTime, double mapX, double mapY) {
+    public StoreResponse(Long storeId, String storeName, String storeCategory, String storeImg, String ifValid, String ifReward, double mapX, double mapY, boolean isOpen) {
         this.storeId = storeId;
         this.storeName = storeName;
         this.storeCategory = storeCategory;
         this.storeImg = storeImg;
         this.ifValid = ifValid ;
         this.ifReward = ifReward;
-        this.operationTime = operationTime;
         this.mapX = mapX;
         this.mapY = mapY;
+        this.isOpen = isOpen;
     }
 }

@@ -2,8 +2,7 @@ package com.example.dosirakbe.domain.activity_log.dto.mapper;
 
 import com.example.dosirakbe.domain.activity_log.dto.response.ActivityLogResponse;
 import com.example.dosirakbe.domain.activity_log.entity.ActivityLog;
-import com.example.dosirakbe.domain.activity_type.entity.ActivityType;
-import com.example.dosirakbe.domain.activity_type.entity.Type;
+import com.example.dosirakbe.domain.activity_log.entity.ActivityType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-03T21:12:24+0900",
+    date = "2024-11-06T03:52:36+0900",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.12 (Oracle Corporation)"
 )
 @Component
@@ -25,12 +24,16 @@ public class ActivityLogMapperImpl implements ActivityLogMapper {
         }
 
         String activityMessage = null;
+        String iconImageUrl = null;
+        String createAtTime = null;
         LocalDateTime createdAt = null;
 
-        activityMessage = activityLogActivityTypeTypeMessage( activityLog );
+        activityMessage = activityLogActivityTypeMessage( activityLog );
+        iconImageUrl = activityLogActivityTypeIconImageUrl( activityLog );
+        createAtTime = formatDateTime( activityLog.getCreatedAt() );
         createdAt = activityLog.getCreatedAt();
 
-        ActivityLogResponse activityLogResponse = new ActivityLogResponse( createdAt, activityMessage );
+        ActivityLogResponse activityLogResponse = new ActivityLogResponse( createdAt, activityMessage, createAtTime, iconImageUrl );
 
         return activityLogResponse;
     }
@@ -49,7 +52,7 @@ public class ActivityLogMapperImpl implements ActivityLogMapper {
         return list;
     }
 
-    private String activityLogActivityTypeTypeMessage(ActivityLog activityLog) {
+    private String activityLogActivityTypeMessage(ActivityLog activityLog) {
         if ( activityLog == null ) {
             return null;
         }
@@ -57,14 +60,25 @@ public class ActivityLogMapperImpl implements ActivityLogMapper {
         if ( activityType == null ) {
             return null;
         }
-        Type type = activityType.getType();
-        if ( type == null ) {
-            return null;
-        }
-        String message = type.message;
+        String message = activityType.message;
         if ( message == null ) {
             return null;
         }
         return message;
+    }
+
+    private String activityLogActivityTypeIconImageUrl(ActivityLog activityLog) {
+        if ( activityLog == null ) {
+            return null;
+        }
+        ActivityType activityType = activityLog.getActivityType();
+        if ( activityType == null ) {
+            return null;
+        }
+        String iconImageUrl = activityType.iconImageUrl;
+        if ( iconImageUrl == null ) {
+            return null;
+        }
+        return iconImageUrl;
     }
 }
