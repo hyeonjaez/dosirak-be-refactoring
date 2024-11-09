@@ -46,7 +46,7 @@ public class SecurityConfig {
 //                        configuration.setAllowedOrigins(Collections.singletonList("*"));
                         configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
-                        configuration.setAllowCredentials(true);
+                       // configuration.setAllowCredentials(true);
 
 //                        configuration.setAllowedHeaders(Collections.singletonList("*"));
                         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "chatRoomId"));
@@ -82,8 +82,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/api/user/check-nickName","/api/token/reissue/access-token", "/api/user/register", "/login", "/api/valid-token"
-                        ,"/api/guide/stores/search", "/api/guide/stores/filter", "/api/guide/stores/nearby", "/api/guide/stores/all","/api/images/**", "/api/user/withdraw",
-                                "/api/user/logout").permitAll()
+                                ,"/api/guide/stores/search", "/api/guide/stores/filter", "/api/guide/stores/nearby", "/api/guide/stores/all","/api/images/**", "/api/user/withdraw",
+                                "/api/user/logout","/dosirak").permitAll()
                         .anyRequest().authenticated());
 
 
