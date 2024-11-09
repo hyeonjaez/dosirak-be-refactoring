@@ -1,5 +1,6 @@
 package com.example.dosirakbe.config;
 
+import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.chat_room.entity.ChatRoom;
 import com.example.dosirakbe.domain.chat_room.repository.ChatRoomRepository;
 import com.example.dosirakbe.domain.chat_room.service.ChatRoomService;
@@ -9,6 +10,7 @@ import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
 import com.example.dosirakbe.global.util.ApiException;
 import com.example.dosirakbe.global.util.ExceptionEnum;
+import com.example.dosirakbe.global.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -28,21 +30,21 @@ public class WebSocketEventListener {
     private final SimpMessagingTemplate messagingTemplate;
     private final MessageService messageService;
     private final ChatRoomRepository chatRoomRepository;
-
+    private final JwtUtil jwtUtil;
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
         // STOMP 헤더에서 유저 정보와 채팅방 ID 추출 (headers에서 가져옴)
-        String userIdHeader = headerAccessor.getFirstNativeHeader("userId"); // 클라이언트에서 전달된 유저 정보
         String chatRoomIdHeader = headerAccessor.getFirstNativeHeader("chatRoomId");
+        Long userId = getUserIdForToken(headerAccessor);
 
-        if (Objects.isNull(chatRoomIdHeader) || Objects.isNull(userIdHeader)) {
+
+        if (Objects.isNull(chatRoomIdHeader)) {
             throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
         }
 
-        Long userId = Long.parseLong(userIdHeader);
         Long chatRoomId = Long.parseLong(chatRoomIdHeader);
 
         ChatRoom chatRoom = chatRoomService.findChatRoomById(chatRoomId);
@@ -64,17 +66,17 @@ public class WebSocketEventListener {
 
     }
 
+
     @EventListener
     public void handleSubscribeListener(SessionSubscribeEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        String userIdHeader = headerAccessor.getFirstNativeHeader("userId"); // 클라이언트에서 전달된 유저 정보
         String chatRoomIdHeader = headerAccessor.getFirstNativeHeader("chatRoomId");
 
-        if (Objects.isNull(chatRoomIdHeader) || Objects.isNull(userIdHeader)) {
+        if (Objects.isNull(chatRoomIdHeader)) {
             throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
         }
 
-        Long userId = Long.parseLong(userIdHeader);
+        Long userId = getUserIdForToken(headerAccessor);
         Long chatRoomId = Long.parseLong(chatRoomIdHeader);
 
         if (!chatRoomRepository.existsById(chatRoomId)) {
@@ -86,5 +88,17 @@ public class WebSocketEventListener {
         }
 
 
+    }
+
+    private Long getUserIdForToken(StompHeaderAccessor headerAccessor) {
+        String authorizationHeader = headerAccessor.getFirstNativeHeader("Authorization");
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
+        }
+
+        String token = authorizationHeader.substring(7);
+
+        return jwtUtil.getUserId(token);
     }
 }
