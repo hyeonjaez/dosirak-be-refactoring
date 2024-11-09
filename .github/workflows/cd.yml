@@ -49,17 +49,17 @@ jobs:
       - name: Push the Docker image
         run: docker push ${{ env.DOCKER_IMAGE_NAME }}:latest
 
-      - name: Remove unused Docker container
-        run: docker container prune -f
-
-      - name: Remove unused Docker network
-        run: docker network prune -f
-
-      - name: Remove unused Docker volume
-        run: docker volume prune -f
-
-      - name: Remove all unused Docker resource
-        run: docker system prune -af --volumes
+#      - name: Remove unused Docker container
+#        run: docker container prune -f
+#
+#      - name: Remove unused Docker network
+#        run: docker network prune -f
+#
+#      - name: Remove unused Docker volume
+#        run: docker volume prune -f
+#
+#      - name: Remove all unused Docker resource
+#        run: docker system prune -af --volumes
 
 
 
@@ -76,6 +76,11 @@ jobs:
           username: ${{ env.EC2_SSH_USER }}
           key: ${{ env.PRIVATE_KEY }}
           script: |
+            sudo docker container prune -f
+            sudo docker image prune -af
+            sudo docker volume prune -f
+            sudo docker system prune -af --volumes
+            
             CONTAINER_ID=$(sudo docker ps -q --filter "publish=80-8080")
             
             if [ ! -z "$CONTAINER_ID" ]; then
