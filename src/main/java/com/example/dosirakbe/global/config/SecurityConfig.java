@@ -32,19 +32,14 @@ public class SecurityConfig{
 
         DefaultAuthorizationCodeTokenResponseClient tokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
         //tokenResponseClient.setRequestEntityConverter(customRequestEntityConverter);
-
-
         http
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
-
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-
                         CorsConfiguration configuration = new CorsConfiguration();
-
                         configuration.setAllowedOrigins(Collections.singletonList("*"));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
-                        configuration.setAllowCredentials(true);
+                        //configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
                         configuration.setMaxAge(3600L);
 
@@ -54,10 +49,8 @@ public class SecurityConfig{
                         return configuration;
                     }
                 }));
-
         http
                 .csrf((auth) -> auth.disable());
-
         http
                 .formLogin((auth) -> auth.disable());
 
@@ -66,7 +59,6 @@ public class SecurityConfig{
 
         http
                 .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-
 
         http
                 .oauth2Login((oauth2) -> oauth2
@@ -80,7 +72,7 @@ public class SecurityConfig{
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/api/user/check-nickName","/api/token/reissue/access-token", "/api/user/register", "/login", "/api/valid-token"
                         ,"/api/guide/stores/search", "/api/guide/stores/filter", "/api/guide/stores/nearby", "/api/guide/stores/all","/api/images/**", "/api/user/withdraw",
-                                "/api/user/logout").permitAll()
+                                "/api/user/logout","/dosirak").permitAll()
                         .anyRequest().authenticated());
 
 
