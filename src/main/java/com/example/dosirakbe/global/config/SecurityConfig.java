@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.web.SecurityFilterChain;
@@ -45,7 +46,7 @@ public class SecurityConfig {
 //                        configuration.setAllowedOrigins(Collections.singletonList("*"));
                         configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
-                       // configuration.setAllowCredentials(true);
+                        configuration.setAllowCredentials(false);
 
 //                        configuration.setAllowedHeaders(Collections.singletonList("*"));
                         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "chatRoomId"));
@@ -58,13 +59,13 @@ public class SecurityConfig {
                 }));
 
         http
-                .csrf((auth) -> auth.disable());
+                .csrf(AbstractHttpConfigurer::disable);
 
         http
-                .formLogin((auth) -> auth.disable());
+                .formLogin(AbstractHttpConfigurer::disable);
 
         http
-                .httpBasic((auth) -> auth.disable());
+                .httpBasic(AbstractHttpConfigurer::disable);
 
         http
                 .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
