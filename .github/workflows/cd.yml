@@ -49,18 +49,6 @@ jobs:
       - name: Push the Docker image
         run: docker push ${{ env.DOCKER_IMAGE_NAME }}:latest
 
-#      - name: Remove unused Docker container
-#        run: docker container prune -f
-#
-#      - name: Remove unused Docker network
-#        run: docker network prune -f
-#
-#      - name: Remove unused Docker volume
-#        run: docker volume prune -f
-#
-#      - name: Remove all unused Docker resource
-#        run: docker system prune -af --volumes
-
 
 
   deploy-to-ec2:
