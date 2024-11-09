@@ -35,7 +35,7 @@ public class WebSocketEventListener {
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-
+        System.out.println("리스너 동작");
         // STOMP 헤더에서 유저 정보와 채팅방 ID 추출 (headers에서 가져옴)
         String chatRoomIdHeader = headerAccessor.getFirstNativeHeader("chatRoomId");
         Long userId = getUserIdForToken(headerAccessor);
