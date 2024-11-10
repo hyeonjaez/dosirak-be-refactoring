@@ -9,6 +9,7 @@ import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
 import com.example.dosirakbe.global.util.ApiException;
 import com.example.dosirakbe.global.util.ExceptionEnum;
+import com.example.dosirakbe.global.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -28,6 +29,7 @@ public class WebSocketEventListener {
     private final SimpMessagingTemplate messagingTemplate;
     private final MessageService messageService;
     private final ChatRoomRepository chatRoomRepository;
+    private final JwtUtil jwtUtil;
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectEvent event) {
@@ -35,10 +37,11 @@ public class WebSocketEventListener {
 
         try {
             // STOMP 헤더에서 유저 정보와 채팅방 ID 추출 (headers에서 가져옴)
-            String chatRoomIdHeader = headerAccessor.getFirstNativeHeader("chatRoomId");
-            Long userId = (Long) headerAccessor.getSessionAttributes().get("userId");
+            Long userId = validationAuthorization(headerAccessor);
 
-            if (Objects.isNull(chatRoomIdHeader) || Objects.isNull(userId)) {
+            String chatRoomIdHeader = headerAccessor.getFirstNativeHeader("chatRoomId");
+
+            if (Objects.isNull(chatRoomIdHeader)) {
                 throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
             }
 
@@ -50,11 +53,9 @@ public class WebSocketEventListener {
                     .orElseThrow(
                             () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
-            // 유저가 처음 입장했는지 확인
             if (chatRoomService.isFirstTimeEntry(user, chatRoom)) {
                 chatRoomService.joinChatRoom(user, chatRoom);
 
-                // 입장 메시지 전송
                 MessageResponse firstJoinMessage = messageService.firstJoinMessage(user, chatRoom);
 
                 messagingTemplate.convertAndSend("/topic/chat-room/" + firstJoinMessage.getChatRoomId(), firstJoinMessage);
@@ -73,7 +74,7 @@ public class WebSocketEventListener {
 
         try {
             String chatRoomIdHeader = headerAccessor.getFirstNativeHeader("chatRoomId");
-            Long userId = (Long) headerAccessor.getSessionAttributes().get("userId");
+            Long userId = validationAuthorization(headerAccessor);
             if (Objects.isNull(chatRoomIdHeader) || Objects.isNull(userId)) {
                 throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
             }
@@ -94,16 +95,33 @@ public class WebSocketEventListener {
 
     }
 
-    private void sendErrorMessageToUser(StompHeaderAccessor headerAccessor, String errorMessage) {
-        Object userIdObj = (headerAccessor.getSessionAttributes() != null) ? headerAccessor.getSessionAttributes().get("userId") : null;
+    private Long validationAuthorization(StompHeaderAccessor headerAccessor) {
+        String authorizationHeader = headerAccessor.getFirstNativeHeader("Authorization");
 
-        if (userIdObj instanceof Long) {
-            Long userId = (Long) userIdObj;
+        if (Objects.nonNull(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            try {
+                return jwtUtil.getUserId(token);
+            } catch (Exception e) {
+                throw new ApiException(ExceptionEnum.ACCESS_DENIED_EXCEPTION);
+            }
+        }
+
+        throw new ApiException(ExceptionEnum.ACCESS_DENIED_EXCEPTION);
+    }
+
+
+    private void sendErrorMessageToUser(StompHeaderAccessor headerAccessor, String errorMessage) {
+        String body = "{\"error\": \"" + errorMessage + "\"}";
+        String sessionId = headerAccessor.getSessionId();
+        if (sessionId != null) {
             messagingTemplate.convertAndSendToUser(
-                    userId.toString(), // userId를 문자열로 변환
+                    sessionId,
                     "/queue/errors",
-                    errorMessage
+                    body
             );
+        } else {
+            System.out.println("Error: 세션 ID를 가져오지 못했습니다. 에러 메시지: " + errorMessage);
         }
     }
 }
