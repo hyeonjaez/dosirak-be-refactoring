@@ -1,4 +1,4 @@
-package com.example.dosirakbe.config;
+package com.example.dosirakbe.global.config;
 
 
 
@@ -20,6 +20,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setAllowedOriginPatterns("*"); // 테스트를 위해 모든 출처 허용
 //                .withSockJS(); // 엔드포인트 지정 및 withSockJS() SockJS 폴백 활성화
         // 브라우저가 WebSocket을 지원하지 않는 경우에도 HTTP 기반의 대체 통신이 가능
+        //System.out.println("register Stomp Endpoint");
     }
 
 
