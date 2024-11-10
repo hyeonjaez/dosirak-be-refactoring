@@ -1,4 +1,4 @@
-package com.example.dosirakbe.config;
+package com.example.dosirakbe.global.config;
 
 import com.example.dosirakbe.global.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
