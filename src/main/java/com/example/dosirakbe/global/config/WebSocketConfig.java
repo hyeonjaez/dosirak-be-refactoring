@@ -1,7 +1,7 @@
 package com.example.dosirakbe.global.config;
 
 
-
+import com.example.dosirakbe.global.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -14,13 +14,15 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    private final JwtUtil jwtUtil;
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/dosirak")
-                .setAllowedOriginPatterns("*"); // 테스트를 위해 모든 출처 허용
+                .setAllowedOriginPatterns("*")// 테스트를 위해 모든 출처 허용
+                .addInterceptors(new JwtHandshakeInterceptor(jwtUtil));
 //                .withSockJS(); // 엔드포인트 지정 및 withSockJS() SockJS 폴백 활성화
         // 브라우저가 WebSocket을 지원하지 않는 경우에도 HTTP 기반의 대체 통신이 가능
-        //System.out.println("register Stomp Endpoint");
     }
 
 
