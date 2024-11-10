@@ -1,4 +1,4 @@
-package com.example.dosirakbe.config;
+package com.example.dosirakbe.global.config;
 
 import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.chat_room.entity.ChatRoom;

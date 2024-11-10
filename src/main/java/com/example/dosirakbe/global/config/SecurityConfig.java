@@ -48,7 +48,7 @@ public class SecurityConfig {
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(false);
 
-//                        configuration.setAllowedHeaders(Collections.singletonList("*"));
+//                      configuration.setAllowedHeaders(Collections.singletonList("*"));
                         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "chatRoomId"));
                         configuration.setMaxAge(3600L);
 
