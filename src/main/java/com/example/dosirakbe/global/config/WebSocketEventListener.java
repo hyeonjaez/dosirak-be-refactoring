@@ -1,6 +1,5 @@
-package com.example.dosirakbe.config;
+package com.example.dosirakbe.global.config;
 
-import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.chat_room.entity.ChatRoom;
 import com.example.dosirakbe.domain.chat_room.repository.ChatRoomRepository;
 import com.example.dosirakbe.domain.chat_room.service.ChatRoomService;
@@ -10,7 +9,6 @@ import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
 import com.example.dosirakbe.global.util.ApiException;
 import com.example.dosirakbe.global.util.ExceptionEnum;
-import com.example.dosirakbe.global.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
