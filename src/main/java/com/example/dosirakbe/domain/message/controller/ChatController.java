@@ -7,6 +7,7 @@ import com.example.dosirakbe.domain.message.service.MessageService;
 import com.example.dosirakbe.global.util.ApiException;
 import com.example.dosirakbe.global.util.ExceptionEnum;
 import com.example.dosirakbe.global.util.JwtUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -21,15 +22,26 @@ import java.util.Objects;
 public class ChatController {
     private final MessageService messageService;
     private final JwtUtil jwtUtil;
+    private final ObjectMapper objectMapper;
 
 
     @MessageMapping("/chat-room/{chatRoomId}/sendMessage")
     @SendTo("/topic/chat-room/{chatRoomId}")
     public MessageResponse sendMessage(@DestinationVariable Long chatRoomId,
-                                       MessageRegisterRequest messageRegisterRequest,
+                                       String messagePayLoad,
                                        SimpMessageHeaderAccessor headerAccessor) {
         System.out.println("controller 들어옴");
+
+        MessageRegisterRequest messageRegisterRequest;
+
+        try {
+            messageRegisterRequest = objectMapper.readValue(messagePayLoad, MessageRegisterRequest.class);
+        } catch (Exception e) {
+            throw new ApiException(ExceptionEnum.INVALID_REQUEST);
+        }
+
         Long userId = validationAuthorization(headerAccessor);
+
         MessageResponse message = messageService.createMessage(userId, chatRoomId, messageRegisterRequest);
         System.out.println("controller return");
         return message;
