@@ -42,6 +42,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // JSON 형식의 메시지를 변환하기 위해 Jackson 메시지 컨버터 추가
         messageConverters.add(new MappingJackson2MessageConverter());
 
-        return false;
+        return true;
     }
 }
