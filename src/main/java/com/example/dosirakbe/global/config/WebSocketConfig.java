@@ -2,6 +2,7 @@ package com.example.dosirakbe.global.config;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,6 +46,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public MappingJackson2MessageConverter mappingJackson2MessageConverter() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule()); // Java 8 날짜/시간 지원 모듈 등록
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false); // 시간 값을 ISO 형식으로 직렬화
+        objectMapper.setDateFormat(new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"));
 
         MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
         converter.setObjectMapper(objectMapper); // ObjectMapper 설정
