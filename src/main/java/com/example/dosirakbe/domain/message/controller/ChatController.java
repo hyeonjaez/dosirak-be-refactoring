@@ -28,9 +28,10 @@ public class ChatController {
     public MessageResponse sendMessage(@DestinationVariable Long chatRoomId,
                                        MessageRegisterRequest messageRegisterRequest,
                                        SimpMessageHeaderAccessor headerAccessor) {
+        System.out.println("controller 들어옴");
         Long userId = validationAuthorization(headerAccessor);
         MessageResponse message = messageService.createMessage(userId, chatRoomId, messageRegisterRequest);
-
+        System.out.println("controller return");
         return message;
     }
 
