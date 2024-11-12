@@ -66,6 +66,7 @@ jobs:
           script: |
             LOG_DIR="/home/ubuntu/app-logs"
             mkdir -p $LOG_DIR
+            touch $LOG_FILE
 
             sudo docker container prune -f
             sudo docker image prune -af
