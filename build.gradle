@@ -57,7 +57,7 @@ dependencies {
     implementation 'org.bouncycastle:bcpkix-jdk18on:1.72'
     implementation 'commons-io:commons-io:2.11.0'
 
-
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2'
     //jasypt
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
     testImplementation 'org.jasypt:jasypt:1.9.3'  // Jasypt 의존성 (테스트용)
