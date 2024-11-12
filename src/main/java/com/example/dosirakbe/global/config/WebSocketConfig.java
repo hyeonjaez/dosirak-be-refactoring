@@ -1,6 +1,9 @@
 package com.example.dosirakbe.global.config;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
@@ -38,11 +41,21 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // queue : 1:1 메시지를 주고받는 개인 메세지 큐 경로
     }
 
+    @Bean
+    public MappingJackson2MessageConverter mappingJackson2MessageConverter() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule()); // Java 8 날짜/시간 지원 모듈 등록
+
+        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
+        converter.setObjectMapper(objectMapper); // ObjectMapper 설정
+        return converter;
+    }
+
     @Override
     public boolean configureMessageConverters(List<MessageConverter> messageConverters) {
         messageConverters.add(new StringMessageConverter());
         // JSON 형식의 메시지를 변환하기 위해 Jackson 메시지 컨버터 추가
-        messageConverters.add(new MappingJackson2MessageConverter());
+        messageConverters.add(mappingJackson2MessageConverter());
 
         return true;
     }
