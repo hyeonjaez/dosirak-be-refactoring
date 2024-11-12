@@ -16,7 +16,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
-import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
 import java.util.Objects;
 
@@ -28,7 +27,6 @@ public class WebSocketEventListener {
     private final UserRepository userRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final MessageService messageService;
-    private final ChatRoomRepository chatRoomRepository;
     private final JwtUtil jwtUtil;
 
     @EventListener
@@ -68,32 +66,6 @@ public class WebSocketEventListener {
     }
 
 
-    @EventListener
-    public void handleSubscribeListener(SessionSubscribeEvent event) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-
-        try {
-            String chatRoomIdHeader = headerAccessor.getFirstNativeHeader("chatRoomId");
-            Long userId = validationAuthorization(headerAccessor);
-            if (Objects.isNull(chatRoomIdHeader) || Objects.isNull(userId)) {
-                throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
-            }
-
-            Long chatRoomId = Long.parseLong(chatRoomIdHeader);
-
-            if (!chatRoomRepository.existsById(chatRoomId)) {
-                throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
-            }
-
-            if (!userRepository.existsById(userId)) {
-                throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
-            }
-        } catch (Exception e) {
-            sendErrorMessageToUser(headerAccessor, e.getMessage());
-        }
-
-
-    }
 
     private Long validationAuthorization(StompHeaderAccessor headerAccessor) {
         String authorizationHeader = headerAccessor.getFirstNativeHeader("Authorization");
@@ -120,8 +92,6 @@ public class WebSocketEventListener {
                     "/queue/errors",
                     body
             );
-        } else {
-            System.out.println("Error: 세션 ID를 가져오지 못했습니다. 에러 메시지: " + errorMessage);
         }
     }
 }
