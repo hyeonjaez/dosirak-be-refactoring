@@ -24,7 +24,7 @@ public class SaleStoreService {
         }
 
 
-        List<SaleStore> saleStores = saleStoreRepository.findBySaleStoreAddressContaining(saleStoreAddress);
+        List<SaleStore> saleStores = saleStoreRepository.findBySaleStoreAddressContainingOrderBySaleDiscountDesc(saleStoreAddress);
 
         if (saleStores.isEmpty()) {
             throw new ApiException(ExceptionEnum.DATA_NOT_FOUND);

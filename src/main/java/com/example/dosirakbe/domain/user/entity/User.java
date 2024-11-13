@@ -3,9 +3,7 @@ package com.example.dosirakbe.domain.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
-
 
 @Table(name = "users")
 @Getter

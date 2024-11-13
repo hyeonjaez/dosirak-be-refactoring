@@ -17,6 +17,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     List<Store> findByStoreCategory(String storeCategory);
 
+
     @Query("SELECT s, " +
             "(6371 * acos(cos(radians(:mapX)) * cos(radians(s.mapX)) " +
             "* cos(radians(s.mapY) - radians(:mapY)) + sin(radians(:mapX)) * sin(radians(s.mapX)))) " +
