@@ -71,7 +71,7 @@ public class StoreService {
     }
 
     private StoreResponse changeToStoreResponse(Store store) {
-        boolean Operating = isStoreOpen(store.getStoreId());
+        boolean operating = isStoreOpen(store.getStoreId());
         return new StoreResponse(
                 store.getStoreId(),
                 store.getStoreName(),
@@ -81,7 +81,7 @@ public class StoreService {
                 store.getIfReward(),
                 store.getMapX(),
                 store.getMapY(),
-                Operating
+                operating
         );
     }
 
@@ -192,10 +192,3 @@ public class StoreService {
 
 
 }
-
-
-
-
-
-
-
