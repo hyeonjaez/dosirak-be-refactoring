@@ -20,19 +20,14 @@ public class SaleStoreController {
 
     @GetMapping("/api/club/saleStores")
     public ResponseEntity<ApiResult<List<SaleStore>>> getStoresByAddress(@RequestParam("saleStoreAddress") String saleStoreAddress) {
-            List<SaleStore> stores = saleStoreService.getSaleStoresByAddress(saleStoreAddress);
-            return ResponseEntity.ok(
-                    ApiResult.<List<SaleStore>>builder()
-                            .status(StatusEnum.SUCCESS)
-                            .message("마감음식 판매 가게 반환")
-                            .data(stores)
-                            .build()
-            );
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("테스트");
+        List<SaleStore> stores = saleStoreService.getSaleStoresByAddress(saleStoreAddress);
+        return ResponseEntity.ok(
+                ApiResult.<List<SaleStore>>builder()
+                        .status(StatusEnum.SUCCESS)
+                        .message("마감음식 판매 가게 반환")
+                        .data(stores)
+                        .build()
+        );
     }
 
 
