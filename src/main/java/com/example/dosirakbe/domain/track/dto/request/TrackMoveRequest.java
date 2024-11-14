@@ -14,11 +14,11 @@ import java.math.BigDecimal;
 public class TrackMoveRequest {
     @NotNull
     @JsonDeserialize(using = NumberDeserializers.BigDecimalDeserializer.class)
-    @Digits(integer = 10, fraction = 5)
+    @Digits(integer = 10, fraction = 2)
     private BigDecimal shortestDistance;
 
     @NotNull
     @JsonDeserialize(using = NumberDeserializers.BigDecimalDeserializer.class)
-    @Digits(integer = 10, fraction = 5)
+    @Digits(integer = 10, fraction = 2)
     private BigDecimal moveDistance;
 }
