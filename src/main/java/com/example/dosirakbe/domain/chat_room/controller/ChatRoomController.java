@@ -1,18 +1,15 @@
 package com.example.dosirakbe.domain.chat_room.controller;
 
-import com.example.dosirakbe.domain.activity_log.entity.ActivityType;
 import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.chat_room.dto.request.ChatRoomRegisterRequest;
 import com.example.dosirakbe.domain.chat_room.dto.response.*;
 import com.example.dosirakbe.domain.chat_room.service.ChatRoomService;
-import com.example.dosirakbe.domain.green_commit.event.GreenCommitEvent;
 import com.example.dosirakbe.domain.user.dto.response.UserChatRoomResponse;
 import com.example.dosirakbe.global.util.ApiResult;
 import com.example.dosirakbe.global.util.StatusEnum;
 import com.example.dosirakbe.global.util.ValidationUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
