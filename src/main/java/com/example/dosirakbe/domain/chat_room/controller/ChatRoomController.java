@@ -28,7 +28,7 @@ import java.util.List;
 @RequestMapping("/api/chat-rooms")
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
-    private final ApplicationEventPublisher eventPublisher;
+
 
     private static final String REQUEST_PART_CHATROOM = "chatRoom";
     private static final String REQUEST_PART_FILE = "file";
@@ -43,8 +43,6 @@ public class ChatRoomController {
 
         Long userId = getUserIdByOAuth(customOAuth2User);
         ChatRoomResponse chatRoomResponse = chatRoomService.createChatRoom(file, createRequest, userId);
-
-        // eventPublisher.publishEvent(new GreenCommitEvent(this, userId, chatRoomResponse.getId(), ActivityType.LOW_CARBON_MEANS_OF_TRANSPORTATION));
 
         ApiResult<ChatRoomResponse> result = ApiResult.<ChatRoomResponse>builder()
                 .status(StatusEnum.SUCCESS)
