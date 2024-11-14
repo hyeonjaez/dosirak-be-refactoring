@@ -74,14 +74,18 @@ public class ActivityLogService {
                 .orElseThrow(
                         () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
+        ActivityLog activityLog;
         if (activityType.equals(ActivityType.LOW_CARBON_MEANS_OF_TRANSPORTATION)) {
-            if (Objects.isNull(distance) || distance.compareTo(BigDecimal.ZERO) < 0) {
+            if (Objects.isNull(distance) || distance.compareTo(BigDecimal.ZERO) <= 0) {
                 throw new ApiException(ExceptionEnum.INVALID_REQUEST);
             }
+            activityLog = new ActivityLog(contentId, user, activityType, distance);
+        } else {
+            activityLog = new ActivityLog(contentId, user, activityType);
         }
 
-        ActivityLog activityLog = new ActivityLog(contentId, user, activityType);
         activityLogRepository.save(activityLog);
+
     }
 
 
