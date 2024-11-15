@@ -43,11 +43,8 @@ public class User {
     @Column(name = "user_valid")
     private boolean userValid;
 
-    @Column(name = "reward")
-    private Integer reward;
-
-
-
+    @Column(name = "reward", nullable = false)
+    private Integer reward=0;
 
 
 }
