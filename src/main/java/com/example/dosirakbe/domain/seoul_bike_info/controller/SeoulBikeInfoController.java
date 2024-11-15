@@ -1,19 +1,16 @@
 package com.example.dosirakbe.domain.seoul_bike_info.controller;
 
-import com.example.dosirakbe.domain.seoul_bike_info.dto.request.SeoulBikeInfoRequest;
 import com.example.dosirakbe.domain.seoul_bike_info.dto.response.SeoulBikeInfoResponse;
 import com.example.dosirakbe.domain.seoul_bike_info.service.SeoulBikeInfoService;
 import com.example.dosirakbe.global.util.ApiResult;
 import com.example.dosirakbe.global.util.StatusEnum;
-import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -23,8 +20,10 @@ public class SeoulBikeInfoController {
     private final SeoulBikeInfoService seoulBikeInfoService;
 
     @GetMapping
-    public ResponseEntity<ApiResult<List<SeoulBikeInfoResponse>>> getSeoulBikeListByAroundMe(@Valid @RequestBody SeoulBikeInfoRequest seoulBikeInfoRequest) {
-        List<SeoulBikeInfoResponse> seoulBikeListAroundMe = seoulBikeInfoService.getSeoulBikeListAroundMe(seoulBikeInfoRequest);
+    public ResponseEntity<ApiResult<List<SeoulBikeInfoResponse>>> getSeoulBikeListByAroundMe(@RequestParam(required = true) @NotNull BigDecimal myLatitude,
+                                                                                             @RequestParam(required = true) @NotNull BigDecimal myLongitude) {
+
+        List<SeoulBikeInfoResponse> seoulBikeListAroundMe = seoulBikeInfoService.getSeoulBikeListAroundMe(myLatitude, myLongitude);
 
         ApiResult<List<SeoulBikeInfoResponse>> apiResult = ApiResult.<List<SeoulBikeInfoResponse>>builder()
                 .status(StatusEnum.SUCCESS)
@@ -35,6 +34,5 @@ public class SeoulBikeInfoController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(apiResult);
-
     }
 }
