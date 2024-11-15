@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -40,9 +41,19 @@ public class ActivityLog {
     @Enumerated(EnumType.STRING)
     private ActivityType activityType;
 
+    @Column(name = "distance")
+    private BigDecimal distance;
+
     public ActivityLog(Long contentId, User user, ActivityType activityType) {
         this.contentId = contentId;
         this.user = user;
         this.activityType = activityType;
+    }
+
+    public ActivityLog(Long contentId, User user, ActivityType activityType, BigDecimal distance) {
+        this.contentId = contentId;
+        this.user = user;
+        this.activityType = activityType;
+        this.distance = distance;
     }
 }
