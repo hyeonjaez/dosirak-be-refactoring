@@ -47,7 +47,7 @@ public class User {
     private boolean userValid;
 
     @Column(name = "reward")
-    private Integer reward;
+    private Integer reward=0;
 
     @Column(name = "track_distance")
     private BigDecimal trackDistance;
