@@ -43,12 +43,13 @@ public class SecurityConfig {
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 
                         CorsConfiguration configuration = new CorsConfiguration();
+
 //                        configuration.setAllowedOrigins(Collections.singletonList("*"));
                         configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(false);
 
-//                      configuration.setAllowedHeaders(Collections.singletonList("*"));
+//                        configuration.setAllowedHeaders(Collections.singletonList("*"));
                         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "chatRoomId"));
                         configuration.setMaxAge(3600L);
 
@@ -83,7 +84,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/api/user/check-nickName","/api/token/reissue/access-token", "/api/user/register", "/login", "/api/valid-token"
                                 ,"/api/guide/stores/search", "/api/guide/stores/filter", "/api/guide/stores/nearby", "/api/guide/stores/all","/api/images/**", "/api/user/withdraw",
-                                "/api/user/logout","/dosirak").permitAll()
+                                "/api/user/logout","/dosirak", "/app/**").permitAll()
                         .anyRequest().authenticated());
 
 

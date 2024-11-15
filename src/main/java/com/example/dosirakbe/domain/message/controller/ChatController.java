@@ -1,28 +1,62 @@
 package com.example.dosirakbe.domain.message.controller;
 
-import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
+
 import com.example.dosirakbe.domain.message.dto.request.MessageRegisterRequest;
 import com.example.dosirakbe.domain.message.dto.response.MessageResponse;
 import com.example.dosirakbe.domain.message.service.MessageService;
+import com.example.dosirakbe.global.util.ApiException;
+import com.example.dosirakbe.global.util.ExceptionEnum;
+import com.example.dosirakbe.global.util.JwtUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
+
+import java.util.Objects;
 
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
     private final MessageService messageService;
+    private final JwtUtil jwtUtil;
+    private final ObjectMapper objectMapper;
 
 
     @MessageMapping("/chat-room/{chatRoomId}/sendMessage")
     @SendTo("/topic/chat-room/{chatRoomId}")
-    public MessageResponse sendMessage(@AuthenticationPrincipal CustomOAuth2User customOAuth2User, @DestinationVariable Long chatRoomId, MessageRegisterRequest messageRegisterRequest) {
-        Long userId = customOAuth2User.getUserDTO().getUserId();
-        MessageResponse message = messageService.createMessage(userId, chatRoomId, messageRegisterRequest);
+    public MessageResponse sendMessage(@DestinationVariable Long chatRoomId,
+                                       String messagePayLoad,
+                                       SimpMessageHeaderAccessor headerAccessor) {
+        System.out.println("controller 들어옴");
 
+        MessageRegisterRequest messageRegisterRequest;
+
+        try {
+            messageRegisterRequest = objectMapper.readValue(messagePayLoad, MessageRegisterRequest.class);
+        } catch (Exception e) {
+            throw new ApiException(ExceptionEnum.INVALID_REQUEST);
+        }
+
+        Long userId = validationAuthorization(headerAccessor);
+
+        MessageResponse message = messageService.createMessage(userId, chatRoomId, messageRegisterRequest);
+        System.out.println("controller return");
         return message;
+    }
+
+    private Long validationAuthorization(SimpMessageHeaderAccessor headerAccessor) {
+        String authorizationHeader = headerAccessor.getFirstNativeHeader("Authorization");
+        if (Objects.nonNull(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            try {
+                return jwtUtil.getUserId(token);
+            } catch (Exception e) {
+                throw new ApiException(ExceptionEnum.ACCESS_DENIED_EXCEPTION);
+            }
+        }
+        throw new ApiException(ExceptionEnum.ACCESS_DENIED_EXCEPTION);
     }
 }

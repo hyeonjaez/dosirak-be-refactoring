@@ -1,6 +1,5 @@
 package com.example.dosirakbe.global.config;
 
-import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.chat_room.entity.ChatRoom;
 import com.example.dosirakbe.domain.chat_room.repository.ChatRoomRepository;
 import com.example.dosirakbe.domain.chat_room.service.ChatRoomService;
@@ -17,7 +16,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
-import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
 import java.util.Objects;
 
@@ -29,76 +27,71 @@ public class WebSocketEventListener {
     private final UserRepository userRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final MessageService messageService;
-    private final ChatRoomRepository chatRoomRepository;
     private final JwtUtil jwtUtil;
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        System.out.println("리스너 동작");
-        // STOMP 헤더에서 유저 정보와 채팅방 ID 추출 (headers에서 가져옴)
-        String chatRoomIdHeader = headerAccessor.getFirstNativeHeader("chatRoomId");
-        Long userId = getUserIdForToken(headerAccessor);
 
+        try {
+            // STOMP 헤더에서 유저 정보와 채팅방 ID 추출 (headers에서 가져옴)
+            Long userId = validationAuthorization(headerAccessor);
 
-        if (Objects.isNull(chatRoomIdHeader)) {
-            throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
-        }
+            String chatRoomIdHeader = headerAccessor.getFirstNativeHeader("chatRoomId");
 
-        Long chatRoomId = Long.parseLong(chatRoomIdHeader);
+            if (Objects.isNull(chatRoomIdHeader)) {
+                throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
+            }
 
-        ChatRoom chatRoom = chatRoomService.findChatRoomById(chatRoomId);
+            Long chatRoomId = Long.parseLong(chatRoomIdHeader);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(
-                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+            ChatRoom chatRoom = chatRoomService.findChatRoomById(chatRoomId);
 
-        // 유저가 처음 입장했는지 확인
-        if (chatRoomService.isFirstTimeEntry(user, chatRoom)) {
-            chatRoomService.joinChatRoom(user, chatRoom);
+            User user = userRepository.findById(userId)
+                    .orElseThrow(
+                            () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
-            // 입장 메시지 전송
-            MessageResponse firstJoinMessage = messageService.firstJoinMessage(user, chatRoom);
+            if (chatRoomService.isFirstTimeEntry(user, chatRoom)) {
+                chatRoomService.joinChatRoom(user, chatRoom);
 
-            messagingTemplate.convertAndSend("/topic/chat-room/" + firstJoinMessage.getChatRoomId(), firstJoinMessage);
-        }
+                MessageResponse firstJoinMessage = messageService.firstJoinMessage(user, chatRoom);
 
-
-    }
-
-
-    @EventListener
-    public void handleSubscribeListener(SessionSubscribeEvent event) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        String chatRoomIdHeader = headerAccessor.getFirstNativeHeader("chatRoomId");
-
-        if (Objects.isNull(chatRoomIdHeader)) {
-            throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
-        }
-
-        Long userId = getUserIdForToken(headerAccessor);
-        Long chatRoomId = Long.parseLong(chatRoomIdHeader);
-
-        if (!chatRoomRepository.existsById(chatRoomId)) {
-            throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
-        }
-
-        if (!userRepository.existsById(userId)) {
-            throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
+                messagingTemplate.convertAndSend("/topic/chat-room/" + firstJoinMessage.getChatRoomId(), firstJoinMessage);
+            }
+        } catch (Exception e) {
+            sendErrorMessageToUser(headerAccessor, e.getMessage());
         }
 
 
     }
 
-    private Long getUserIdForToken(StompHeaderAccessor headerAccessor) {
+
+
+    private Long validationAuthorization(StompHeaderAccessor headerAccessor) {
         String authorizationHeader = headerAccessor.getFirstNativeHeader("Authorization");
 
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
+        if (Objects.nonNull(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            try {
+                return jwtUtil.getUserId(token);
+            } catch (Exception e) {
+                throw new ApiException(ExceptionEnum.ACCESS_DENIED_EXCEPTION);
+            }
         }
 
-        String token = authorizationHeader.substring(7);
+        throw new ApiException(ExceptionEnum.ACCESS_DENIED_EXCEPTION);
+    }
 
-        return jwtUtil.getUserId(token);
+
+    private void sendErrorMessageToUser(StompHeaderAccessor headerAccessor, String errorMessage) {
+        String body = "{\"error\": \"" + errorMessage + "\"}";
+        String sessionId = headerAccessor.getSessionId();
+        if (sessionId != null) {
+            messagingTemplate.convertAndSendToUser(
+                    sessionId,
+                    "/queue/errors",
+                    body
+            );
+        }
     }
 }

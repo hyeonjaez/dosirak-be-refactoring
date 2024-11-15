@@ -64,6 +64,11 @@ jobs:
           username: ${{ env.EC2_SSH_USER }}
           key: ${{ env.PRIVATE_KEY }}
           script: |
+            LOG_DIR="/home/ubuntu/app-logs"
+            mkdir -p $LOG_DIR
+            touch $LOG_DIR/app.log
+
+
             sudo docker container prune -f
             sudo docker image prune -af
             sudo docker volume prune -f
@@ -77,4 +82,6 @@ jobs:
             fi
             
             sudo docker pull ${{ env.DOCKER_HUB }} kanepark/app:latest
-            sudo docker run --name container1 -d -p 80:8080 -e TZ=Asia/Seoul ${{ env.DOCKER_HUB }} kanepark/app:latest
+            # sudo docker run --name container1 -d -p 80:8080 -e TZ=Asia/Seoul ${{ env.DOCKER_HUB }} kanepark/app:latest
+            sudo docker run --name container1 -d -p 80:8080 -e TZ=Asia/Seoul \
+              -v $LOG_DIR/app.log:/app/logs/app.log ${{ env.DOCKER_IMAGE_NAME }}:latest

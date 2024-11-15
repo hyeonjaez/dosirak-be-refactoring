@@ -4,8 +4,9 @@ package com.example.dosirakbe.domain.user.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
+import java.util.Objects;
 
 @Table(name = "users")
 @Getter
@@ -18,22 +19,22 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id",unique = true,updatable = false)
+    @Column(name = "user_id", unique = true, updatable = false)
     private Long userId;
 
-    @Column(name = "name", updatable = false , nullable = false)
+    @Column(name = "name", updatable = false, nullable = false)
     private String name;
 
     @Column(name = "user_name", nullable = false)
     private String userName;
 
-    @Column(name = "nick_name",unique = true)
+    @Column(name = "nick_name", unique = true)
     private String nickName;
 
     @Column(name = "email", updatable = false, nullable = false)
     private String email;
 
-    @Column(name = "created_at",updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
@@ -46,10 +47,21 @@ public class User {
     private boolean userValid;
 
     @Column(name = "reward")
-    private Integer reward;
+    private Integer reward=0;
 
+    @Column(name = "track_distance")
+    private BigDecimal trackDistance;
 
+    @PrePersist
+    public void prePersist() {
+        if (Objects.isNull(this.trackDistance)) {
+            this.trackDistance = BigDecimal.ZERO;
+        }
+    }
 
-
-
+    public void addTrackDistance(BigDecimal moveTrackDistance) {
+        if (Objects.nonNull(moveTrackDistance)) {
+            this.trackDistance = this.trackDistance.add(moveTrackDistance);
+        }
+    }
 }
