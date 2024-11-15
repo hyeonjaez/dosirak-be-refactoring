@@ -10,6 +10,6 @@ public class RankResponse {
     private Long userId;
     private String profileImg;
     private Integer rank;
-    private String nickname;
+    private String nickName;
     private Integer reward;
 }
