@@ -15,10 +15,10 @@ public class StoreResponse {
     private String ifReward;
     private double mapX;
     private double mapY;
-    private boolean Operating;
+    private boolean operating;
 
 
-    public StoreResponse(Long storeId, String storeName, String storeCategory, String storeImg, String ifValid, String ifReward, double mapX, double mapY, boolean Operating) {
+    public StoreResponse(Long storeId, String storeName, String storeCategory, String storeImg, String ifValid, String ifReward, double mapX, double mapY, boolean operating) {
         this.storeId = storeId;
         this.storeName = storeName;
         this.storeCategory = storeCategory;
@@ -27,6 +27,6 @@ public class StoreResponse {
         this.ifReward = ifReward;
         this.mapX = mapX;
         this.mapY = mapY;
-        this.Operating = Operating;
+        this.operating = operating;
     }
 }

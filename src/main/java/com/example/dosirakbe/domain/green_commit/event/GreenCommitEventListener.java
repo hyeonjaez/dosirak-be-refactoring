@@ -14,7 +14,7 @@ public class GreenCommitEventListener {
 
     @EventListener
     public void handleGreenCommitEvent(GreenCommitEvent event) {
-        activityLogService.addActivityLog(event.getUserId(), event.getContentId(), event.getActivityType());
+        activityLogService.addActivityLog(event.getUserId(), event.getContentId(), event.getActivityType(), event.getDistance());
         userActivityService.createOrIncrementUserActivity(event.getUserId());
     }
 

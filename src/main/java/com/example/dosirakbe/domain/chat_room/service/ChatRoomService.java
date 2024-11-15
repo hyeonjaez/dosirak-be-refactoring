@@ -1,10 +1,12 @@
 package com.example.dosirakbe.domain.chat_room.service;
 
+import com.example.dosirakbe.domain.activity_log.entity.ActivityType;
 import com.example.dosirakbe.domain.chat_room.dto.request.ChatRoomRegisterRequest;
 import com.example.dosirakbe.domain.chat_room.dto.response.*;
 import com.example.dosirakbe.domain.chat_room.entity.ChatRoom;
 import com.example.dosirakbe.domain.chat_room.dto.mapper.ChatRoomMapper;
 import com.example.dosirakbe.domain.chat_room.repository.ChatRoomRepository;
+import com.example.dosirakbe.domain.green_commit.event.GreenCommitEvent;
 import com.example.dosirakbe.domain.message.dto.mapper.MessageMapper;
 import com.example.dosirakbe.domain.message.dto.response.MessageResponse;
 import com.example.dosirakbe.domain.message.entity.Message;
@@ -22,6 +24,7 @@ import com.example.dosirakbe.global.config.S3Uploader;
 import com.example.dosirakbe.global.util.ApiException;
 import com.example.dosirakbe.global.util.ExceptionEnum;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +48,7 @@ public class ChatRoomService {
     private final UserMapper userMapper;
     private final ZoneCategoryRepository zoneCategoryRepository;
     private final S3Uploader s3Uploader;
+    private final ApplicationEventPublisher eventPublisher;
 
     public ChatRoomResponse createChatRoom(MultipartFile file, ChatRoomRegisterRequest createRequest, Long userId) {
         validationFile(file, createRequest);
@@ -64,6 +68,9 @@ public class ChatRoomService {
         ChatRoom chatRoom = new ChatRoom(createRequest.getTitle(), createRequest.getExplanation(), zoneCategory, imageUrl);
 
         userChatRoomRepository.save(new UserChatRoom(chatRoom, user));
+
+        eventPublisher.publishEvent(new GreenCommitEvent(this, user.getUserId(), chatRoom.getId(), ActivityType.LOW_CARBON_MEANS_OF_TRANSPORTATION));
+
         return chatRoomMapper.mapToChatRoomResponse(chatRoomRepository.save(chatRoom));
     }
 
