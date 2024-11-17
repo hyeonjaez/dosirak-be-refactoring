@@ -103,10 +103,9 @@ public class UserService {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
-            String newUserName = "delete " + user.getUserName();
-
             user.setUserValid(false);
-            user.setUserName(newUserName);
+            user.setUserName("deleted " + user.getUserName());
+            user.setNickName("deleted " + user.getNickName());
             userRepository.save(user);
 
             refreshTokenRepository.deleteByUser_UserId(userId);
@@ -144,7 +143,8 @@ public class UserService {
                     .orElseThrow(() -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
             user.setUserValid(false);
-            user.setUserName("delete " + user.getUserName());
+            user.setUserName("deleted " + user.getUserName());
+            user.setNickName("deleted " + user.getNickName());
             userRepository.save(user);
 
             refreshTokenRepository.deleteByUser_UserId(userId);
