@@ -10,4 +10,8 @@ import java.util.List;
 
 public interface ActivityLogRepository extends JpaRepository<ActivityLog, Long> {
     List<ActivityLog> findByUserAndCreatedAtBetweenOrderByCreatedAtAsc(User user, LocalDateTime start, LocalDateTime end);
+
+    void deleteByUser(User user);
+
+    boolean existsByUser(User user);
 }
