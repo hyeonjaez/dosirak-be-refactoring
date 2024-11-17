@@ -1,5 +1,6 @@
 package com.example.dosirakbe.domain.user.service;
 
+import com.example.dosirakbe.domain.activity_log.repository.ActivityLogRepository;
 import com.example.dosirakbe.domain.auth.dto.OAuth2UserInfo;
 import com.example.dosirakbe.domain.auth.entity.RefreshToken;
 import com.example.dosirakbe.domain.auth.repository.RefreshTokenRepository;
@@ -7,18 +8,17 @@ import com.example.dosirakbe.domain.user.dto.response.UserProfileResponse;
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.generator.NickNameGenerator;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
+import com.example.dosirakbe.domain.user_activity.repository.UserActivityRepository;
+import com.example.dosirakbe.domain.user_chat_room.repository.UserChatRoomRepository;
 import com.example.dosirakbe.global.util.ApiException;
 import com.example.dosirakbe.global.util.ExceptionEnum;
 import com.example.dosirakbe.global.util.JwtUtil;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -27,11 +27,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -43,11 +40,16 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
     private final RestTemplate restTemplate;
+    private final UserChatRoomRepository userChatRoomRepository;
+    private final UserActivityRepository userActivityRepository;
+    private final ActivityLogRepository activityLogRepository;
 
     @Value("${spring.security.oauth2.client.registration.naver.client-id}")
     private String clientId;
     @Value("${spring.security.oauth2.client.registration.naver.client-secret}")
     private String clientSecret;
+    public static final String DELETE_USER_NICKNAME = "(알 수 없음)";
+    public static final String DELETE_USER_IMAGE = "https://dosirakbucket.s3.ap-northeast-2.amazonaws.com/aeb4b5c6-8766-4280-96ee-93dd2cb1baf5.png";
 
     public Map<String, String> registerUser(OAuth2UserInfo oAuth2UserInfo) {
         String userName = oAuth2UserInfo.getProvider() + " " + oAuth2UserInfo.getProviderId();
@@ -107,9 +109,14 @@ public class UserService {
 
             user.setUserValid(false);
             user.setUserName(newUserName);
+            user.setNickName(DELETE_USER_NICKNAME);
+            user.setProfileImg(DELETE_USER_IMAGE);
+
             userRepository.save(user);
 
+            deleteByUser(user);
             refreshTokenRepository.deleteByUser_UserId(userId);
+
 
         } catch (HttpClientErrorException e) {
             throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
@@ -117,10 +124,9 @@ public class UserService {
     }
 
 
-
     @Transactional
     public void processNaverLogout(String accessToken, Long userId) {
-            refreshTokenRepository.deleteByUser_UserId(userId);
+        refreshTokenRepository.deleteByUser_UserId(userId);
     }
 
     @Transactional
@@ -145,8 +151,11 @@ public class UserService {
 
             user.setUserValid(false);
             user.setUserName("delete " + user.getUserName());
+            user.setNickName(DELETE_USER_NICKNAME);
+            user.setProfileImg(DELETE_USER_IMAGE);
             userRepository.save(user);
 
+            deleteByUser(user);
             refreshTokenRepository.deleteByUser_UserId(userId);
 
         } catch (HttpClientErrorException e) {
@@ -221,6 +230,19 @@ public class UserService {
         );
     }
 
+    private void deleteByUser(User user) {
+        if (userChatRoomRepository.existsByUser(user)) {
+            userChatRoomRepository.deleteByUser(user);
+        }
+
+        if (userActivityRepository.existsByUser(user)) {
+            userActivityRepository.deleteByUser(user);
+        }
+
+        if (activityLogRepository.existsByUser(user)) {
+            activityLogRepository.deleteByUser(user);
+        }
+    }
 
 
 }
