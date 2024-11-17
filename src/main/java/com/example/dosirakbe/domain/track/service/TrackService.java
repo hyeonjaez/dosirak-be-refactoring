@@ -22,7 +22,7 @@ public class TrackService {
     public TrackMoveResponse recordTrackDistance(Long userId, TrackMoveRequest trackMoveRequest) {
         User user = userRepository.findById(userId).orElseThrow();
 
-        user.setTrackDistance(trackMoveRequest.getMoveDistance());
+        user.addTrackDistance(trackMoveRequest.getMoveDistance());
         eventPublisher.publishEvent(new GreenCommitEvent(this, user.getUserId(), null, ActivityType.LOW_CARBON_MEANS_OF_TRANSPORTATION, trackMoveRequest.getMoveDistance()));
 
         return new TrackMoveResponse(trackMoveRequest.getMoveDistance());
