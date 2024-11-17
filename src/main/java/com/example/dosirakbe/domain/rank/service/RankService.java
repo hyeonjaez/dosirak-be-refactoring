@@ -39,13 +39,18 @@ public class RankService {
 
         int prevReward = -1;
 
+        int equivalentUser = 0;
+
         for (User user : users) {
             if (user.getNickName() != null && user.getNickName().startsWith("(알 수 없음)")) {
                 continue;
             }
 
             if (user.getReward() != prevReward) {
-                rank++;
+                rank += equivalentUser + 1;
+                equivalentUser = 0;
+            } else {
+                equivalentUser++;
             }
 
             rankedUsers.add(new RankResponse(
