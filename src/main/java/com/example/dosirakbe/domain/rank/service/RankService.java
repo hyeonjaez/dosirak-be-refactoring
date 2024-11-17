@@ -40,7 +40,7 @@ public class RankService {
         int prevReward = -1;
 
         for (User user : users) {
-            if (user.getNickName() != null && user.getNickName().startsWith("deleted")) {
+            if (user.getNickName() != null && user.getNickName().startsWith("(알 수 없음)")) {
                 continue;
             }
 
