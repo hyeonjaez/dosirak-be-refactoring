@@ -35,15 +35,27 @@ public class RankService {
         List<User> users = userRepository.findAll(Sort.by(Sort.Direction.DESC, "reward"));
         List<RankResponse> rankedUsers = new ArrayList<>();
 
-        int rank = 1;
+        int rank = 0;
+
         int prevReward = -1;
 
-        for (int i = 0; i < users.size(); i++) {
-            User user = users.get(i);
-            if (user.getReward() != prevReward) {
-                rank = i + 1; // 새로운 순위
+        for (User user : users) {
+            if (user.getNickName() != null && user.getNickName().startsWith("(알 수 없음)")) {
+                continue;
             }
-            rankedUsers.add(new RankResponse(user.getUserId(), user.getProfileImg(), rank, user.getNickName(), user.getReward()));
+
+            if (user.getReward() != prevReward) {
+                rank++;
+            }
+
+            rankedUsers.add(new RankResponse(
+                    user.getUserId(),
+                    user.getProfileImg(),
+                    rank,
+                    user.getNickName(),
+                    user.getReward()
+            ));
+
             prevReward = user.getReward();
         }
 

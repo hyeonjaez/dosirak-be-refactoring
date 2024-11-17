@@ -105,14 +105,12 @@ public class UserService {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
-            String newUserName = "delete " + user.getUserName();
-
             user.setUserValid(false);
-            user.setUserName(newUserName);
+            user.setUserName("delete " + user.getUserName());
             user.setNickName(DELETE_USER_NICKNAME);
             user.setProfileImg(DELETE_USER_IMAGE);
-
             userRepository.save(user);
+
 
             deleteByUser(user);
             refreshTokenRepository.deleteByUser_UserId(userId);
