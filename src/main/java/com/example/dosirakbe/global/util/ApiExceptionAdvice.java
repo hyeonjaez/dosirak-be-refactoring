@@ -28,7 +28,6 @@ public class ApiExceptionAdvice {
                         .build());
     }
 
-
     @ExceptionHandler({RuntimeException.class})
     public ResponseEntity<ApiResult> exceptionHandler(HttpServletRequest request, final RuntimeException e) {
         ApiExceptionEntity apiExceptionEntity = ApiExceptionEntity.builder()

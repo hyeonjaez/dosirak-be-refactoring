@@ -63,7 +63,7 @@ dependencies {
     testImplementation 'org.jasypt:jasypt:1.9.3'  // Jasypt 의존성 (테스트용)
 
     //spring ai
-    implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
+    // implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
 
 }
 
