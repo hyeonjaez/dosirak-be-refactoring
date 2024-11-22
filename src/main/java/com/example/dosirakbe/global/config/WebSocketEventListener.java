@@ -36,9 +36,7 @@ public class WebSocketEventListener {
         try {
             // STOMP 헤더에서 유저 정보와 채팅방 ID 추출 (headers에서 가져옴)
             Long userId = validationAuthorization(headerAccessor);
-
             String chatRoomIdHeader = headerAccessor.getFirstNativeHeader("chatRoomId");
-
             if (Objects.isNull(chatRoomIdHeader)) {
                 throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
             }
