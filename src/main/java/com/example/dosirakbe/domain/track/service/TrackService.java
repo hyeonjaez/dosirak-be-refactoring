@@ -9,7 +9,9 @@ import com.example.dosirakbe.domain.track.dto.request.TrackMoveRequest;
 import com.example.dosirakbe.domain.track.dto.response.TrackMoveResponse;
 import com.example.dosirakbe.domain.track.dto.response.TrackSearchResponse;
 import com.example.dosirakbe.domain.track.entity.Track;
+import com.example.dosirakbe.domain.track.entity.TrackSearch;
 import com.example.dosirakbe.domain.track.repository.TrackRepository;
+import com.example.dosirakbe.domain.track.repository.TrackSearchRepository;
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ public class TrackService {
     private final SaleStoreRepository saleStoreRepository;
     private final TrackRepository trackRepository;
     private final TrackMapper trackMapper;
+    private final TrackSearchRepository trackSearchRepository;
 
     public TrackMoveResponse recordTrackDistance(Long userId, TrackMoveRequest trackMoveRequest) {
         User user = userRepository.findById(userId).orElseThrow();
@@ -50,6 +53,8 @@ public class TrackService {
         User user = userRepository.findById(userId).orElseThrow();
 
         List<Track> trackList = trackRepository.findByUserAndStoreNameContainingIgnoreCaseOrderByCreatedAtDesc(user, search);
+        TrackSearch trackSearch = new TrackSearch(search, user);
+        trackSearchRepository.save(trackSearch);
 
         return trackMapper.mapToTrackSearchResponseList(trackList);
     }
