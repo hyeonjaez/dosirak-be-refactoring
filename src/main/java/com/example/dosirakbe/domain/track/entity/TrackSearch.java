@@ -9,7 +9,6 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -17,23 +16,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "track_record")
+@Table(name = "track_search")
 @EntityListeners(AuditingEntityListener.class)
-public class Track {
+public class TrackSearch {
 
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "store_name")
-    private String storeName;
-
-    @Column(name = "store_address")
-    private String storeAddress;
-
-    @Column(name = "distance")
-    private BigDecimal distance;
+    @Column
+    private String search;
 
     @CreatedDate
     @Column(name = "created_at")
@@ -43,10 +36,8 @@ public class Track {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Track(String storeName, String storeAddress, BigDecimal distance, User user) {
-        this.storeName = storeName;
-        this.storeAddress = storeAddress;
-        this.distance = distance;
+    public TrackSearch(String search, User user) {
+        this.search = search;
         this.user = user;
     }
 }
