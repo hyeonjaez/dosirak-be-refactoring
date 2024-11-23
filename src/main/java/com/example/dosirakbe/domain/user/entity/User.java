@@ -47,7 +47,7 @@ public class User {
     private boolean userValid;
 
     @Column(name = "reward")
-    private Integer reward=0;
+    private Integer reward;
 
     @Column(name = "track_distance")
     private BigDecimal trackDistance;
@@ -56,6 +56,10 @@ public class User {
     public void prePersist() {
         if (Objects.isNull(this.trackDistance)) {
             this.trackDistance = BigDecimal.ZERO;
+        }
+
+        if (Objects.isNull(this.reward)) {
+            this.reward = 0;
         }
     }
 
