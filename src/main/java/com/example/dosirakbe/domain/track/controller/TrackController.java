@@ -3,6 +3,7 @@ package com.example.dosirakbe.domain.track.controller;
 import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.track.dto.request.TrackMoveRequest;
 import com.example.dosirakbe.domain.track.dto.response.TrackMoveResponse;
+import com.example.dosirakbe.domain.track.dto.response.TrackSearchResponse;
 import com.example.dosirakbe.domain.track.service.TrackService;
 import com.example.dosirakbe.global.util.ApiException;
 import com.example.dosirakbe.global.util.ApiResult;
@@ -13,12 +14,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -45,6 +44,24 @@ public class TrackController {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
+                .body(result);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<ApiResult<List<TrackSearchResponse>>> d(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                                  @RequestParam(required = false) String search) {
+        Long userId = customOAuth2User.getUserDTO().getUserId();
+
+        List<TrackSearchResponse> trackList = trackService.getTrackList(userId, search);
+
+        ApiResult<List<TrackSearchResponse>> result = ApiResult.<List<TrackSearchResponse>>builder()
+                .status(StatusEnum.SUCCESS)
+                .message("track log search successful")
+                .data(trackList)
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
                 .body(result);
     }
 
