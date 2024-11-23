@@ -1,12 +1,14 @@
 package com.example.dosirakbe.domain.elite.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 @AllArgsConstructor
-public class QuestionDto {
-    private Long questionId;
-    private String questionText;
+public class ProblemDto {
+    private Long id;
+    private String description;
     private String answer;
 }
