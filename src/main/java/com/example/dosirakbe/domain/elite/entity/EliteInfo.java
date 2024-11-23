@@ -1,30 +1,32 @@
 package com.example.dosirakbe.domain.elite.entity;
 
+
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@Table(name = "elite_info")
+@Entity
+@Table(name = "elite_info") // 테이블명 지정
 public class EliteInfo {
 
     @Id
+    @Column(name = "info_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long eliteInfoId;
+    private Long InfoId;
 
-    @Column(nullable = false)
-    private int correctAnsCount;
+    @Column(name = "user_id", nullable = false)
+    private Long userId; // 사용자 ID
 
-    @Column(nullable = false)
-    private int wrongAnsCnt;
+    @Column(name = "correct_cnt", nullable = false)
+    private int correctAnswers; // 정답 수
 
-    @Column(nullable = false)
-    private Long userId;
+    @Column(name = "wrong_cnt", nullable = false)
+    private int incorrectAnswers; // 틀린 정답 수
 
-    @Column
-    private Long lastSolvedQuestionId; // 마지막으로 푼 문제 ID 추가
+    // 전체 정답 수 계산 (엔터티 내부에서 계산)
+    public int getTotalAnswers() {
+        return correctAnswers + incorrectAnswers;
+    }
 }
