@@ -11,6 +11,10 @@ import java.util.List;
 
 public interface ProblemRepository extends JpaRepository<Problem, Long> {
 
+
+    // ProblemId로 문제 조회
+    Problem findByProblemId(Long problemId);
+
     // 사용자(userId)가 풀지 않은 문제 조회
     @Query("""
     SELECT p FROM Problem p 

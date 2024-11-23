@@ -35,4 +35,19 @@ public class ProblemService {
                 .answer(randomProblem.getAnswer())
                 .build();
     }
+
+    // ProblemId로 문제 조회
+    public ProblemDto findProblemById(Long problemId) {
+        Problem problem = problemRepository.findByProblemId(problemId);
+        if (problem == null) {
+            return null; // 예외 처리는 Controller에서 수행
+        }
+
+        // Problem 엔티티를 DTO로 변환
+        return new ProblemDto(
+                problem.getProblemId(),
+                problem.getDescription(),
+                problem.getAnswer()
+        );
+    }
 }
