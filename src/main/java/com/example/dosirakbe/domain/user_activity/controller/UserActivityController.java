@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 @RestController
@@ -27,9 +28,12 @@ public class UserActivityController {
 
     @GetMapping("/monthly")
     public ResponseEntity<ApiResult<List<UserActivityResponse>>> getMonthlyActivitySummary(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                                                           @RequestParam(value = "month", required = false)  @DateTimeFormat(pattern = "yyyy-MM") LocalDate month) {
+                                                                                           @RequestParam(value = "month", required = false) @DateTimeFormat(pattern = "yyyy-MM") YearMonth month) {
         Long userId = getUserIdByOAuth(customOAuth2User);
-        List<UserActivityResponse> monthlySummary = userActivityService.getUserActivityList(userId, month);
+
+        YearMonth targetMonth = (month != null) ? month : YearMonth.now();
+
+        List<UserActivityResponse> monthlySummary = userActivityService.getUserActivityList(userId, targetMonth);
 
         ApiResult<List<UserActivityResponse>> result = ApiResult.<List<UserActivityResponse>>builder()
                 .status(StatusEnum.SUCCESS)
