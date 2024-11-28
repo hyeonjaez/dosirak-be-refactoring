@@ -49,6 +49,31 @@ public class ProblemController {
         );
     }
 
+    // ProblemId로 문제 조회
+    // ProblemId로 문제 조회
+    @GetMapping("/problems/{problemId}")
+    public ResponseEntity<ApiResult<ProblemDto>> getProblemById(@PathVariable Long problemId) {
+        ProblemDto problem = problemService.findProblemById(problemId);
+
+        if (problem == null) {
+            return ResponseEntity.status(404).body(
+                    ApiResult.<ProblemDto>builder()
+                            .status(StatusEnum.FAILURE)
+                            .message("해당 문제를 찾을 수 없습니다.")
+                            .data(null)
+                            .build()
+            );
+        }
+
+        return ResponseEntity.ok(
+                ApiResult.<ProblemDto>builder()
+                        .status(StatusEnum.SUCCESS)
+                        .message("문제 조회 성공")
+                        .data(problem)
+                        .build()
+        );
+    }
+
     private Long getUserIdByOAuth(CustomOAuth2User customOAuth2User) {
         return customOAuth2User.getUserDTO().getUserId();
     }

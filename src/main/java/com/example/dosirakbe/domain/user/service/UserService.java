@@ -242,5 +242,14 @@ public class UserService {
         }
     }
 
+    public void addRewardPointsByTrack(Long userId, double distance){
+        int result = (int) Math.round(distance * 7 * 100);
+        userRepository.updateReward(userId, result);
+    }
+
+    public void addRewardPointsByAuth(Long userId) {
+        userRepository.updateReward(userId,10);
+    }
+
 
 }

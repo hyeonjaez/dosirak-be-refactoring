@@ -57,6 +57,10 @@ public class UserActivityService {
             userActivity = new UserActivity(user);
             userActivityRepository.save(userActivity);
         }
-
     }
+
+
+
+
+
 }

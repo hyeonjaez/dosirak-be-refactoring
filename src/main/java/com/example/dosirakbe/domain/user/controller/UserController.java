@@ -205,7 +205,6 @@ public class UserController {
 
             Map<String, String> responseData = new HashMap<>();
             responseData.put("nickName", updatedUser.getNickName());
-
             ApiResult result = ApiResult.builder()
                     .status(StatusEnum.SUCCESS)
                     .message("닉네임이 성공적으로 저장되었습니다.")
@@ -264,6 +263,7 @@ public class UserController {
     @PutMapping("/api/mypage/nickName")
     public ResponseEntity<ApiResult> updateNickname(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                     @RequestBody NickNameRequest nickNameRequest) {
+
         Long userId = customOAuth2User.getUserDTO().getUserId();
 
         try {
@@ -289,6 +289,23 @@ public class UserController {
                     .build();
             return ResponseEntity.badRequest().body(result);
         }
+    }
+
+    @PostMapping("api/track/rewards")
+    public ResponseEntity<String> addReward(@AuthenticationPrincipal CustomOAuth2User customOAuth2User, @RequestParam double distance) {
+
+        Long userId = customOAuth2User.getUserDTO().getUserId();
+        userService.addRewardPointsByTrack(userId, distance);
+        return ResponseEntity.ok("리워드 포인트가 성공적으로 추가되었습니다.");
+    }
+
+    @PostMapping("api/dosirak/rewards")
+    public ResponseEntity<String> addReward(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+
+        Long userId = customOAuth2User.getUserDTO().getUserId();
+        userService.addRewardPointsByAuth(userId);
+        return ResponseEntity.ok("리워드 포인트가 성공적으로 추가되었습니다.");
+
     }
 
 }
