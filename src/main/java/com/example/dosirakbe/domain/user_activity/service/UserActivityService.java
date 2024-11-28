@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 import java.util.Objects;
@@ -27,19 +28,16 @@ public class UserActivityService {
     private final UserRepository userRepository;
     private final UserActivityMapper userActivityMapper;
 
-    public List<UserActivityResponse> getUserActivityList(Long userId, LocalDate month) {
+    public List<UserActivityResponse> getUserActivityList(Long userId, YearMonth month) {
         User user = userRepository.findById(userId)
                 .orElseThrow(
                         () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
-        if (Objects.isNull(month)) {
-            month = LocalDate.now();
-        }
 
-        LocalDate startDate = month.withDayOfMonth(1);
-        LocalDate endDate = month.withDayOfMonth(month.lengthOfMonth());
+        LocalDate firstDay = month.atDay(1);  // 해당 월의 첫째 날
+        LocalDate lastDay = month.atEndOfMonth();
 
-        List<UserActivity> byUserAndCreatedAtBetweenOrderByCreatedAtAsc = userActivityRepository.findByUserAndCreatedAtBetweenOrderByCreatedAtAsc(user, startDate, endDate);
+        List<UserActivity> byUserAndCreatedAtBetweenOrderByCreatedAtAsc = userActivityRepository.findByUserAndCreatedAtBetweenOrderByCreatedAtAsc(user, firstDay, lastDay);
 
         return userActivityMapper.mapToUserActivityResponseList(byUserAndCreatedAtBetweenOrderByCreatedAtAsc);
     }
