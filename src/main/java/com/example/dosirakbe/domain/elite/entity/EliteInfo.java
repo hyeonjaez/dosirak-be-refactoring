@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Entity
@@ -25,8 +28,16 @@ public class EliteInfo {
     @Column(name = "wrong_cnt", nullable = false)
     private int incorrectAnswers; // 틀린 정답 수
 
+    @Column(name = "last_date", nullable = false)
+    private LocalDate lastSolvedDate; // 마지막으로 푼 날짜
+
     // 전체 정답 수 계산 (엔터티 내부에서 계산)
     public int getTotalAnswers() {
         return correctAnswers + incorrectAnswers;
     }
+    // 마지막으로 푼 날짜 업데이트
+    public void updateLastSolvedDate() {
+        this.lastSolvedDate = LocalDate.now();
+    }
+
 }
