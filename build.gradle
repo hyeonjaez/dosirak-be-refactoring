@@ -62,8 +62,10 @@ dependencies {
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
     testImplementation 'org.jasypt:jasypt:1.9.3'  // Jasypt 의존성 (테스트용)
 
-    //spring ai
-    // implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0' // HTTP 요청 라이브러리
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2' // JSON 처리
+
 
 }
 
