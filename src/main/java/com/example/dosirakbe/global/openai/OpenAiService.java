@@ -14,7 +14,6 @@ public class OpenAiService {
 
     private static final String API_URL = "https://api.openai.com/v1/chat/completions";
 
-
     public String extractReusableContainerData(String prompt) throws Exception {
         OkHttpClient client = new OkHttpClient();
         ObjectMapper objectMapper = new ObjectMapper();
