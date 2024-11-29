@@ -84,7 +84,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/api/user/check-nickName","/api/token/reissue/access-token", "/api/user/register", "/login", "/api/valid-token"
                                 ,"/api/guide/stores/search", "/api/guide/stores/filter", "/api/guide/stores/nearby", "/api/guide/stores/all","/api/images/**", "/api/user/withdraw",
-                                "/api/user/logout","/dosirak", "/app/**","api/elite-info/**", "api/problems/**","api/elite-history/**").permitAll()
+                                "/api/user/logout","/dosirak", "/app/**","api/elite-info/**", "api/problems/**","api/elite-history/**"
+                        ,"/api/containers/**","/api/rewards/**","/api/dosirak/**").permitAll()
                         .anyRequest().authenticated());
 
 
