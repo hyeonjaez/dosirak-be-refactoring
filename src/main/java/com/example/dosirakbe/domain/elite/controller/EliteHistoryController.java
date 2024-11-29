@@ -43,12 +43,12 @@ public class EliteHistoryController {
     // 문제 풀이 기록 추가 (정답 또는 오답)
     @PostMapping("/elite-history/record")
     public ResponseEntity<ApiResult<Void>> recordAnswer(
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+//            @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
             @RequestParam Long problemId,
             @RequestParam boolean isCorrect
     ) {
-        Long userId = getUserIdByOAuth(customOAuth2User);
-        eliteHistoryService.recordAnswer(userId, problemId, isCorrect);
+        //Long userId = getUserIdByOAuth(customOAuth2User);
+        eliteHistoryService.recordAnswer((long)1, problemId, isCorrect);
 
         return ResponseEntity.ok(
                 ApiResult.<Void>builder()

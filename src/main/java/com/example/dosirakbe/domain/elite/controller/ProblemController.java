@@ -50,7 +50,6 @@ public class ProblemController {
     }
 
     // ProblemId로 문제 조회
-    // ProblemId로 문제 조회
     @GetMapping("/problems/{problemId}")
     public ResponseEntity<ApiResult<ProblemDto>> getProblemById(@PathVariable Long problemId) {
         ProblemDto problem = problemService.findProblemById(problemId);

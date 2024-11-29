@@ -28,7 +28,7 @@ public class EliteInfo {
     @Column(name = "wrong_cnt", nullable = false)
     private int incorrectAnswers; // 틀린 정답 수
 
-    @Column(name = "last_date", nullable = false)
+    @Column(name = "last_date", nullable = false, columnDefinition = "DATE DEFAULT CURRENT_DATE")
     private LocalDate lastSolvedDate; // 마지막으로 푼 날짜
 
     // 전체 정답 수 계산 (엔터티 내부에서 계산)
