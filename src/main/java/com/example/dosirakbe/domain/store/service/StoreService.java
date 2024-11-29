@@ -87,6 +87,7 @@ public class StoreService {
 
 
 
+    // 다회용기 -용량예측
     public StoreDetailResponse getStoreDetail(Long storeId) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
@@ -97,7 +98,7 @@ public class StoreService {
                 .map(this::changeToMenuResponse)
                 .collect(Collectors.toList());
 
-
+        //메뉴 response 메뉴에 있음
         return new StoreDetailResponse(
                 store.getStoreId(),
                 store.getStoreName(),
