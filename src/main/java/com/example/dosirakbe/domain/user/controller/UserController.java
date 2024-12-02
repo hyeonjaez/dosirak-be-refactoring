@@ -6,6 +6,7 @@ import com.example.dosirakbe.domain.auth.dto.NaverUserInfo;
 import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.auth.service.CustomOAuth2UserService;
 import com.example.dosirakbe.domain.user.dto.request.NickNameRequest;
+import com.example.dosirakbe.domain.user.dto.request.TrackRewardRequest;
 import com.example.dosirakbe.domain.user.dto.response.UserProfileResponse;
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
@@ -205,7 +206,6 @@ public class UserController {
 
             Map<String, String> responseData = new HashMap<>();
             responseData.put("nickName", updatedUser.getNickName());
-
             ApiResult result = ApiResult.builder()
                     .status(StatusEnum.SUCCESS)
                     .message("닉네임이 성공적으로 저장되었습니다.")
@@ -264,6 +264,7 @@ public class UserController {
     @PutMapping("/api/mypage/nickName")
     public ResponseEntity<ApiResult> updateNickname(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                     @RequestBody NickNameRequest nickNameRequest) {
+
         Long userId = customOAuth2User.getUserDTO().getUserId();
 
         try {
@@ -289,6 +290,34 @@ public class UserController {
                     .build();
             return ResponseEntity.badRequest().body(result);
         }
+    }
+
+    @PostMapping("api/rewards/track")
+    public ResponseEntity<String> addReward(
+            @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+            @RequestBody TrackRewardRequest trackRewardRequest) {
+
+        try {
+            Long userId = customOAuth2User.getUserDTO().getUserId();
+            userService.addRewardPointsByTrack(userId, trackRewardRequest.getDistance());
+            return ResponseEntity.ok("리워드 포인트가 성공적으로 추가되었습니다.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("잘못된 입력값입니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("리워드 포인트 추가 중 예상치 못한 오류가 발생했습니다.");
+        }
+    }
+
+    @PostMapping("api/rewards/dosirak")
+    public ResponseEntity<String> addReward(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+
+        Long userId = customOAuth2User.getUserDTO().getUserId();
+        userService.addRewardPointsByAuth(userId);
+        return ResponseEntity.ok("리워드 포인트가 성공적으로 추가되었습니다.");
+
     }
 
 }

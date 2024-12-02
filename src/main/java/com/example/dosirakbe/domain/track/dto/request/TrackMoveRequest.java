@@ -21,4 +21,7 @@ public class TrackMoveRequest {
     @JsonDeserialize(using = NumberDeserializers.BigDecimalDeserializer.class)
     @Digits(integer = 10, fraction = 2)
     private BigDecimal moveDistance;
+
+    @NotNull
+    private String saleStoreName;
 }
