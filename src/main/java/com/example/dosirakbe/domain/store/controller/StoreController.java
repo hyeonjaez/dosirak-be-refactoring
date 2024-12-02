@@ -21,7 +21,7 @@ public class StoreController {
 
 
     @GetMapping("/api/guide/stores/{storeId}")
-    public ResponseEntity<ApiResult<StoreDetailResponse>> getStoreDetail(@PathVariable("storeId") Long storeId) {
+    public ResponseEntity<ApiResult<StoreDetailResponse>> getStoreDetail(@PathVariable("storeId") Long storeId){
         StoreDetailResponse storeDetailResponse = storeService.getStoreDetail(storeId);
         return ResponseEntity.ok(
                 ApiResult.<StoreDetailResponse>builder()
