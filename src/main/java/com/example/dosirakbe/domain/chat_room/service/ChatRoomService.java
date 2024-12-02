@@ -133,7 +133,6 @@ public class ChatRoomService {
 
             return userChatRoomBriefParticipationResponse;
         }).toList();
-
     }
 
     public void leaveChatRoom(Long userId, Long chatRoomId) {
