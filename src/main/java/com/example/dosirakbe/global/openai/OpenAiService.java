@@ -31,7 +31,7 @@ public class OpenAiService {
         OkHttpClient client = new OkHttpClient();
         ObjectMapper objectMapper = new ObjectMapper();
 
-        String prompt = String.format("%s 1인분을 포장하는 데 필요한 다회용기 용량을 숫자와 단위만으로 다른 응답 없이 응답해주세요.", dishName);
+        String prompt = String.format("%s 1인분을 포장하는 데 필요한 다회용기의 용량을 정확히 숫자와 단위만으로 응답해주세요. 다른 텍스트를 포함하지 마세요. 예: '500ml'.", dishName);
         JsonNode requestBody = objectMapper.createObjectNode()
                 .put("model", "gpt-3.5-turbo")
                 .put("max_tokens", 50)
