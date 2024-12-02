@@ -8,6 +8,7 @@ import com.example.dosirakbe.domain.store.dto.response.StoreDetailResponse;
 import com.example.dosirakbe.domain.store.dto.response.StoreResponse;
 import com.example.dosirakbe.domain.store.entity.Store;
 import com.example.dosirakbe.domain.store.repository.StoreRepository;
+import com.example.dosirakbe.global.openai.OpenAiService;
 import com.example.dosirakbe.global.util.ApiException;
 import com.example.dosirakbe.global.util.ExceptionEnum;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,6 +29,7 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
     private final MenuRepository menuRepository;
+    private final OpenAiService openAiService;
 
     public List<StoreResponse> searchStores(String keyword) {
 
@@ -85,18 +87,49 @@ public class StoreService {
         );
     }
 
-
-
     // 다회용기 -용량예측
     public StoreDetailResponse getStoreDetail(Long storeId) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
         List<Menu> menuList = menuRepository.findByStore_StoreId(storeId);
-
         List<MenuResponse> menuResponses = menuList.stream()
-                .map(this::changeToMenuResponse)
+                .map(menu -> {
+                    try {
+                        return changeToMenuResponse(menu); // 예외 처리
+                    } catch (Exception e) {
+                        // 예외 발생 시 기본값 반환
+                        return new MenuResponse(
+                                menu.getMenuId(),
+                                menu.getMenuName(),
+                                menu.getMenuImg(),
+                                menu.getMenuPrice(),
+                                "Unknown size"
+                        );
+                    }
+                })
                 .collect(Collectors.toList());
+
+
+
+//        List<MenuResponse> menuResponses = menuList.stream()
+//               .map(this::changeToMenuResponse)
+////                .collect(Collectors.toList());
+//        List<MenuResponse> menuResponses = menuList.stream()
+//                .map(menu -> {
+//                    try {
+//                        return new MenuResponse(
+//                                menu.getMenuId(),
+//                                menu.getMenuName(),
+//                                menu.getMenuImg(),
+//                                menu.getMenuPrice(),
+//                                openAiService.extractReusableContainerData(menu.getMenuName()) // 캐싱된 데이터 사용
+//                        );
+//                    } catch (Exception e) {
+//                        return new MenuResponse(menu.getMenuId(), menu.getMenuName(), menu.getMenuImg(), menu.getMenuPrice(), "Unknown size");
+//                    }
+//                })
+//                .collect(Collectors.toList());
 
         //메뉴 response 메뉴에 있음
         return new StoreDetailResponse(
@@ -114,13 +147,13 @@ public class StoreService {
         );
     }
 
-    private MenuResponse changeToMenuResponse(Menu menu) {
+    private MenuResponse changeToMenuResponse(Menu menu) throws Exception {
         return new MenuResponse(
                 menu.getMenuId(),
                 menu.getMenuName(),
                 menu.getMenuImg(),
                 menu.getMenuPrice(),
-                menu.getMenuPackSize()
+                openAiService.extractReusableContainerData(menu.getMenuName())
         );
     }
 
