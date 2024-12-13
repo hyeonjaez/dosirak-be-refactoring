@@ -52,11 +52,11 @@ public class ChatRoomController {
                 .body(result);
     }
 
-    @GetMapping("/{id}/information")
+    @GetMapping("/{chatRoomId}")
     public ResponseEntity<ApiResult<ChatRoomInformationResponse>> getChatRoomInformation(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                                                         @PathVariable Long id) {
+                                                                                         @PathVariable Long chatRoomId) {
         Long userId = getUserIdByOAuth(customOAuth2User);
-        ChatRoomInformationResponse chatRoomInformation = chatRoomService.findMessagesByChatRoom(userId, id);
+        ChatRoomInformationResponse chatRoomInformation = chatRoomService.findMessagesByChatRoom(userId, chatRoomId);
 
         ApiResult<ChatRoomInformationResponse> result = ApiResult.<ChatRoomInformationResponse>builder()
                 .status(StatusEnum.SUCCESS)
@@ -69,9 +69,9 @@ public class ChatRoomController {
                 .body(result);
     }
 
-    @GetMapping("/{id}/user-list")
-    public ResponseEntity<ApiResult<List<UserChatRoomResponse>>> getChatRoomUsers(@PathVariable Long id) {
-        List<UserChatRoomResponse> userList = chatRoomService.findUserChatRooms(id);
+    @GetMapping("/{chatRoomId}/users")
+    public ResponseEntity<ApiResult<List<UserChatRoomResponse>>> getChatRoomUsers(@PathVariable Long chatRoomId) {
+        List<UserChatRoomResponse> userList = chatRoomService.findUserChatRooms(chatRoomId);
 
         ApiResult<List<UserChatRoomResponse>> result = ApiResult.<List<UserChatRoomResponse>>builder()
                 .status(StatusEnum.SUCCESS)
@@ -84,11 +84,11 @@ public class ChatRoomController {
                 .body(result);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{chatRoomId}")
     public ResponseEntity<ApiResult<Void>> deleteChatRoom(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                          @PathVariable Long id) {
+                                                          @PathVariable Long chatRoomId) {
         Long userId = getUserIdByOAuth(customOAuth2User);
-        chatRoomService.leaveChatRoom(userId, id);
+        chatRoomService.leaveChatRoom(userId, chatRoomId);
 
         ApiResult<Void> result = ApiResult.<Void>builder()
                 .status(StatusEnum.SUCCESS)
@@ -119,7 +119,7 @@ public class ChatRoomController {
                 .body(result);
     }
 
-    @GetMapping("/by-user")
+    @GetMapping("/me")
     public ResponseEntity<ApiResult<List<UserChatRoomParticipationResponse>>> myChatRoomList(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
         Long userId = getUserIdByOAuth(customOAuth2User);
         List<UserChatRoomParticipationResponse> allByUser = chatRoomService.findAllByUser(userId);
@@ -135,7 +135,7 @@ public class ChatRoomController {
                 .body(result);
     }
 
-    @GetMapping("/main/by-user")
+    @GetMapping("/me/main")
     public ResponseEntity<ApiResult<List<UserChatRoomBriefParticipationResponse>>> mainChatRoomByUser(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
         Long userId = getUserIdByOAuth(customOAuth2User);
         List<UserChatRoomBriefParticipationResponse> allBriefByUser = chatRoomService.findAllBriefByUser(userId);
