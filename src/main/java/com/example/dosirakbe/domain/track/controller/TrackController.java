@@ -3,9 +3,7 @@ package com.example.dosirakbe.domain.track.controller;
 import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.track.dto.request.TrackMoveRequest;
 import com.example.dosirakbe.domain.track.dto.response.TrackMoveResponse;
-import com.example.dosirakbe.domain.track.dto.response.TrackSearchGetResponse;
 import com.example.dosirakbe.domain.track.dto.response.TrackSearchResponse;
-import com.example.dosirakbe.domain.track.service.TrackSearchService;
 import com.example.dosirakbe.domain.track.service.TrackService;
 import com.example.dosirakbe.global.util.ApiException;
 import com.example.dosirakbe.global.util.ApiResult;
@@ -27,7 +25,6 @@ import java.util.List;
 public class TrackController {
     public final TrackService trackService;
     public static final BigDecimal GAP_DISTANCE = BigDecimal.ONE; //1km
-    public final TrackSearchService trackSearchService;
 
     @PostMapping
     public ResponseEntity<ApiResult<TrackMoveResponse>> recordMovingDistance(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
@@ -50,7 +47,7 @@ public class TrackController {
                 .body(result);
     }
 
-    @GetMapping("/list")
+    @GetMapping
     public ResponseEntity<ApiResult<List<TrackSearchResponse>>> getTrackList(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                                              @RequestParam(required = false) String search) {
         Long userId = getUserId(customOAuth2User);
@@ -65,40 +62,6 @@ public class TrackController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(result);
-    }
-
-
-    @GetMapping("/search/list")
-    public ResponseEntity<ApiResult<List<TrackSearchGetResponse>>> getSearchList(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        Long userId = getUserId(customOAuth2User);
-
-        List<TrackSearchGetResponse> searchList = trackSearchService.getSearchList(userId);
-
-        ApiResult<List<TrackSearchGetResponse>> result = ApiResult.<List<TrackSearchGetResponse>>builder()
-                .status(StatusEnum.SUCCESS)
-                .message(" search list get successful")
-                .data(searchList)
-                .build();
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(result);
-    }
-
-
-    @DeleteMapping("/search/{id}")
-    public ResponseEntity<ApiResult<Void>> deleteSearch(@PathVariable Long id) {
-        trackSearchService.deleteSearch(id);
-
-        ApiResult<Void> result = ApiResult.<Void>builder()
-                .status(StatusEnum.SUCCESS)
-                .message("search delete successful")
-                .data(null)
-                .build();
-
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
                 .body(result);
     }
 
