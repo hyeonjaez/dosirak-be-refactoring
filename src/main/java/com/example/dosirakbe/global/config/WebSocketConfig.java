@@ -16,10 +16,31 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 import java.util.List;
 
+/**
+ * packageName    : com.example.dosirakbe.global.config<br>
+ * fileName       : WebSocketConfig<br>
+ * author         : Fiat_lux<br>
+ * date           : 11/09/24<br>
+ * description    : WebSocket 및 STOMP 프로토콜을 사용한 메시징 설정을 담당하는 구성 클래스입니다.<br>
+ * ===========================================================<br>
+ * DATE              AUTHOR             NOTE<br>
+ * -----------------------------------------------------------<br>
+ * 11/09/24        Fiat_lux                최초 생성<br>
+ */
 @Configuration
 @EnableWebSocketMessageBroker // WebSocket 메시지 브로커를 활성화,  STOMP 프로토콜을 사용한 WebSocket 메시징 기능
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    /**
+     * STOMP 엔드포인트를 등록하고, SockJS 폴백을 활성화합니다.
+     *
+     * <p>
+     * 이 메서드는 클라이언트가 WebSocket 연결을 시작할 수 있는 엔드포인트를 등록합니다.
+     * 지정된 엔드포인트에 대해 모든 출처(origin)를 허용하며, SockJS를 통해 WebSocket 을 지원하지 않는 브라우저에서도 대체 통신이 가능하도록 설정합니다.
+     * </p>
+     *
+     * @param registry STOMP 엔드포인트를 등록할 {@link StompEndpointRegistry} 객체
+     */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/dosirak")
@@ -30,7 +51,16 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     }
 
-
+    /**
+     * 메시지 브로커를 구성하고, 애플리케이션의 메시지 경로 접두사를 설정합니다.
+     *
+     * <p>
+     * 이 메서드는 애플리케이션의 메시지 경로 접두사를 `/app`으로 설정하고, 간단한 메시지 브로커를 활성화하여
+     * `/topic` 및 `/queue` 경로로 전송된 메시지를 브로드캐스트 및 개인 메시지 큐로 전달합니다.
+     * </p>
+     *
+     * @param config 메시지 브로커 구성을 위한 {@link MessageBrokerRegistry} 객체
+     */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.setApplicationDestinationPrefixes("/app");
@@ -42,6 +72,16 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // queue : 1:1 메시지를 주고받는 개인 메세지 큐 경로
     }
 
+    /**
+     * Jackson 메시지 컨버터를 빈으로 등록하고, Java 8 날짜/시간 모듈을 설정합니다.
+     *
+     * <p>
+     * 이 메서드는 {@link ObjectMapper}를 커스터마이징하여 Java 8 날짜/시간 타입을 지원하고,
+     * 날짜 및 시간 값을 ISO 형식으로 직렬화하도록 설정합니다.
+     * </p>
+     *
+     * @return 설정된 {@link MappingJackson2MessageConverter} 객체
+     */
     @Bean
     public MappingJackson2MessageConverter mappingJackson2MessageConverter() {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -54,6 +94,17 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         return converter;
     }
 
+    /**
+     * 메시지 컨버터를 구성하여 문자열 및 JSON 메시지를 처리할 수 있도록 설정합니다.
+     *
+     * <p>
+     * 이 메서드는 {@link StringMessageConverter}와 커스터마이징된 {@link MappingJackson2MessageConverter}를
+     * 메시지 컨버터 리스트에 추가하여, 다양한 메시지 형식을 처리할 수 있도록 설정합니다.
+     * </p>
+     *
+     * @param messageConverters 메시지 컨버터를 등록할 {@link List} 객체
+     * @return 메시지 컨버터 구성이 완료되었음을 나타내는 {@code true}
+     */
     @Override
     public boolean configureMessageConverters(List<MessageConverter> messageConverters) {
         messageConverters.add(new StringMessageConverter());
