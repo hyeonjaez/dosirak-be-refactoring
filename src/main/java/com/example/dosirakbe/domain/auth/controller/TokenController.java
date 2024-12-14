@@ -10,20 +10,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.JwtException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.example.dosirakbe.global.util.JwtUtil;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/tokens")
 public class TokenController {
 
     private final TokenService tokenService;
     private final JwtUtil jwtUtil;
 
-    @GetMapping("/api/token/reissue/access-token")
+    //accesstoken재발급
+    @PostMapping
     public ResponseEntity<ApiResult> reissueAccessToken() {
         try {
 
@@ -50,7 +49,8 @@ public class TokenController {
         }
     }
 
-    @GetMapping("/api/valid-token")
+    //토큰유효성검증
+    @GetMapping("/validate")
     public ResponseEntity<ApiResult> validateToken(@RequestHeader("Authorization") String authorizationHeader) {
         try {
 

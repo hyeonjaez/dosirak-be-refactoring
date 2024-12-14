@@ -15,12 +15,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/guide/stores")
 public class StoreController {
 
     private final StoreService storeService;
 
 
-    @GetMapping("/api/guide/stores/{storeId}")
+    @GetMapping("/{storeId}")
     public ResponseEntity<ApiResult<StoreDetailResponse>> getStoreDetail(@PathVariable("storeId") Long storeId){
         StoreDetailResponse storeDetailResponse = storeService.getStoreDetail(storeId);
         return ResponseEntity.ok(
@@ -32,7 +33,7 @@ public class StoreController {
         );
     }
 
-    @GetMapping("/api/guide/stores/search")
+    @GetMapping(params = "keyword")
     public ResponseEntity<ApiResult<List<StoreResponse>>> searchStores(@RequestParam("keyword") String keyword) {
         List<StoreResponse> stores = storeService.searchStores(keyword);
         return ResponseEntity.ok(
@@ -44,9 +45,9 @@ public class StoreController {
         );
     }
 
-    @GetMapping("/api/guide/stores/filter")
-    public ResponseEntity<ApiResult<List<StoreResponse>>> getStoresByCategory(@RequestParam("storeCategory") String storeCategory) {
-        List<StoreResponse> stores = storeService.storesByCategory(storeCategory);
+    @GetMapping(params = "category")
+    public ResponseEntity<ApiResult<List<StoreResponse>>> getStoresByCategory(@RequestParam("category") String category) {
+        List<StoreResponse> stores = storeService.storesByCategory(category);
         return ResponseEntity.ok(
                 ApiResult.<List<StoreResponse>>builder()
                         .status(StatusEnum.SUCCESS)
@@ -56,7 +57,7 @@ public class StoreController {
         );
     }
 
-    @GetMapping("/api/guide/stores/nearby")
+    @GetMapping("/nearby")
     public ResponseEntity<ApiResult<List<StoreResponse>>> getNearbyStores(@RequestBody StoreRequest storeRequest) {
         List<StoreResponse> stores = storeService.getStoresWithinRadius(storeRequest);
         return ResponseEntity.ok(
@@ -68,7 +69,7 @@ public class StoreController {
         );
     }
 
-    @GetMapping("/api/guide/stores/all")
+    @GetMapping("/all")
     public ResponseEntity<ApiResult<List<StoreResponse>>> getAllStores() {
         List<StoreResponse> stores = storeService.getAllStores();
 

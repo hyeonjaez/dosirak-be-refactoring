@@ -33,8 +33,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         DefaultAuthorizationCodeTokenResponseClient tokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
-        //tokenResponseClient.setRequestEntityConverter(customRequestEntityConverter);
-
 
         http
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
@@ -82,9 +80,12 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/user/check-nickName","/api/token/reissue/access-token", "/api/user/register", "/login", "/api/valid-token"
-                                ,"/api/guide/stores/search", "/api/guide/stores/filter", "/api/guide/stores/nearby", "/api/guide/stores/all","/api/images/**", "/api/user/withdraw",
-                                "/api/user/logout","/dosirak", "/app/**").permitAll()
+                        .requestMatchers("/api/users/check","/api/tokens ", "/api/users", "/api/tokens/validate",
+                                "/api/guide/stores",
+                                "/api/guide/stores/nearby",
+                                "/api/guide/stores/all", "/api/guide/stores?keyword=",
+                                "/api/guide/stores?category=",
+                                "/api/users/logout","/dosirak", "/app/**").permitAll()
                         .anyRequest().authenticated());
 
 

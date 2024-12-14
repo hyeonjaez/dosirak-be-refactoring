@@ -32,7 +32,7 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    @PostMapping("/api/user/register")
+    @PostMapping("/api/users")
     public ResponseEntity<ApiResult<Map<String, String>>> authenticateUser(@RequestHeader("Authorization") String socialAccessToken) {
         try {
             if (socialAccessToken.startsWith("Bearer ")) {
@@ -74,7 +74,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/api/user/logout")
+    @PostMapping("/api/users/logout")
     public ResponseEntity<ApiResult<Map<String, String>>> logoutUser(@RequestHeader("Authorization") String socialAccessToken) {
         if (socialAccessToken.startsWith("Bearer ")) {
             socialAccessToken = socialAccessToken.substring(7);
@@ -116,7 +116,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/api/user/withdraw")
+    @PostMapping("/api/users/withdraw")
     public ResponseEntity<ApiResult<Map<String, String>>> withdrawUser(@RequestHeader("Authorization") String socialAccessToken) {
         if (socialAccessToken.startsWith("Bearer ")) {
             socialAccessToken = socialAccessToken.substring(7);
@@ -195,7 +195,7 @@ public class UserController {
     }
 
     //회원가입시사용
-    @PostMapping("/api/user/nickName")
+    @PostMapping("/api/users/nickname")
     public ResponseEntity<?> generateNickname(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                               @RequestBody NickNameRequest nickNameRequest) {
 
@@ -226,9 +226,9 @@ public class UserController {
     }
 
     //닉네임 중복확인
-    @GetMapping("/api/user/check-nickName")
-    public ResponseEntity<?> checkNicknName(@RequestParam("nickName") String nickName) {
-        boolean exists = userRepository.existsByNickName(nickName);
+    @GetMapping("/api/users/check")
+    public ResponseEntity<?> checkNicknName(@RequestParam("nickname") String nickname) {
+        boolean exists = userRepository.existsByNickName(nickname);
         if (exists) {
             ApiResult result = ApiResult.builder()
                     .status(StatusEnum.FAILURE)
@@ -246,7 +246,7 @@ public class UserController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/api/user/mypage/profile")
+    @GetMapping("/api/users/profile")
     public ResponseEntity<ApiResult<UserProfileResponse>> getUserProfile(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
         Long userId = customOAuth2User.getUserDTO().getUserId();
         UserProfileResponse userProfileResponse = userService.getUserProfile(userId);
@@ -261,7 +261,7 @@ public class UserController {
         return ResponseEntity.ok(result);
     }
 
-    @PutMapping("/api/mypage/nickName")
+    @PutMapping("/api/users/nickname")
     public ResponseEntity<ApiResult> updateNickname(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                     @RequestBody NickNameRequest nickNameRequest) {
 

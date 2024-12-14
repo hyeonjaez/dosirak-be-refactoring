@@ -9,17 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/users")
 public class RankController {
 
     @Autowired
     private RankService rankService;
 
-    @GetMapping("/api/users/rank")
+    @GetMapping("/rank")
     public ResponseEntity<ApiResult<List<RankResponse>>> getAllRanks() {
         List<RankResponse> ranks = rankService.getRankedUsers();
         return ResponseEntity.ok(
@@ -31,7 +33,7 @@ public class RankController {
         );
     }
 
-    @GetMapping("/api/users/rank/my")
+    @GetMapping("/me/rank")
     public ResponseEntity<ApiResult<RankResponse>> getRankByUserId(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
         Long userId = customOAuth2User.getUserDTO().getUserId();
         RankResponse rank = rankService.getRankByUserId(userId);
