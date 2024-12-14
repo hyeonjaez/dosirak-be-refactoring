@@ -32,9 +32,9 @@ public class JwtFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
 
 
-        if (requestURI.equals("/api/user/withdraw") ||
-                requestURI.equals("/api/user/register") ||
-                requestURI.equals("/api/user/logout") )  {
+        if (requestURI.equals("/api/users/withdraw") ||
+                requestURI.equals("/api/users") ||
+                requestURI.equals("/api/users/logout") )  {
             filterChain.doFilter(request, response);
             return;
         }
