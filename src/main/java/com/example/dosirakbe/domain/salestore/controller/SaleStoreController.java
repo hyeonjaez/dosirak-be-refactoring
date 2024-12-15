@@ -18,9 +18,9 @@ public class SaleStoreController {
     @Autowired
     private SaleStoreService saleStoreService;
 
-    @GetMapping("/api/club/saleStores")
-    public ResponseEntity<ApiResult<List<SaleStore>>> getStoresByAddress(@RequestParam("saleStoreAddress") String saleStoreAddress) {
-        List<SaleStore> stores = saleStoreService.getSaleStoresByAddress(saleStoreAddress);
+    @GetMapping("/api/salestores")
+    public ResponseEntity<ApiResult<List<SaleStore>>> getStoresByAddress(@RequestParam("address") String address) {
+        List<SaleStore> stores = saleStoreService.getSaleStoresByAddress(address);
         return ResponseEntity.ok(
                 ApiResult.<List<SaleStore>>builder()
                         .status(StatusEnum.SUCCESS)
