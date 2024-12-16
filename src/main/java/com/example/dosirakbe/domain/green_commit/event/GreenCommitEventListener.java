@@ -3,8 +3,9 @@ package com.example.dosirakbe.domain.green_commit.event;
 import com.example.dosirakbe.domain.activity_log.service.ActivityLogService;
 import com.example.dosirakbe.domain.user_activity.service.UserActivityService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 /**
  * packageName    : com.example.dosirakbe.domain.green_commit.event<br>
@@ -49,7 +50,7 @@ public class GreenCommitEventListener {
      *
      * @param event 처리할 {@link GreenCommitEvent} 이벤트 객체
      */
-    @EventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleGreenCommitEvent(GreenCommitEvent event) {
         activityLogService.addActivityLog(event.getUserId(), event.getContentId(), event.getActivityType(), event.getDistance());
         userActivityService.createOrIncrementUserActivity(event.getUserId());
