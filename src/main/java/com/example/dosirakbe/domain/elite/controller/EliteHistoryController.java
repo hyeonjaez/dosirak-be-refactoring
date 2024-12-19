@@ -35,7 +35,7 @@ public class EliteHistoryController {
      * @param customOAuth2User 인증된 사용자 정보를 포함한 객체
      * @return 사용자의 전체 문제 풀이 기록 목록
      */
-    @GetMapping("/elite-history/user")
+    @GetMapping("/elite-histories/user")
     public ResponseEntity<ApiResult<List<EliteHistoryResponseDto>>> getEliteHistoryByUserId(
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
             ) {
@@ -58,7 +58,7 @@ public class EliteHistoryController {
      * @param isCorrect 문제 풀이 결과 (정답 여부: true/false)
      * @return 작업 성공 여부
      */
-    @PostMapping("/elite-history/record")
+    @PostMapping("/elite-histories/record")
     public ResponseEntity<ApiResult<Void>> recordAnswer(
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
             @RequestParam Long problemId,
@@ -82,7 +82,7 @@ public class EliteHistoryController {
      * @param customOAuth2User 인증된 사용자 정보를 포함한 객체
      * @return 사용자가 맞힌 문제 기록 목록
      */
-    @GetMapping("/elite-history/user/correct")
+    @GetMapping("/elite-histories/user/correct")
     public ResponseEntity<ApiResult<List<EliteHistoryResponseDto>>> getCorrectProblemsByUserId(
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
         Long userId = getUserIdByOAuth(customOAuth2User);
@@ -102,7 +102,7 @@ public class EliteHistoryController {
      * @param customOAuth2User 인증된 사용자 정보를 포함한 객체
      * @return 사용자가 틀린 문제 기록 목록
      */
-    @GetMapping("/elite-history/user/incorrect")
+    @GetMapping("/elite-histories/user/incorrect")
     public ResponseEntity<ApiResult<List<EliteHistoryResponseDto>>> getIncorrectProblemsByUserId(
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
             ) {
