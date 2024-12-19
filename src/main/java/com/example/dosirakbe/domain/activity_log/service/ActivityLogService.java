@@ -40,31 +40,6 @@ public class ActivityLogService {
     private final ActivityLogMapper activityLogMapper;
 
     /**
-     * 사용자의 오늘 날짜에 해당하는 활동 로그를 조회합니다.
-     *
-     * <p>
-     * 이 메서드는 주어진 사용자 ID에 해당하는 {@link User} 엔티티를 조회하고,
-     * 오늘의 시작 시각과 종료 시각 사이에 생성된 모든 {@link ActivityLog} 엔티티를
-     * 조회하여 {@link ActivityLogResponse} DTO 리스트로 변환하여 반환합니다.
-     * </p>
-     *
-     * @param userId 조회할 활동 로그의 소유자 사용자 ID
-     * @return 오늘의 활동 로그를 포함한 {@link ActivityLogResponse} DTO 리스트
-     * @throws ApiException {@link ExceptionEnum#DATA_NOT_FOUND} 예외 발생 시
-     */
-    public List<ActivityLogResponse> getTodayDateActivityLog(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(
-                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
-        LocalDate localDate = LocalDate.now();
-        LocalDateTime startOfDay = localDate.atStartOfDay();
-        LocalDateTime endOfDay = localDate.atTime(LocalTime.MAX);
-
-        List<ActivityLog> activityLogList = activityLogRepository.findByUserAndCreatedAtBetweenOrderByCreatedAtAsc(user, startOfDay, endOfDay);
-        return activityLogMapper.mapToActivityLogResponseList(activityLogList);
-    }
-
-    /**
      * 사용자의 지정된 날짜에 해당하는 활동 로그를 조회합니다.
      *
      * <p>
@@ -82,7 +57,9 @@ public class ActivityLogService {
         User user = userRepository.findById(userId)
                 .orElseThrow(
                         () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
-
+        if (Objects.isNull(today)) {
+            today = LocalDate.now();
+        }
         LocalDateTime startOfDay = today.atStartOfDay();
         LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
 
@@ -127,10 +104,10 @@ public class ActivityLogService {
      * {@link ActivityType#LOW_CARBON_MEANS_OF_TRANSPORTATION}인 경우, 이동 거리도 함께 저장됩니다.
      * </p>
      *
-     * @param userId        활동 로그를 추가할 사용자 ID
-     * @param contentId     활동 로그와 관련된 콘텐츠 ID
-     * @param activityType  활동의 유형 {@link ActivityType}
-     * @param distance      활동 중 이동한 거리 (선택 사항)
+     * @param userId       활동 로그를 추가할 사용자 ID
+     * @param contentId    활동 로그와 관련된 콘텐츠 ID
+     * @param activityType 활동의 유형 {@link ActivityType}
+     * @param distance     활동 중 이동한 거리 (선택 사항)
      * @throws ApiException {@link ExceptionEnum#DATA_NOT_FOUND} 또는 {@link ExceptionEnum#INVALID_REQUEST} 예외 발생 시
      */
     @Transactional
