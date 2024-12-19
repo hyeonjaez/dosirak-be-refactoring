@@ -10,10 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,38 +25,13 @@ import java.util.List;
  * DATE              AUTHOR             NOTE<br>
  * -----------------------------------------------------------<br>
  * 11/03/24        Fiat_lux                최초 생성<br>
+ * 12/20/24        Fiat_lux                api 수정<br>
  */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/activity-logs")
 public class ActivityLogController {
     private final ActivityLogService activityLogService;
-
-    /**
-     * 오늘의 활동 로그를 조회합니다.
-     *
-     * <p>
-     * 이 메서드는 인증된 사용자의 오늘 날짜에 해당하는 활동 로그를 조회하여 반환합니다.
-     * </p>
-     *
-     * @param customOAuth2User 인증된 사용자 정보
-     * @return 오늘의 활동 로그를 포함한 {@link ApiResult} 객체
-     */
-    @GetMapping("/today")
-    public ResponseEntity<ApiResult<List<ActivityLogResponse>>> getTodayActivityLog(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        Long userId = getUserIdByOAuth(customOAuth2User);
-        List<ActivityLogResponse> activityLogs = activityLogService.getTodayDateActivityLog(userId);
-
-        ApiResult<List<ActivityLogResponse>> result = ApiResult.<List<ActivityLogResponse>>builder()
-                .status(StatusEnum.SUCCESS)
-                .message("Activity history for today retrieved successfully")
-                .data(activityLogs)
-                .build();
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(result);
-    }
 
     /**
      * 특정 날짜의 활동 로그를 조회합니다.
@@ -72,16 +44,15 @@ public class ActivityLogController {
      * @param date             조회할 날짜 (yyyy-MM-dd 형식)
      * @return 지정된 날짜의 활동 로그를 포함한 {@link ApiResult} 객체
      */
-    @GetMapping("/daily/{date}")
-    public ResponseEntity<ApiResult<List<ActivityLogResponse>>> getActivityLogForDate(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                                                      @PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-
+    @GetMapping
+    public ResponseEntity<ApiResult<List<ActivityLogResponse>>> getTodayActivityLog(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                                                    @RequestParam(name = "date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         Long userId = getUserIdByOAuth(customOAuth2User);
         List<ActivityLogResponse> activityLogs = activityLogService.getThatDateActivityLog(userId, date);
 
         ApiResult<List<ActivityLogResponse>> result = ApiResult.<List<ActivityLogResponse>>builder()
                 .status(StatusEnum.SUCCESS)
-                .message("Activity history for that date retrieved successfully")
+                .message("Activity history for today retrieved successfully")
                 .data(activityLogs)
                 .build();
 
@@ -89,6 +60,61 @@ public class ActivityLogController {
                 .status(HttpStatus.OK)
                 .body(result);
     }
+
+//    /**
+//     * 오늘의 활동 로그를 조회합니다.
+//     *
+//     * <p>
+//     * 이 메서드는 인증된 사용자의 오늘 날짜에 해당하는 활동 로그를 조회하여 반환합니다.
+//     * </p>
+//     *
+//     * @param customOAuth2User 인증된 사용자 정보
+//     * @return 오늘의 활동 로그를 포함한 {@link ApiResult} 객체
+//     */
+//    @GetMapping("/today")
+//    public ResponseEntity<ApiResult<List<ActivityLogResponse>>> getTodayActivityLog(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+//        Long userId = getUserIdByOAuth(customOAuth2User);
+//        List<ActivityLogResponse> activityLogs = activityLogService.getTodayDateActivityLog(userId);
+//
+//        ApiResult<List<ActivityLogResponse>> result = ApiResult.<List<ActivityLogResponse>>builder()
+//                .status(StatusEnum.SUCCESS)
+//                .message("Activity history for today retrieved successfully")
+//                .data(activityLogs)
+//                .build();
+//
+//        return ResponseEntity
+//                .status(HttpStatus.OK)
+//                .body(result);
+//    }
+
+//    /**
+//     * 특정 날짜의 활동 로그를 조회합니다.
+//     *
+//     * <p>
+//     * 이 메서드는 인증된 사용자의 지정된 날짜에 해당하는 활동 로그를 조회하여 반환합니다.
+//     * </p>
+//     *
+//     * @param customOAuth2User 인증된 사용자 정보
+//     * @param date             조회할 날짜 (yyyy-MM-dd 형식)
+//     * @return 지정된 날짜의 활동 로그를 포함한 {@link ApiResult} 객체
+//     */
+//    @GetMapping("/daily/{date}")
+//    public ResponseEntity<ApiResult<List<ActivityLogResponse>>> getActivityLogForDate(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+//                                                                                      @PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+//
+//        Long userId = getUserIdByOAuth(customOAuth2User);
+//        List<ActivityLogResponse> activityLogs = activityLogService.getThatDateActivityLog(userId, date);
+//
+//        ApiResult<List<ActivityLogResponse>> result = ApiResult.<List<ActivityLogResponse>>builder()
+//                .status(StatusEnum.SUCCESS)
+//                .message("Activity history for that date retrieved successfully")
+//                .data(activityLogs)
+//                .build();
+//
+//        return ResponseEntity
+//                .status(HttpStatus.OK)
+//                .body(result);
+//    }
 
     /**
      * 특정 월의 첫째 날의 활동 로그를 조회합니다.
@@ -98,7 +124,7 @@ public class ActivityLogController {
      * </p>
      *
      * @param customOAuth2User 인증된 사용자 정보
-     * @param month             조회할 월 (yyyy-MM 형식)
+     * @param month            조회할 월 (yyyy-MM 형식)
      * @return 지정된 월의 첫째 날의 활동 로그를 포함한 {@link ApiResult} 객체
      */
     @GetMapping("/first-day/{month}")
