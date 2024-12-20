@@ -49,19 +49,19 @@ public class ActivityLogService {
      * </p>
      *
      * @param userId 조회할 활동 로그의 소유자 사용자 ID
-     * @param today  조회할 날짜
+     * @param thatDay  조회할 날짜
      * @return 지정된 날짜의 활동 로그를 포함한 {@link ActivityLogResponse} DTO 리스트
      * @throws ApiException {@link ExceptionEnum#DATA_NOT_FOUND} 예외 발생 시
      */
-    public List<ActivityLogResponse> getThatDateActivityLog(Long userId, LocalDate today) {
+    public List<ActivityLogResponse> getThatDateActivityLog(Long userId, LocalDate thatDay) {
         User user = userRepository.findById(userId)
                 .orElseThrow(
                         () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
-        if (Objects.isNull(today)) {
-            today = LocalDate.now();
+        if (Objects.isNull(thatDay)) {
+            thatDay = LocalDate.now();
         }
-        LocalDateTime startOfDay = today.atStartOfDay();
-        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+        LocalDateTime startOfDay = thatDay.atStartOfDay();
+        LocalDateTime endOfDay = thatDay.atTime(LocalTime.MAX);
 
         List<ActivityLog> activityLogList = activityLogRepository.findByUserAndCreatedAtBetweenOrderByCreatedAtAsc(user, startOfDay, endOfDay);
         return activityLogMapper.mapToActivityLogResponseList(activityLogList);
