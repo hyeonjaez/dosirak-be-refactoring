@@ -1,10 +1,12 @@
 package com.example.dosirakbe.domain.elite.controller;
 
 import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
+import com.example.dosirakbe.domain.elite.dto.EliteHistoryRequestDto;
 import com.example.dosirakbe.domain.elite.dto.EliteHistoryResponseDto;
 import com.example.dosirakbe.domain.elite.service.EliteHistoryService;
 import com.example.dosirakbe.global.util.ApiResult;
 import com.example.dosirakbe.global.util.StatusEnum;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -51,21 +53,33 @@ public class EliteHistoryController {
     }
 
     /**
-     * 사용자의 문제 풀이 기록을 추가합니다.
+     * 사용자의 문제 풀이 기록을 추가합니다.<br>
      *
-     * @param customOAuth2User 인증된 사용자 정보를 포함한 객체
-     * @param problemId 기록할 문제의 ID
-     * @param isCorrect 문제 풀이 결과 (정답 여부: true/false)
-     * @return 작업 성공 여부
+     * <p>
+     * 클라이언트로부터 문제 풀이 기록 데이터를 받아 해당 사용자의 풀이 기록을 저장 및 업데이트합니다.
+     * 이 API는 사용자가 푼 문제와 정답 여부를 기록하며, 성공적으로 저장되면 성공 메시지를 반환합니다.
+     * </p>
+     *
+     * @param customOAuth2User 인증된 사용자 정보를 포함한 객체<br>
+     *                         - OAuth2 인증을 통해 사용자 정보를 포함한 객체가 주입됩니다.
+     * @param requestDto       문제 풀이 기록 요청 데이터를 포함한 객체<br>
+     *                         - 문제 ID와 정답 여부가 포함되어 있습니다.
+     *
+     * @return 문제 풀이 기록 및 업데이트 성공 여부를 반환합니다.<br>
+     *         - 성공: HTTP 200 응답과 함께 성공 메시지 반환<br>
+     *         - 실패: 예외 처리에 따라 적절한 오류 메시지 반환
+     *
+     * @see EliteHistoryRequestDto
+     * @see CustomOAuth2User
+     * @see com.example.dosirakbe.domain.elite.service.EliteHistoryService#recordAnswer(Long, Long, boolean)
      */
     @PostMapping("/elite-histories/record")
     public ResponseEntity<ApiResult<Void>> recordAnswer(
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-            @RequestParam Long problemId,
-            @RequestParam boolean isCorrect
+            @Valid @RequestBody EliteHistoryRequestDto requestDto
     ) {
         Long userId = getUserIdByOAuth(customOAuth2User);
-        eliteHistoryService.recordAnswer(userId, problemId, isCorrect);
+        eliteHistoryService.recordAnswer(userId, requestDto.getProblemId(), requestDto.getIsCorrect());
 
         return ResponseEntity.ok(
                 ApiResult.<Void>builder()
@@ -75,6 +89,7 @@ public class EliteHistoryController {
                         .build()
         );
     }
+
 
     /**
      * 사용자가 맞힌 문제 목록을 조회합니다.
