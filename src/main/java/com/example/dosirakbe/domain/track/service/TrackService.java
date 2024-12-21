@@ -40,7 +40,6 @@ public class TrackService {
     private final ApplicationEventPublisher eventPublisher;
     private final SaleStoreRepository saleStoreRepository;
     private final TrackRepository trackRepository;
-    private final TrackMapper trackMapper;
 
 
     /**
@@ -75,30 +74,5 @@ public class TrackService {
         eventPublisher.publishEvent(new GreenCommitEvent(this, user.getUserId(), null, ActivityType.LOW_CARBON_MEANS_OF_TRANSPORTATION, trackMoveRequest.getMoveDistance()));
 
         return new TrackMoveResponse(trackMoveRequest.getMoveDistance());
-    }
-
-    /**
-     * 사용자의 트랙 목록을 조회하고 반환합니다.
-     *
-     * <p>
-     * 이 메서드는 사용자의 ID와 선택적인 검색 키워드를 기반으로 트랙 로그를 검색합니다.
-     * 검색된 트랙 목록을 {@link TrackSearchResponse} DTO 리스트로 매핑하여 반환합니다.
-     * </p>
-     *
-     * @param userId 트랙 로그를 조회할 사용자의 고유 식별자 {@link Long}
-     * @param search 트랙 로그를 검색할 키워드 {@link String} (선택 사항)
-     * @return 검색된 트랙 로그를 포함하는 {@link List} 형태의 {@link TrackSearchResponse} 객체 리스트
-     * @throws ApiException {@link com.example.dosirakbe.global.util.ApiException} 발생 시
-     */
-    @Transactional(readOnly = true)
-    public List<TrackSearchResponse> getTrackList(Long userId, String search) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(
-                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND)
-                );
-
-        List<Track> trackList = trackRepository.findByUserAndStoreNameContainingIgnoreCaseOrderByCreatedAtDesc(user, search);
-
-        return trackMapper.mapToTrackSearchResponseList(trackList);
     }
 }
