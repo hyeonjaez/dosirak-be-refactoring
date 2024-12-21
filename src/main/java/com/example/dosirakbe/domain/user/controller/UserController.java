@@ -1,6 +1,5 @@
 package com.example.dosirakbe.domain.user.controller;
 
-import com.example.dosirakbe.domain.auth.dto.AppleUserInfo;
 import com.example.dosirakbe.domain.auth.dto.KakaoUserInfo;
 import com.example.dosirakbe.domain.auth.dto.NaverUserInfo;
 import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
@@ -15,6 +14,7 @@ import com.example.dosirakbe.global.util.ApiException;
 import com.example.dosirakbe.global.util.ApiResult;
 import com.example.dosirakbe.global.util.ExceptionEnum;
 import com.example.dosirakbe.global.util.StatusEnum;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +24,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * packageName    : com.example.dosirakbe.domain.user.controller<br>
+ * fileName       : UserController<br>
+ * author         : yyujin1231<br>
+ * date           : 10/20/24<br>
+ * description    : 유저 정보 관련 CRUD controller 클래스 입니다.<br>
+ * ===========================================================<br>
+ * DATE              AUTHOR             NOTE<br>
+ * -----------------------------------------------------------<br>
+ * 10/20/24        yyujin1231                최초 생성<br>
+ */
+
+
+
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -31,6 +45,13 @@ public class UserController {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final UserService userService;
     private final UserRepository userRepository;
+
+    /**
+     * 소셜 인증을 처리하고 JWT 토큰을 반환합니다.
+     *
+     * @param socialAccessToken 소셜 제공자에서 전달받은 액세스 토큰
+     * @return JWT 액세스 및 리프레시 토큰이 포함된 응답
+     */
 
     @PostMapping("/api/users")
     public ResponseEntity<ApiResult<Map<String, String>>> authenticateUser(@RequestHeader("Authorization") String socialAccessToken) {
@@ -74,6 +95,13 @@ public class UserController {
         }
     }
 
+    /**
+     * 사용자의 소셜 로그아웃을 처리합니다.
+     *
+     * @param socialAccessToken 소셜 제공자에서 전달받은 액세스 토큰
+     * @return 로그아웃 성공 여부에 대한 응답
+     */
+
     @PostMapping("/api/users/logout")
     public ResponseEntity<ApiResult<Map<String, String>>> logoutUser(@RequestHeader("Authorization") String socialAccessToken) {
         if (socialAccessToken.startsWith("Bearer ")) {
@@ -115,6 +143,13 @@ public class UserController {
             throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
         }
     }
+
+    /**
+     * 사용자 탈퇴를 처리합니다.
+     *
+     * @param socialAccessToken 소셜 제공자에서 전달받은 액세스 토큰
+     * @return 탈퇴 성공 여부에 대한 응답
+     */
 
     @PostMapping("/api/users/withdraw")
     public ResponseEntity<ApiResult<Map<String, String>>> withdrawUser(@RequestHeader("Authorization") String socialAccessToken) {
@@ -170,6 +205,15 @@ public class UserController {
         }
     }
 
+    /**
+     * 소셜 인증 토큰이 카카오 토큰인지 확인합니다.
+     *
+     * @param accessToken 소셜 제공자로부터 전달받은 액세스 토큰
+     * @return 카카오 사용자 정보가 포함된 Optional 객체. 유효하지 않은 토큰일 경우 빈 Optional 반환
+     */
+
+
+
     private Optional<KakaoUserInfo> isKakaoToken(String accessToken) {
         try {
             return Optional.of(customOAuth2UserService.processKakaoToken(accessToken));
@@ -177,6 +221,13 @@ public class UserController {
             return Optional.empty();
         }
     }
+
+    /**
+     * 소셜 인증 토큰이 네이버 토큰인지 확인합니다.
+     *
+     * @param accessToken 소셜 제공자로부터 전달받은 액세스 토큰
+     * @return 네이버 사용자 정보가 포함된 Optional 객체. 유효하지 않은 토큰일 경우 빈 Optional 반환
+     */
 
     private Optional<NaverUserInfo> isNaverToken(String accessToken) {
         try {
@@ -186,18 +237,18 @@ public class UserController {
         }
     }
 
-    private Optional<AppleUserInfo> isAppleToken(String accessToken) {
-        try {
-            return Optional.of(customOAuth2UserService.processAppleToken(accessToken));
-        } catch (Exception e) {
-            return Optional.empty();
-        }
-    }
 
-    //회원가입시사용
+    /**
+     * 새로운 닉네임을 생성하여 사용자 정보를 업데이트합니다.
+     *
+     * @param customOAuth2User 현재 인증된 사용자 정보
+     * @param nickNameRequest 요청으로 전달받은 닉네임 정보
+     * @return 닉네임 생성 결과를 포함한 응답
+     */
+
     @PostMapping("/api/users/nickname")
     public ResponseEntity<?> generateNickname(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                              @RequestBody NickNameRequest nickNameRequest) {
+                                              @Valid @RequestBody NickNameRequest nickNameRequest) {
 
         Long userId = customOAuth2User.getUserDTO().getUserId();
 
@@ -225,8 +276,14 @@ public class UserController {
         }
     }
 
-    //닉네임 중복확인
-    @GetMapping("/api/users/check")
+    /**
+     * 닉네임의 중복 여부를 확인합니다.
+     *
+     * @param nickname 확인하려는 닉네임
+     * @return 닉네임 중복 여부를 나타내는 응답
+     */
+
+    @GetMapping("/api/users/check/nickname")
     public ResponseEntity<?> checkNicknName(@RequestParam("nickname") String nickname) {
         boolean exists = userRepository.existsByNickName(nickname);
         if (exists) {
@@ -246,6 +303,13 @@ public class UserController {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * 현재 사용자 프로필 정보를 조회합니다.
+     *
+     * @param customOAuth2User 인증된 사용자 정보
+     * @return 사용자 프로필 정보를 포함한 응답
+     */
+
     @GetMapping("/api/users/profile")
     public ResponseEntity<ApiResult<UserProfileResponse>> getUserProfile(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
         Long userId = customOAuth2User.getUserDTO().getUserId();
@@ -261,6 +325,13 @@ public class UserController {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * 사용자 닉네임을 업데이트합니다.
+     *
+     * @param customOAuth2User 인증된 사용자 정보
+     * @param nickNameRequest 업데이트할 닉네임 정보
+     * @return 닉네임 업데이트 결과를 포함한 응답
+     */
     @PutMapping("/api/users/nickname")
     public ResponseEntity<ApiResult> updateNickname(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                     @RequestBody NickNameRequest nickNameRequest) {
@@ -292,6 +363,14 @@ public class UserController {
         }
     }
 
+    /**
+     * 이동 거리를 기반으로 리워드 포인트를 추가합니다.
+     *
+     * @param customOAuth2User 인증된 사용자 정보
+     * @param trackRewardRequest 이동 거리 정보를 포함한 요청
+     * @return 리워드 추가 결과 메시지
+     */
+
     @PostMapping("api/rewards/track")
     public ResponseEntity<String> addReward(
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
@@ -310,6 +389,13 @@ public class UserController {
                     .body("리워드 포인트 추가 중 예상치 못한 오류가 발생했습니다.");
         }
     }
+
+    /**
+     * 인증 기반으로 리워드를 추가합니다.
+     *
+     * @param customOAuth2User 인증된 사용자 정보
+     * @return 리워드 추가 결과 메시지
+     */
 
     @PostMapping("api/rewards/dosirak")
     public ResponseEntity<String> addReward(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {

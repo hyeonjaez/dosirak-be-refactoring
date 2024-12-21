@@ -18,6 +18,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+
+/**
+ * packageName    : com.example.dosirakbe.domain.auth.service<br>
+ * fileName       : TokenServiceImpl<br>
+ * author         : yyujin1231<br>
+ * date           : 10/20/24<br>
+ * description    : 액세스 토큰과 리프레시 토큰의 생성 및 갱신 관련 로직을 처리하는 클래스입니다.<br>
+ * ===========================================================<br>
+ * DATE              AUTHOR             NOTE<br>
+ * -----------------------------------------------------------<br>
+ * 10/20/24        yyujin1231                최초 생성<br>
+ */
+
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -29,6 +43,17 @@ public class TokenServiceImpl implements TokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
+
+    /**
+     * <p>만료된 액세스 토큰을 재발급합니다.</p>
+     *
+     * <p>SecurityContext에서 인증 정보를 가져와 사용자를 확인한 뒤, 리프레시 토큰을 검증하여 새로운 액세스 토큰을 생성합니다.</p>
+     *
+     * @return {@link TokenResponse} 새로 발급된 액세스 토큰 정보를 포함하는 객체
+     * @throws ApiException {@link ExceptionEnum#SECURITY} 인증 정보가 없거나 유효하지 않을 때
+     * @throws ApiException {@link ExceptionEnum#DATA_NOT_FOUND} 사용자 또는 리프레시 토큰이 존재하지 않을 때
+     * @throws ApiException {@link ExceptionEnum#ACCESS_DENIED_EXCEPTION} 리프레시 토큰이 만료되었을 때
+     */
 
     @Override
     public TokenResponse reissueAccessToken() {
