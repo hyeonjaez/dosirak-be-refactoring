@@ -68,7 +68,7 @@ public class TrackService {
 
         Track track = new Track(saleStore.getSaleStoreName(), saleStore.getSaleStoreAddress(), trackMoveRequest.getMoveDistance(), user);
 
-        Track saveTrack = trackRepository.save(track);
+        trackRepository.save(track);
 
         user.addTrackDistance(trackMoveRequest.getMoveDistance());
         eventPublisher.publishEvent(new GreenCommitEvent(this, user.getUserId(), null, ActivityType.LOW_CARBON_MEANS_OF_TRANSPORTATION, trackMoveRequest.getMoveDistance()));
