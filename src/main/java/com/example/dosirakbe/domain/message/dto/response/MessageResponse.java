@@ -2,6 +2,7 @@ package com.example.dosirakbe.domain.message.dto.response;
 
 import com.example.dosirakbe.domain.message.entity.MessageType;
 import com.example.dosirakbe.domain.user.dto.response.UserChatRoomResponse;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
  * DATE              AUTHOR             NOTE<br>
  * -----------------------------------------------------------<br>
  * 10/17/24        Fiat_lux                최초 생성<br>
+ * 12/23/24        Fiat_lux               필드에 json 어노테이션 추가<br>
  */
 @Getter
 @AllArgsConstructor
@@ -48,6 +50,7 @@ public class MessageResponse {
      * 예를 들어, 텍스트 메시지, 이미지 메시지 등이 될 수 있습니다.
      * </p>
      */
+    @JsonProperty("message_type")
     private MessageType messageType;
 
     /**
@@ -57,6 +60,7 @@ public class MessageResponse {
      * 이 필드는 메시지가 전송된 정확한 시각을 {@link LocalDateTime} 형식으로 나타냅니다.
      * </p>
      */
+    @JsonProperty("created_at")
     private LocalDateTime createdAt;
 
     /**
@@ -66,6 +70,7 @@ public class MessageResponse {
      * 이 필드는 {@link UserChatRoomResponse} Response DTO 를 사용하여 메시지를 보낸 사용자의 ID, 닉네임, 프로필 이미지를 포함합니다.
      * </p>
      */
+    @JsonProperty("user_chat_room_response")
     private UserChatRoomResponse userChatRoomResponse;
 
     /**
@@ -75,5 +80,6 @@ public class MessageResponse {
      * 이 필드는 메시지가 전송된 특정 채팅 방의 ID를 나타냅니다.
      * </p>
      */
+    @JsonProperty("chat_room_id")
     private Long chatRoomId;
 }
