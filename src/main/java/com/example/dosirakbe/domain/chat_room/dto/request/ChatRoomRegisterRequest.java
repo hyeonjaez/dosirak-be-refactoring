@@ -1,5 +1,6 @@
 package com.example.dosirakbe.domain.chat_room.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
  * DATE              AUTHOR             NOTE<br>
  * -----------------------------------------------------------<br>
  * 10/23/24        Fiat_lux                최초 생성<br>
+ * 12/23/24        Fiat_lux               필드에 json 어노테이션 추가<br>
  */
 @Getter
 @NoArgsConstructor
@@ -60,6 +62,7 @@ public class ChatRoomRegisterRequest {
      */
     @NotBlank
     @Size(min = 1, max = 20)
+    @JsonProperty("zone_category_name")
     private String zoneCategoryName;
 
     /**
@@ -69,5 +72,6 @@ public class ChatRoomRegisterRequest {
      * 기본 이미지는 선택 사항이며, 지정되지 않은 경우 기본값을 사용합니다.
      * </p>
      */
+    @JsonProperty("default_image")
     private String defaultImage;
 }

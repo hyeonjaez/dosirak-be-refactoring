@@ -2,6 +2,7 @@ package com.example.dosirakbe.domain.chat_room.dto.response;
 
 import com.example.dosirakbe.domain.message.dto.response.MessageResponse;
 import com.example.dosirakbe.domain.user.dto.response.UserChatRoomResponse;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -17,6 +18,7 @@ import java.util.List;
  * DATE              AUTHOR             NOTE<br>
  * -----------------------------------------------------------<br>
  * 10/19/24        Fiat_lux                최초 생성<br>
+ * 12/23/24        Fiat_lux               필드에 json 어노테이션 추가<br>
  */
 @Getter
 @AllArgsConstructor
@@ -25,6 +27,7 @@ public class ChatRoomInformationResponse {
     /**
      * 채팅방에 현재 참여하고 있는 사람의 수입니다.
      */
+    @JsonProperty("person_count")
     private Long personCount;
 
     /**
@@ -41,6 +44,7 @@ public class ChatRoomInformationResponse {
      *
      * @see MessageResponse
      */
+    @JsonProperty("message_list")
     private List<MessageResponse> messageList;
 
     /**
@@ -52,5 +56,6 @@ public class ChatRoomInformationResponse {
      *
      * @see UserChatRoomResponse
      */
+    @JsonProperty("user_list")
     private List<UserChatRoomResponse> userList;
 }

@@ -1,6 +1,7 @@
 package com.example.dosirakbe.domain.message.dto.request;
 
 import com.example.dosirakbe.domain.message.entity.MessageType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ import lombok.Setter;
  * DATE              AUTHOR             NOTE<br>
  * -----------------------------------------------------------<br>
  * 10/20/24        Fiat_lux                최초 생성<br>
+ * 12/23/24        Fiat_lux               필드에 json 어노테이션 추가<br>
  */
 @Getter
 @Setter
@@ -43,5 +45,6 @@ public class MessageRegisterRequest {
      * </p>
      */
     @NotNull
+    @JsonProperty("message_type")
     private MessageType messageType;
 }
