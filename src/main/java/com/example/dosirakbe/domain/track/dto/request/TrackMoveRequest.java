@@ -1,5 +1,6 @@
 package com.example.dosirakbe.domain.track.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
 import jakarta.validation.constraints.Digits;
@@ -19,6 +20,7 @@ import java.math.BigDecimal;
  * DATE              AUTHOR             NOTE<br>
  * -----------------------------------------------------------<br>
  * 11/14/24        Fiat_lux                최초 생성<br>
+ * 12/23/24        Fiat_lux               필드에 json 어노테이션 추가<br>
  */
 @Getter
 @NoArgsConstructor
@@ -35,6 +37,7 @@ public class TrackMoveRequest {
     @NotNull
     @JsonDeserialize(using = NumberDeserializers.BigDecimalDeserializer.class)
     @Digits(integer = 10, fraction = 2)
+    @JsonProperty("shortest_distance")
     private BigDecimal shortestDistance;
 
     /**
@@ -48,6 +51,7 @@ public class TrackMoveRequest {
     @NotNull
     @JsonDeserialize(using = NumberDeserializers.BigDecimalDeserializer.class)
     @Digits(integer = 10, fraction = 2)
+    @JsonProperty("move_distance")
     private BigDecimal moveDistance;
 
     /**
@@ -58,5 +62,6 @@ public class TrackMoveRequest {
      * </p>
      */
     @NotNull
+    @JsonProperty("sale_store_name")
     private String saleStoreName;
 }
