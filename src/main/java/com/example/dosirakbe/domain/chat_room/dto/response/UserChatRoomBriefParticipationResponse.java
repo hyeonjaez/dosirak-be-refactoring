@@ -1,5 +1,6 @@
 package com.example.dosirakbe.domain.chat_room.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import lombok.Setter;
  * DATE              AUTHOR             NOTE<br>
  * -----------------------------------------------------------<br>
  * 10/27/24        Fiat_lux                최초 생성<br>
+ * 12/23/24        Fiat_lux               필드에 json 어노테이션 추가<br>
  */
 @Getter
 @Setter
@@ -54,5 +56,6 @@ public class UserChatRoomBriefParticipationResponse {
      * 이 필드는 채팅방에서 마지막 메시지를 나타냅니다.
      * </p>
      */
+    @JsonProperty("last_message")
     private String lastMessage;
 }
