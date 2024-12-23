@@ -406,4 +406,11 @@ public class UserController {
 
     }
 
+    @GetMapping("/api/test/user")
+    public ResponseEntity<String> getUserId(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        return ResponseEntity.ok("현재 사용자 ID: " + customOAuth2User.getUserDTO().getUserId() +
+                ", 이름: " + customOAuth2User.getUserDTO().getName());
+    }
+
+
 }
