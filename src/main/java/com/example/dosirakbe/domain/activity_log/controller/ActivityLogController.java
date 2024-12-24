@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 /**
@@ -74,7 +75,7 @@ public class ActivityLogController {
      */
     @GetMapping("/first-day/{month}")
     public ResponseEntity<ApiResult<List<ActivityLogResponse>>> getActivityLogForFirstDayOfMonth(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                                                                 @PathVariable("month") @DateTimeFormat(pattern = "yyyy-MM") LocalDate month) {
+                                                                                                 @PathVariable("month") @DateTimeFormat(pattern = "yyyy-MM") YearMonth month) {
 
         Long userId = getUserIdByOAuth(customOAuth2User);
         List<ActivityLogResponse> firstDayLogs = activityLogService.getActivityLogForFirstDayOfMonth(userId, month);
