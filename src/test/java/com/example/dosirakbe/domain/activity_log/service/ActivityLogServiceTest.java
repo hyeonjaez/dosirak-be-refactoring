@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 
@@ -118,9 +119,9 @@ class ActivityLogServiceTest {
     @DisplayName("getActivityLogForFirstDayOfMonth - 성공")
     void getActivityLogForFirstDayOfMonthTest_success() {
         Long userId = 1L;
-        LocalDate month = LocalDate.of(2024, 8, 1);
+        YearMonth yearMonth = YearMonth.of(2024, 8);
 
-        LocalDate firstDayOfMonth = month.withDayOfMonth(1);
+        LocalDate firstDayOfMonth = yearMonth.atDay(1);
         LocalDateTime startOfDay = firstDayOfMonth.atStartOfDay();
         LocalDateTime endOfDay = firstDayOfMonth.atTime(LocalTime.MAX);
 
@@ -134,7 +135,7 @@ class ActivityLogServiceTest {
         List<ActivityLogResponse> mockResponseList = List.of(mockResponse);
         when(activityLogMapper.mapToActivityLogResponseList(mockActivityLogList)).thenReturn(mockResponseList);
 
-        List<ActivityLogResponse> result = activityLogService.getActivityLogForFirstDayOfMonth(userId, month);
+        List<ActivityLogResponse> result = activityLogService.getActivityLogForFirstDayOfMonth(userId, yearMonth);
         assertNotNull(result);
         assertEquals(result.size(), mockResponseList.size());
         assertEquals(mockResponseList, result);
@@ -147,9 +148,9 @@ class ActivityLogServiceTest {
     @DisplayName("getActivityLogForFirstDayOfMonth - 실패 : 유저 not found")
     void getActivityLogForFirstDayOfMonthTest_fail_userNotFound() {
         Long userId = 1L;
-        LocalDate month = LocalDate.of(2024, 8, 1);
+        YearMonth yearMonth = YearMonth.of(2024, 8);
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
-        assertThrows(ApiException.class, () -> activityLogService.getActivityLogForFirstDayOfMonth(userId, month));
+        assertThrows(ApiException.class, () -> activityLogService.getActivityLogForFirstDayOfMonth(userId, yearMonth));
         verify(userRepository, times(1)).findById(any(Long.class));
         verify(activityLogRepository, times(0)).findByUserAndCreatedAtBetweenOrderByCreatedAtAsc(any(), any(), any());
         verify(activityLogMapper, times(0)).mapToActivityLogResponseList(any());
