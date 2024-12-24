@@ -1,6 +1,7 @@
 package com.example.dosirakbe.domain.user.dto.response;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +21,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class UserDTO {
 
     /**
