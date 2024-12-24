@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Objects;
 
@@ -81,12 +82,12 @@ public class ActivityLogService {
      * @return 선택한 월의 첫째 날의 활동 로그를 포함한 {@link ActivityLogResponse} DTO 리스트
      * @throws ApiException {@link ExceptionEnum#DATA_NOT_FOUND} 예외 발생 시
      */
-    public List<ActivityLogResponse> getActivityLogForFirstDayOfMonth(Long userId, LocalDate month) {
+    public List<ActivityLogResponse> getActivityLogForFirstDayOfMonth(Long userId, YearMonth month) {
         User user = userRepository.findById(userId)
                 .orElseThrow(
                         () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
 
-        LocalDate firstDayOfMonth = month.withDayOfMonth(1);
+        LocalDate firstDayOfMonth = month.atDay(1);
         LocalDateTime startOfDay = firstDayOfMonth.atStartOfDay();
         LocalDateTime endOfDay = firstDayOfMonth.atTime(LocalTime.MAX);
 
