@@ -9,6 +9,17 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
+/**
+ * packageName    : com.example.dosirakbe.global.openai<br>
+ * fileName       : OpenAiService<br>
+ * author         : femmefatalehaein<br>
+ * date           : 11/29/24<br>
+ * description    : OpenAI API와 통신하여 데이터를 처리하는 서비스 클래스입니다.<br>
+ * ===========================================================<br>
+ * DATE              AUTHOR             NOTE<br>
+ * -----------------------------------------------------------<br>
+ * 11/29/24        femmefatalehaein                최초 생성<br>
+ */
 @Service
 public class OpenAiService {
     private static final String API_URL = "https://api.openai.com/v1/chat/completions";
@@ -16,6 +27,17 @@ public class OpenAiService {
 
     private final Map<String, String> responseCache = new ConcurrentHashMap<>();
 
+    /**
+     * 주어진 요리 이름에 대해 다회용기 용량 데이터를 추출합니다.
+     *
+     * <p>
+     * API 호출 결과를 캐싱하여 동일한 요청에 대해 재사용할 수 있도록 최적화되었습니다.
+     * </p>
+     *
+     * @param dishName 요리 이름
+     * @return 다회용기 용량을 나타내는 문자열 (예: "500ml")
+     * @throws Exception OpenAI API 호출 중 예외가 발생한 경우
+     */
     public String extractReusableContainerData(String dishName) throws Exception {
         // 캐싱된 데이터 확인
         return responseCache.computeIfAbsent(dishName, key -> {
@@ -27,6 +49,13 @@ public class OpenAiService {
         });
     }
 
+    /**
+     * OpenAI API를 호출하여 주어진 요리 이름에 대한 다회용기 용량을 요청합니다.
+     *
+     * @param dishName 요리 이름
+     * @return 다회용기 용량을 나타내는 문자열 (예: "500ml")
+     * @throws Exception API 요청 실패 또는 응답 처리 중 오류가 발생한 경우
+     */
     private String callOpenAiApi(String dishName) throws Exception {
         OkHttpClient client = new OkHttpClient();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -52,10 +81,6 @@ public class OpenAiService {
                 .header("Content-Type", "application/json")
                 .post(body)
                 .build();
-
-        System.out.println("Request URL: " + request.url());
-        System.out.println("Request Headers: " + request.headers());
-        System.out.println("Request Body: " + objectMapper.writeValueAsString(requestBody));
 
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
