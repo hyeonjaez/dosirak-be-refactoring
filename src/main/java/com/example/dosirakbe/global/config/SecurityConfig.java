@@ -20,7 +20,17 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import java.util.Arrays;
 import java.util.Collections;
 
-
+/**
+ * packageName    : com.example.dosirakbe.global.config<br>
+ * fileName       : SecurityConfig<br>
+ * author         : femmefatalehaein<br>
+ * date           : 11/09/24<br>
+ * description    : Spring Security 설정 클래스입니다.<br>
+ * ===========================================================<br>
+ * DATE              AUTHOR             NOTE<br>
+ * -----------------------------------------------------------<br>
+ * 11/09/24        femmefatalehaein                최초 생성<br>
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -29,6 +39,18 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final JwtUtil jwtUtil;
 
+    /**
+     * Spring Security 의 필터 체인을 구성합니다.
+     *
+     * <p>
+     * 이 메서드는 CORS, CSRF, 세션 관리, OAuth2 인증, JWT 필터 등의 설정을 포함한
+     * Spring Security 의 전체 필터 체인을 정의합니다.
+     * </p>
+     *
+     * @param http {@link HttpSecurity} 객체를 통해 보안 설정을 구성합니다.
+     * @return {@link SecurityFilterChain} 객체
+     * @throws Exception 보안 설정 과정에서 발생할 수 있는 예외
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
