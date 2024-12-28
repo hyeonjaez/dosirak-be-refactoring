@@ -65,9 +65,7 @@ public class ChatController {
 
         Long userId = validationAuthorization(headerAccessor);
 
-        MessageResponse message = messageService.createMessage(userId, chatRoomId, messageRegisterRequest);
-
-        return message;
+        return messageService.createMessage(userId, chatRoomId, messageRegisterRequest);
     }
 
     /**

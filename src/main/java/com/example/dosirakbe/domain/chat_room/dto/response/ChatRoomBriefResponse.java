@@ -1,5 +1,6 @@
 package com.example.dosirakbe.domain.chat_room.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,6 +14,7 @@ import lombok.Getter;
  * DATE              AUTHOR             NOTE<br>
  * -----------------------------------------------------------<br>
  * 10/23/24        Fiat_lux                최초 생성<br>
+ * 12/23/24        Fiat_lux               필드에 json 어노테이션 추가<br>
  */
 @Getter
 @AllArgsConstructor
@@ -40,6 +42,7 @@ public class ChatRoomBriefResponse {
     /**
      * 채팅방에 현재 참여하고 있는 사람의 수입니다.
      */
+    @JsonProperty("person_count")
     private Long personCount;
 
     /**

@@ -1,5 +1,6 @@
 package com.example.dosirakbe.domain.track.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
  * DATE              AUTHOR             NOTE<br>
  * -----------------------------------------------------------<br>
  * 11/24/24        Fiat_lux                최초 생성<br>
+ * 12/23/24        Fiat_lux               필드에 json 어노테이션 추가<br>
  */
 @Getter
 @AllArgsConstructor
@@ -37,6 +39,7 @@ public class TrackSearchResponse {
      * 이 필드는 사용자가 이동한 판매점의 이름을 나타내며, 사용자의 이동 기록을 식별하는 데 사용됩니다.
      * </p>
      */
+    @JsonProperty("store_name")
     private String storeName;
 
     /**
@@ -46,6 +49,7 @@ public class TrackSearchResponse {
      * 이 필드는 사용자가 이동한 판매점의 상세 주소를 나타내며, 위치 기반 서비스를 지원하는 데 사용됩니다.
      * </p>
      */
+    @JsonProperty("store_address")
     private String storeAddress;
 
     /**
@@ -64,5 +68,6 @@ public class TrackSearchResponse {
      * 이 필드는 트랙이 생성된 날짜와 시간을 {@link LocalDateTime} 형식으로 나타냅니다.
      * </p>
      */
+    @JsonProperty("created_at")
     private LocalDateTime createdAt;
 }
