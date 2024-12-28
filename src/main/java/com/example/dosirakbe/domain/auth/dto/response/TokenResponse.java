@@ -25,5 +25,11 @@ public class TokenResponse {
      * 클라이언트에 반환될 액세스 토큰입니다.
      */
 
+
     private String accessToken;
+
+    public TokenResponse(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
 }
