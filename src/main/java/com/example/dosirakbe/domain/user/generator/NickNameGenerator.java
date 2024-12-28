@@ -8,9 +8,33 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+
+/**
+ * packageName    : com.example.dosirakbe.domain.user.generator<br>
+ * fileName       : NickNameGenerator<br>
+ * author         : yyujin1231<br>
+ * date           : 10/20/24<br>
+ * description    : 사용자 닉네임을 생성하는 클래스입니다.<br>
+ * ===========================================================<br>
+ * DATE              AUTHOR             NOTE<br>
+ * -----------------------------------------------------------<br>
+ * 10/20/24        yyujin1231                최초 생성<br>
+ */
+
+
+
 @Getter
 @Component
 public class NickNameGenerator {
+
+    /**
+     * 랜덤 닉네임을 생성합니다.
+     * <p>
+     * 형용사와 동물 이름을 랜덤으로 선택한 후, 1부터 99 사이의 랜덤 숫자를 결합하여 닉네임을 생성합니다.
+     * </p>
+     *
+     * @return 생성된 닉네임 문자열
+     */
 
     private String nickName;
 

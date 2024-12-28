@@ -1,5 +1,6 @@
 package com.example.dosirakbe.domain.user_activity.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -27,6 +28,7 @@ public class UserActivityResponse {
      * 이 필드는 사용자의 활동이 발생한 날짜를 {@link LocalDate} 형식으로 나타냅니다.
      * </p>
      */
+    @JsonProperty("created_at")
     private LocalDate createdAt;
 
     /**
@@ -36,6 +38,7 @@ public class UserActivityResponse {
      * 이 필드는 특정 날짜에 사용자가 수행한 커밋의 총 개수를 {@link Integer} 형식으로 나타냅니다.
      * </p>
      */
+    @JsonProperty("commit_count")
     private Integer commitCount;
 
 }

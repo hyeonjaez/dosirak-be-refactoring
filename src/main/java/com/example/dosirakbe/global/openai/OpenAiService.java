@@ -10,13 +10,13 @@ import java.util.Map;
 /**
  * packageName    : com.example.dosirakbe.global.openai<br>
  * fileName       : OpenAiService<br>
- * author         : femmefatlaehaein<br>
- * date           : 12/03/24<br>
- * description    : OpenAI API와 통신하여 다회용기의 용량 데이터를 추출하는 서비스 클래스입니다.<br>
+ * author         : femmefatalehaein<br>
+ * date           : 11/29/24<br>
+ * description    : OpenAI API와 통신하여 데이터를 처리하는 서비스 클래스입니다.<br>
  * ===========================================================<br>
  * DATE              AUTHOR             NOTE<br>
  * -----------------------------------------------------------<br>
- * 12/03/24        femmefatlaehaein       최초 생성<br>
+ * 11/29/24        femmefatalehaein                최초 생성<br>
  */
 @Service
 public class OpenAiService {
@@ -31,6 +31,7 @@ public class OpenAiService {
     private final Map<String, String> responseCache = new ConcurrentHashMap<>();
 
     /**
+
      * 특정 음식의 다회용기 용량 정보를 반환합니다.<br>
      * - 캐시된 데이터가 있는 경우 캐시에서 반환합니다.<br>
      * - 캐시에 없는 경우 OpenAI API를 호출하여 데이터를 가져옵니다.
@@ -38,6 +39,7 @@ public class OpenAiService {
      * @param dishName 음식 이름
      * @return 음식에 대한 다회용기의 용량 데이터 (예: "500ml")
      * @throws Exception OpenAI API 호출 실패 시 예외 발생
+
      */
     public String extractReusableContainerData(String dishName) throws Exception {
         // 캐싱된 데이터 확인

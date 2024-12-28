@@ -31,7 +31,7 @@ import java.util.List;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user-activity")
+@RequestMapping("/api/user-activities")
 public class UserActivityController {
     private final UserActivityService userActivityService;
 

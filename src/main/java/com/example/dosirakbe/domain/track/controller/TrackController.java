@@ -3,7 +3,6 @@ package com.example.dosirakbe.domain.track.controller;
 import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.track.dto.request.TrackMoveRequest;
 import com.example.dosirakbe.domain.track.dto.response.TrackMoveResponse;
-import com.example.dosirakbe.domain.track.dto.response.TrackSearchResponse;
 import com.example.dosirakbe.domain.track.service.TrackService;
 import com.example.dosirakbe.global.util.ApiException;
 import com.example.dosirakbe.global.util.ApiResult;
@@ -17,7 +16,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * packageName    : com.example.dosirakbe.domain.track.controller<br>
@@ -32,7 +30,7 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/track")
+@RequestMapping("/api/tracks")
 public class TrackController {
     public final TrackService trackService;
     public static final BigDecimal GAP_DISTANCE = BigDecimal.ONE; //1km
@@ -68,36 +66,6 @@ public class TrackController {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(result);
-    }
-
-    /**
-     * 사용자의 트랙 목록을 조회하고 반환합니다.
-     *
-     * <p>
-     * 이 메서드는 인증된 사용자의 ID를 기반으로 트랙 로그를 검색하며, 선택적으로 검색 키워드를 포함할 수 있습니다.
-     * 검색된 트랙 목록을 {@link TrackSearchResponse} Response DTO 리스트로 반환합니다.
-     * </p>
-     *
-     * @param customOAuth2User 인증된 사용자의 정보를 포함하는 {@link CustomOAuth2User} 객체
-     * @param search           트랙 로그를 검색할 키워드 (선택 사항)
-     * @return 검색된 트랙 로그를 포함하는 {@link ApiResult} 형태의 {@link List} 객체
-     */
-    @GetMapping
-    public ResponseEntity<ApiResult<List<TrackSearchResponse>>> getTrackList(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                                             @RequestParam(required = false) String search) {
-        Long userId = getUserId(customOAuth2User);
-
-        List<TrackSearchResponse> trackList = trackService.getTrackList(userId, search);
-
-        ApiResult<List<TrackSearchResponse>> result = ApiResult.<List<TrackSearchResponse>>builder()
-                .status(StatusEnum.SUCCESS)
-                .message("track log search successful")
-                .data(trackList)
-                .build();
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
                 .body(result);
     }
 
