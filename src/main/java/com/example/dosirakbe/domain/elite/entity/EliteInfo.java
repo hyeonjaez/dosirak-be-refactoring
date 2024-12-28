@@ -53,7 +53,7 @@ public class EliteInfo {
      * 사용자가 마지막으로 문제를 푼 날짜를 나타냅니다.<br>
      * 기본값은 현재 날짜로 설정됩니다.
      */
-    @Column(name = "last_solvied_date", nullable = false, columnDefinition = "DATE DEFAULT CURRENT_DATE")
+    @Column(name = "last_solvied_date", nullable = false)
     private LocalDate lastSolvedDate;
 
     /**
