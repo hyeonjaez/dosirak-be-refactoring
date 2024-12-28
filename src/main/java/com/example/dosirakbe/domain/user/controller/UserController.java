@@ -380,7 +380,6 @@ public class UserController {
     public ResponseEntity<String> addReward(
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
             @RequestBody TrackRewardRequest trackRewardRequest) {
-
         try {
             Long userId = customOAuth2User.getUserDTO().getUserId();
             userService.addRewardPointsByTrack(userId, trackRewardRequest.getDistance());
