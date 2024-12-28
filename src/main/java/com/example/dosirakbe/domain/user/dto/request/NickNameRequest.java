@@ -2,6 +2,7 @@ package com.example.dosirakbe.domain.user.dto.request;
 
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * packageName    : com.example.dosirakbe.domain.user.dto.request<br>
@@ -26,4 +27,8 @@ public class NickNameRequest {
 
     @Size(max = 30, message = "닉네임은 최대 30자까지 입력 가능합니다.")
     private String nickName;
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
 }
