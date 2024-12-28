@@ -139,8 +139,13 @@ public class UserController {
                     .build();
             return ResponseEntity.ok(apiResult);
 
-        } catch (Exception e) {
-            throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
+        } catch (ApiException e) {
+            ApiResult<Map<String, String>> apiResult = ApiResult.<Map<String, String>>builder()
+                    .status(StatusEnum.FAILURE)
+                    .message(e.getMessage())
+                    .data(null)
+                    .build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResult);
         }
     }
 
@@ -406,11 +411,6 @@ public class UserController {
 
     }
 
-    @GetMapping("/api/test/user")
-    public ResponseEntity<String> getUserId(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        return ResponseEntity.ok("현재 사용자 ID: " + customOAuth2User.getUserDTO().getUserId() +
-                ", 이름: " + customOAuth2User.getUserDTO().getName());
-    }
 
 
 }
