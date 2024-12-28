@@ -71,12 +71,14 @@ public class RefreshToken {
     }
 
 
-
-
-
    public void setRefreshToken(String refreshToken) {
        this.refreshToken = refreshToken;
     }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 
 
 }
