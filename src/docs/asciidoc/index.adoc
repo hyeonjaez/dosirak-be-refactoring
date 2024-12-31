@@ -1,0 +1,127 @@
+
+= 프로젝트 REST Docs
+Author1 femmefatalehaein <rmfls4359@gmail.com>
+:toc: left
+:doctype: book
+:source-highlighter: coderay
+:snippets: build/generated-snippets
+
+= Common
+
+== 공통 API 응답 포맷
+
+== 응답 상태 코드 및 메세지
+
+== API 목록
+=== 사용자가 푼 문제들 정보 조회 API
+==== 1. Curl Request
+include::{snippets}/elite-history-get-list/curl-request.adoc[]
+==== 2. HTTP Request
+include::{snippets}/elite-history-get-list/http-request.adoc[]
+==== 3. HTTP Response
+include::{snippets}/elite-history-get-list/http-response.adoc[]
+==== 4. HTTP Request Headers
+include::{snippets}/elite-history-get-list/httpie-request.adoc[]
+==== 5. HTTP Request Body
+include::{snippets}/elite-history-get-list/request-body.adoc[]
+==== 6. HTTP Response Body
+include::{snippets}/elite-history-get-list/response-body.adoc[]
+==== 7. HTTP Response Parameter
+include::{snippets}/elite-history-get-list/response-fields.adoc[]
+=== 사용자가 푼 문제 수 종합 정보 조회 API
+===== 맞은문제수, 틀린문제수, 전체문제수 조회
+==== 1. Curl Request
+include::{snippets}/elite-info-get/curl-request.adoc[]
+==== 2. HTTP Request
+include::{snippets}/elite-info-get/http-request.adoc[]
+==== 3. HTTP Response
+include::{snippets}/elite-info-get/http-response.adoc[]
+==== 4. HTTP Request Headers
+include::{snippets}/elite-info-get/httpie-request.adoc[]
+==== 5. HTTP Request Body
+include::{snippets}/elite-info-get/request-body.adoc[]
+==== 6. HTTP Response Body
+include::{snippets}/elite-info-get/response-body.adoc[]
+==== 7. HTTP Response Parameter
+include::{snippets}/elite-info-get/response-fields.adoc[]
+
+=== 사용자가 푼 문제 수 종합 정보 조회 API - 사용자가 없을 때
+==== 1. Curl Request
+include::{snippets}/elite-info-get-not-found/curl-request.adoc[]
+==== 2. HTTP Request
+include::{snippets}/elite-info-get-not-found/http-request.adoc[]
+==== 3. HTTP Response
+include::{snippets}/elite-info-get-not-found/http-response.adoc[]
+==== 4. HTTP Request Headers
+include::{snippets}/elite-info-get-not-found/httpie-request.adoc[]
+==== 5. HTTP Request Body
+include::{snippets}/elite-info-get-not-found/request-body.adoc[]
+==== 6. HTTP Response Body
+include::{snippets}/elite-info-get-not-found/response-body.adoc[]
+==== 7. HTTP Response Parameter
+include::{snippets}/elite-info-get-not-found/response-fields.adoc[]
+
+=== 문제별 정답 조회 API
+==== 1. Curl Request
+include::{snippets}/problem-by-id-get/curl-request.adoc[]
+==== 2. HTTP Request
+include::{snippets}/problem-by-id-get/http-request.adoc[]
+==== 3. HTTP Response
+include::{snippets}/problem-by-id-get/http-response.adoc[]
+==== 4. HTTP Request Headers
+include::{snippets}/problem-by-id-get/httpie-request.adoc[]
+==== 5. HTTP Request Body
+include::{snippets}/problem-by-id-get/request-body.adoc[]
+==== 6. HTTP Response Body
+include::{snippets}/problem-by-id-get/response-body.adoc[]
+==== 7. HTTP Response Parameter
+include::{snippets}/problem-by-id-get/response-fields.adoc[]
+
+=== 문제별 정답 조회 API - 해당문제 id가 존재하지 않을 때
+==== 1. Curl Request
+include::{snippets}/problem-by-id-get-not-found/curl-request.adoc[]
+==== 2. HTTP Request
+include::{snippets}/problem-by-id-get-not-found/http-request.adoc[]
+==== 3. HTTP Response
+include::{snippets}/problem-by-id-get-not-found/http-response.adoc[]
+==== 4. HTTP Request Headers
+include::{snippets}/problem-by-id-get-not-found/httpie-request.adoc[]
+==== 5. HTTP Request Body
+include::{snippets}/problem-by-id-get-not-found/request-body.adoc[]
+==== 6. HTTP Response Body
+include::{snippets}/problem-by-id-get-not-found/response-body.adoc[]
+==== 7. HTTP Response Parameter
+include::{snippets}/problem-by-id-get-not-found/response-fields.adoc[]
+
+=== 랜덤 문제 조회 API
+====== 랜덤으로 사용자가 풀지 않은 문제 한문제를 반환한다.
+==== 1. Curl Request
+include::{snippets}/problem-random-get/curl-request.adoc[]
+==== 2. HTTP Request
+include::{snippets}/problem-random-get/http-request.adoc[]
+==== 3. HTTP Response
+include::{snippets}/problem-random-get/http-response.adoc[]
+==== 4. HTTP Request Headers
+include::{snippets}/problem-random-get/httpie-request.adoc[]
+==== 5. HTTP Request Body
+include::{snippets}/problem-random-get/request-body.adoc[]
+==== 6. HTTP Response Body
+include::{snippets}/problem-random-get/response-body.adoc[]
+==== 7. HTTP Response Parameter
+include::{snippets}/problem-random-get/response-fields.adoc[]
+
+=== 랜덤 문제 조회 API - 더이상 반환할 문제가 없을 때
+==== 1. Curl Request
+include::{snippets}/problem-random-get-empty/curl-request.adoc[]
+==== 2. HTTP Request
+include::{snippets}/problem-random-get-empty/http-request.adoc[]
+==== 3. HTTP Response
+include::{snippets}/problem-random-get-empty/http-response.adoc[]
+==== 4. HTTP Request Headers
+include::{snippets}/problem-random-get-empty/httpie-request.adoc[]
+==== 5. HTTP Request Body
+include::{snippets}/problem-random-get-empty/request-body.adoc[]
+==== 6. HTTP Response Body
+include::{snippets}/problem-random-get-empty/response-body.adoc[]
+==== 7. HTTP Response Parameter
+include::{snippets}/problem-random-get-empty/response-fields.adoc[]
