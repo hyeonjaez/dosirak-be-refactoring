@@ -21,6 +21,10 @@ jobs:
           sudo apt-get install -y ruby ruby-dev
           sudo gem install asciidoctor
 
+        # gradlew 실행 권한 부여
+      - name: Grant execute permission to gradlew
+        run: chmod +x ./gradlew
+
        # Gradle 설치 및 테스트 실행
       - name: Run Gradle Tests
         run: |
