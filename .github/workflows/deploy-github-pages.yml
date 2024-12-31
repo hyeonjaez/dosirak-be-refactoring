@@ -34,7 +34,7 @@ jobs:
        # Gradle 설치 및 테스트 실행
       - name: Run Gradle Tests
         run: |
-          ./gradlew test  # Gradle 테스트 실행
+          ./gradlew test --warning-mode all
 
       # AsciiDoc 파일을 HTML로 변환 (예시)
       - name: Build AsciiDoc to HTML
