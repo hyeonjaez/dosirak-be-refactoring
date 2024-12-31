@@ -19,6 +19,9 @@ jobs:
       # 최신 코드 체크아웃
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.SUBMODULE_TOKEN }}
+          submodules: true
 
       # Asciidoctor 설치 (Ubuntu 환경에서)
       - name: Install Asciidoctor
@@ -26,9 +29,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ruby ruby-dev
           sudo gem install asciidoctor
-          
-      - name: Write application.yml from GitHub Secrets
-        run: echo "$APPLICATION_YML" > src/main/resources/application.yml
 
         # gradlew 실행 권한 부여
       - name: Grant execute permission to gradlew
@@ -36,8 +36,9 @@ jobs:
 
        # Gradle 설치 및 테스트 실행
       - name: Run Gradle Tests
-        run: |
-          ./gradlew test --warning-mode all
+        env:
+          JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}  # GitHub Secrets에서 비밀번호 가져오기
+        run: ./gradlew test -Djasypt.encryptor.password=${{ secrets.JASYPT_PASSWORD }} --info
 
       # AsciiDoc 파일을 HTML로 변환 (예시)
       - name: Build AsciiDoc to HTML
