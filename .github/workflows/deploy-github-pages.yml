@@ -8,9 +8,14 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      # 체크아웃 최신 코드를 가져옴
+      # Java 17 설치
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+
+      # 최신 코드 체크아웃
       - name: Checkout code
         uses: actions/checkout@v3
 
