@@ -58,4 +58,5 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}  # Make sure this is set correctly
           publish_dir: ./docs  # docs 폴더에 배포
