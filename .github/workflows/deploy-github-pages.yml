@@ -21,6 +21,11 @@ jobs:
           sudo apt-get install -y ruby ruby-dev
           sudo gem install asciidoctor
 
+       # Gradle 설치 및 테스트 실행
+      - name: Run Gradle Tests
+        run: |
+          ./gradlew test  # Gradle 테스트 실행
+
       # AsciiDoc 파일을 HTML로 변환 (예시)
       - name: Build AsciiDoc to HTML
         run: |
