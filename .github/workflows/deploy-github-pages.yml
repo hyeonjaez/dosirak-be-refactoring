@@ -30,8 +30,7 @@ jobs:
       # orphan 브랜치 만들기
       - name: Create orphan branch for GitHub Pages
         run: |
-          git checkout --orphan gh-pages  # gh-pages 브랜치 생성
-          git reset --hard                # 기존 파일 삭제
+          git checkout gh-pages  # gh-pages 브랜치 생성
           git add docs/index.html         # HTML 파일만 추가
           git commit -m "Deploy to GitHub Pages"
           git push origin gh-pages --force
