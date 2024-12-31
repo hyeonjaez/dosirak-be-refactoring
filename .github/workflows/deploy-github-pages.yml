@@ -14,6 +14,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: 17
+          distribution: temurin  # 또는 zulu, adopt 중 선택 가능
 
       # 최신 코드 체크아웃
       - name: Checkout code
