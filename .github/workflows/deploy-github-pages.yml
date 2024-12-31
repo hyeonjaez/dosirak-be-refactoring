@@ -30,8 +30,8 @@ jobs:
       # 사용자 정보 설정
       - name: Set git user
         run: |
-           git config --global user.name "GitHub Actions"
-           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+           git config --global user.name "femmefatalehaein"
+           git config --global user.email "rmfls4359gmail.com"
            git remote set-url origin https://x-access-token:${{ secrets.MY_GITHUB_TOKEN }}@github.com/DOSI-RAK/dosirak-be.git
 
       - name: Create gh-pages branch if not exists
