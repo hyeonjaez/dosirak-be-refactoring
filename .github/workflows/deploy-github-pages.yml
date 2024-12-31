@@ -32,7 +32,7 @@ jobs:
         run: |
            git config --global user.name "GitHub Actions"
            git config --global user.email "github-actions[bot]@users.noreply.github.com"
-           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/DOSI-RAK/dosirak-be.git
+           git remote set-url origin https://x-access-token:${{ secrets.MY_GITHUB_TOKEN }}@github.com/DOSI-RAK/dosirak-be.git
 
      # gh-pages 브랜치가 존재하지 않으면, orphan 브랜치로 생성
       - name: Create gh-pages branch if not exists
