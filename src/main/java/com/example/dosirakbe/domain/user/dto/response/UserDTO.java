@@ -77,6 +77,17 @@ public class UserDTO {
     public UserDTO() {
     }
 
+    public UserDTO(String userName) {
+        this.userName = userName;
+    }
+
+    public UserDTO(String name, String userName, String profileImg, Long userId) {
+        this.name = name;
+        this.userName = userName;
+        this.profileImg = profileImg;
+        this.userId = userId;
+    }
+
 
 
 }
