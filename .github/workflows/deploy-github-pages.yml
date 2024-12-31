@@ -27,6 +27,12 @@ jobs:
           mkdir -p docs
           asciidoctor src/docs/asciidoc/index.adoc -o docs/index.html
 
+      # 사용자 정보 설정
+      - name: Set git user
+        run: |
+          git config --global user.email "your-email@example.com"  # 본인의 이메일 주소로 수정
+          git config --global user.name "Your Name"  # 본인의 이름으로 수정
+
      # gh-pages 브랜치가 존재하지 않으면, orphan 브랜치로 생성
       - name: Create gh-pages branch if not exists
         run: |
