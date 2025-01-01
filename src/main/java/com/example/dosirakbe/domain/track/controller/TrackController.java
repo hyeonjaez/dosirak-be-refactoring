@@ -94,13 +94,9 @@ public class TrackController {
      * @return 이동 거리가 허용된 간격 내에 있으면 {@code true}, 그렇지 않으면 {@code false}
      */
     private boolean checkGapDistance(TrackMoveRequest trackMoveRequest) {
-        BigDecimal shortestDistance = trackMoveRequest.getShortestDistance();
-        BigDecimal moveDistance = trackMoveRequest.getMoveDistance();
-
-        if (shortestDistance.compareTo(moveDistance) > 0) {
-            return shortestDistance.subtract(moveDistance).compareTo(GAP_DISTANCE) <= 0;
-        } else {
-            return moveDistance.subtract(shortestDistance).compareTo(GAP_DISTANCE) <= 0;
-        }
+        return trackMoveRequest.getMoveDistance()
+                .subtract(trackMoveRequest.getShortestDistance())
+                .abs()
+                .compareTo(GAP_DISTANCE) <= 0;
     }
 }
