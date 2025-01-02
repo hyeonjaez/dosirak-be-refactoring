@@ -1,12 +1,12 @@
 
 = DOSI:RAK REST Docs
-Co-authored : femmefatalehaein <rmfls4359@gmail.com>, hyeonjaez <jhjh0022@naver.com>, yyujin1231 <leeyujin1231@duksung.ac.kr>
+:author: femmefatalehaein <rmfls4359@gmail.com>, hyeonjaez <jhjh0022@naver.com>, yyujin1231 <leeyujin1231@duksung.ac.kr>
 = API 명세서
 :toc: left
 :doctype: book
 :source-highlighter: coderay
 :snippets: build/generated-snippets
-:toclevels: 4
+
 
 
 = Common
