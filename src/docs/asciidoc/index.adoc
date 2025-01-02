@@ -1,17 +1,16 @@
 
 = DOSI:RAK REST Docs
-== Co-authored : femmefatalehaein <rmfls4359@gmail.com>
-== Co-authored : hyeonjaez <jhjh0022@naver.com>
-
+Co-authored : femmefatalehaein <rmfls4359@gmail.com>, hyeonjaez <jhjh0022@naver.com>, yyujin1231 <leeyujin1231@duksung.ac.kr>
+= API 명세서
 :toc: left
 :doctype: book
 :source-highlighter: coderay
 :snippets: build/generated-snippets
+:toclevels: 4
+
 
 = Common
-
 == 공통 API 응답 포맷
-
 == 응답 상태 코드 및 메세지
 
 = 기능별 API 목록
@@ -23,6 +22,7 @@
 == 5. GREEN TALK
 == 6. GREEN COMMIT
 == 7. GREEN HEROES
+
 == 8. GREEN ELITE
 === 8.1.1 사용자가 푼 문제들 정보 조회 API
 ==== 1. Curl Request
@@ -39,8 +39,10 @@ include::{snippets}/elite-history-get-list/request-body.adoc[]
 include::{snippets}/elite-history-get-list/response-body.adoc[]
 ==== 7. HTTP Response Parameter
 include::{snippets}/elite-history-get-list/response-fields.adoc[]
+
 === 8.2.1. 사용자가 푼 문제 수 종합 정보 조회 API
 ===== 맞은문제수, 틀린문제수, 전체문제수 조회
+
 ==== 1. Curl Request
 include::{snippets}/elite-info-get/curl-request.adoc[]
 ==== 2. HTTP Request
