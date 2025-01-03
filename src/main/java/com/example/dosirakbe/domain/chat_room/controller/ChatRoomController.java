@@ -108,27 +108,6 @@ public class ChatRoomController {
                 .body(result);
     }
 
-//    /**
-//     * 특정 채팅방에 참여하고 있는 사용자 목록을 조회합니다.
-//     *
-//     * @param chatRoomId 조회할 채팅방의 ID
-//     * @return 채팅방에 참여하고 있는 사용자 목록
-//     */
-//    @GetMapping("/{chatRoomId}/users")
-//    public ResponseEntity<ApiResult<List<UserChatRoomResponse>>> getChatRoomUsers(@PathVariable Long chatRoomId) {
-//        List<UserChatRoomResponse> userList = chatRoomService.findUserChatRooms(chatRoomId);
-//
-//        ApiResult<List<UserChatRoomResponse>> result = ApiResult.<List<UserChatRoomResponse>>builder()
-//                .status(StatusEnum.SUCCESS)
-//                .message("User list retrieved successfully")
-//                .data(userList)
-//                .build();
-//
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(result);
-//    }
-
     /**
      * 특정 채팅방을 삭제하거나, 사용자가 해당 채팅방을 떠납니다.
      *
