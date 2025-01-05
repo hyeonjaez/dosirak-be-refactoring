@@ -95,17 +95,16 @@ public class StoreService {
      * <p>
      * 사용자의 현재 위치를 기준으로 1km 반경 내에 위치한 가게 목록을 조회합니다.
      * </p>
-     * @param storeRequest 사용자의 현재 위치 정보
+     * @param currentMapX 사용자의 현재 위치 X좌표
+     * @param currentMapY 사용자의 현재 위치 Y정보
      * @return 반경 내의 가게 목록
      * @throws ApiException {@link ExceptionEnum#DATA_NOT_FOUND} 예외 발생 시
      */
 
     @Transactional(readOnly = true)
-    public List<StoreResponse> getStoresWithinRadius(StoreRequest storeRequest) {
-        double latitude = storeRequest.getCurrentMapX();
-        double longitude = storeRequest.getCurrentMapY();
+    public List<StoreResponse> getStoresWithinRadius(double currentMapX, double currentMapY) {
 
-        List<Store> stores = storeRepository.findStoresIn1Km(latitude, longitude);
+        List<Store> stores = storeRepository.findStoresIn1Km(currentMapX, currentMapY);
         if (stores.isEmpty()) {
             throw new ApiException(ExceptionEnum.DATA_NOT_FOUND);
         }
@@ -114,6 +113,7 @@ public class StoreService {
                 .map(this::changeToStoreResponse)
                 .collect(Collectors.toList());
     }
+
 
     /**
      * Store 엔티티를 StoreResponse 객체로 변환합니다.
@@ -277,6 +277,7 @@ public class StoreService {
         } catch (JsonProcessingException e) {
             throw new ApiException(ExceptionEnum.INTERNAL_SERVER_ERROR);
         }
+
     }
 
     /**

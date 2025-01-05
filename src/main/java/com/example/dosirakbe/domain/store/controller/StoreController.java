@@ -112,13 +112,16 @@ public class StoreController {
      * 이 메서드는 사용자가 현재 위치를 기반으로 근처 가게 목록을 반환합니다.
      * </p>
      *
-     * @param storeRequest 현재 사용자의 위도 경도 값
+     * @param currentMapX, currentMapY 현재 사용자의 위도 경도 값
      * @return 사용자의 현재 위치 기반 반경 내 스토어 목록을 포함한 {@link ApiResult} 형태의 {@link List} 객체
      */
 
     @GetMapping("/nearby")
-    public ResponseEntity<ApiResult<List<StoreResponse>>> getNearbyStores(@Valid @RequestBody StoreRequest storeRequest) {
-        List<StoreResponse> stores = storeService.getStoresWithinRadius(storeRequest);
+    public ResponseEntity<ApiResult<List<StoreResponse>>> getNearbyStores(
+            @RequestParam(name = "currentMapX") double currentMapX,
+            @RequestParam(name = "currentMapY") double currentMapY) {
+
+        List<StoreResponse> stores = storeService.getStoresWithinRadius(currentMapX, currentMapY);
         return ResponseEntity.ok(
                 ApiResult.<List<StoreResponse>>builder()
                         .status(StatusEnum.SUCCESS)
@@ -127,6 +130,7 @@ public class StoreController {
                         .build()
         );
     }
+
 
     /**
      * 모든 스토어 정보를 반환합니다.
