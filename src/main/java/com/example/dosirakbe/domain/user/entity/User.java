@@ -25,7 +25,6 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class User {
@@ -177,4 +176,10 @@ public class User {
             this.trackDistance = this.trackDistance.add(moveTrackDistance);
         }
     }
+
+    public User() {
+    }
+
+
+
 }
