@@ -15,7 +15,7 @@ import java.util.Map;
  * fileName       : Store<br>
  * author         : yyujin1231<br>
  * date           : 10/25/24<br>
- * description    : 가게 관련 정보를 처리하는 CRUD controller 클래스 입니다.<br>
+ * description    : 가게 관련 정보를 처리하는 엔티티 클래스 입니다.<br>
  * ===========================================================<br>
  * DATE              AUTHOR             NOTE<br>
  * -----------------------------------------------------------<br>
@@ -27,7 +27,6 @@ import java.util.Map;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Store {
 
@@ -156,6 +155,11 @@ public class Store {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(operationTime, new TypeReference<List<Map<String, String>>>() {});
     }
+
+    public Store() {
+    }
+
+
 
 
 
