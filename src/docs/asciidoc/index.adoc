@@ -34,19 +34,19 @@ include::{snippets}/store-detail-get/response-fields.adoc[]
 
 === 1.1.2 특정 가게의 상세 정보 조회 API - 가게 ID가 유효하지 않을 때
 ==== 1. Curl Request
-include::{snippets}/store-detail-get-id-not-found/curl-request.adoc[]
+include::{snippets}/store-detail-id-get-not-found/curl-request.adoc[]
 ==== 2. HTTP Request
-include::{snippets}/store-detail-get-id-not-found/http-request.adoc[]
+include::{snippets}/store-detail-id-get-not-found/http-request.adoc[]
 ==== 3. HTTP Response
-include::{snippets}/store-detail-get-id-not-found/http-response.adoc[]
+include::{snippets}/store-detail-id-get-not-found/http-response.adoc[]
 ==== 4. HTTP Request Headers
-include::{snippets}/store-detail-get-id-not-found/httpie-request.adoc[]
+include::{snippets}/store-detail-id-get-not-found/httpie-request.adoc[]
 ==== 5. HTTP Request Body
-include::{snippets}/store-detail-get-id-not-found/request-body.adoc[]
+include::{snippets}/store-detail-id-get-not-found/request-body.adoc[]
 ==== 6. HTTP Response Body
-include::{snippets}/store-detail-get-id-not-found/response-body.adoc[]
+include::{snippets}/store-detail-id-get-not-found/response-body.adoc[]
 ==== 7. HTTP Response Parameter
-include::{snippets}/store-detail-get-id-not-found/response-fields.adoc[]
+include::{snippets}/store-detail-id-get-not-found/response-fields.adoc[]
 
 === 1.1.3 특정 가게의 상세 정보 조회 API - 데이터가 존재하지 않을 때
 ==== 1. Curl Request
@@ -233,6 +233,53 @@ include::{snippets}/store-all-get-not-found/response-fields.adoc[]
 == 5. GREEN TALK
 == 6. GREEN COMMIT
 == 7. GREEN HEROES
+=== 7.1.1 전체 사용자 랭킹 조회 API
+==== 1. Curl Request
+include::{snippets}/rank-all-get/curl-request.adoc[]
+==== 2. HTTP Request
+include::{snippets}/rank-all-get/http-request.adoc[]
+==== 3. HTTP Response
+include::{snippets}/rank-all-get/http-response.adoc[]
+==== 4. HTTP Request Headers
+include::{snippets}/rank-all-get/httpie-request.adoc[]
+==== 5. HTTP Request Body
+include::{snippets}/rank-all-get/request-body.adoc[]
+==== 6. HTTP Response Body
+include::{snippets}/rank-all-get/response-body.adoc[]
+==== 7. HTTP Response Parameter
+include::{snippets}/rank-all-get/response-fields.adoc[]
+
+=== 7.2.1 특정 사용자 랭킹 조회 API
+==== 1. Curl Request
+include::{snippets}/rank-id-get/curl-request.adoc[]
+==== 2. HTTP Request
+include::{snippets}/rank-id-get/http-request.adoc[]
+==== 3. HTTP Response
+include::{snippets}/rank-id-get/http-response.adoc[]
+==== 4. HTTP Request Headers
+include::{snippets}/rank-id-get/httpie-request.adoc[]
+==== 5. HTTP Request Body
+include::{snippets}/rank-id-get/request-body.adoc[]
+==== 6. HTTP Response Body
+include::{snippets}/rank-id-get/response-body.adoc[]
+==== 7. HTTP Response Parameter
+include::{snippets}/rank-id-get/response-fields.adoc[]
+
+=== 7.2.2 특정 사용자 랭킹 조회 API - 사용자id가 존재하지 않을때
+==== 1. Curl Request
+include::{snippets}/rank-id-get-not-found/curl-request.adoc[]
+==== 2. HTTP Request
+include::{snippets}/rank-id-get-not-found/http-request.adoc[]
+==== 3. HTTP Response
+include::{snippets}/rank-id-get-not-found/http-response.adoc[]
+==== 4. HTTP Request Headers
+include::{snippets}/rank-id-get-not-found/httpie-request.adoc[]
+==== 5. HTTP Request Body
+include::{snippets}/rank-id-get-not-found/request-body.adoc[]
+==== 6. HTTP Response Body
+include::{snippets}/rank-id-get-not-found/response-body.adoc[]
+==== 7. HTTP Response Parameter
+include::{snippets}/rank-id-get-not-found/response-fields.adoc[]
 
 == 8. GREEN ELITE
 === 8.1.1 사용자가 푼 문제들 정보 조회 API
