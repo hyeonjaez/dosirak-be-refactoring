@@ -108,7 +108,9 @@ public enum ExceptionEnum {
      * 중복된 닉네임 예외.
      * <p>HTTP 상태: {@code BAD_REQUEST} (400)</p>
      */
-    DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "CE00010", "중복된 닉네임입니다");
+    DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "CE00010", "중복된 닉네임입니다"),
+
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER-001", "해당 user 를 찾을 수 없습니다.");
 
 
     private final HttpStatus status;
