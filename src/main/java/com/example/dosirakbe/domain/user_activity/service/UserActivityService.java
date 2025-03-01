@@ -2,7 +2,7 @@ package com.example.dosirakbe.domain.user_activity.service;
 
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.implement.UserReader;
-import com.example.dosirakbe.domain.user_activity.dto.mapper.UserActivityMapper;
+import com.example.dosirakbe.domain.user_activity.domain.mapper.UserActivityMapper;
 import com.example.dosirakbe.domain.user_activity.dto.response.UserActivityResponse;
 import com.example.dosirakbe.domain.user_activity.entity.UserActivity;
 import com.example.dosirakbe.domain.user_activity.implement.UserActivityReader;
