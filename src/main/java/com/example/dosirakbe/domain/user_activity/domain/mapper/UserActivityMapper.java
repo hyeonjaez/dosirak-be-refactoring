@@ -1,4 +1,4 @@
-package com.example.dosirakbe.domain.user_activity.dto.mapper;
+package com.example.dosirakbe.domain.user_activity.domain.mapper;
 
 import com.example.dosirakbe.domain.user_activity.dto.response.UserActivityResponse;
 import com.example.dosirakbe.domain.user_activity.entity.UserActivity;

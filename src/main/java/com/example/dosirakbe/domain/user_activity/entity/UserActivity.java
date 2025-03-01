@@ -86,6 +86,7 @@ public class UserActivity {
      */
     public UserActivity(User user) {
         this.user = user;
+        this.commitCount = 1;
     }
 
     /**
@@ -99,6 +100,10 @@ public class UserActivity {
     public void prePersist() {
         if (Objects.isNull(this.commitCount)) {
             this.commitCount = 1;
+        }
+
+        if (Objects.isNull(this.createdAt)) {
+            this.createdAt = LocalDate.now();
         }
     }
 

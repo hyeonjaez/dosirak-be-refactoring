@@ -1,11 +1,12 @@
 package com.example.dosirakbe.domain.user_activity.service;
 
 import com.example.dosirakbe.domain.user.entity.User;
-import com.example.dosirakbe.domain.user.repository.UserRepository;
-import com.example.dosirakbe.domain.user_activity.dto.mapper.UserActivityMapper;
+import com.example.dosirakbe.domain.user.implement.UserReader;
+import com.example.dosirakbe.domain.user_activity.domain.mapper.UserActivityMapper;
 import com.example.dosirakbe.domain.user_activity.dto.response.UserActivityResponse;
 import com.example.dosirakbe.domain.user_activity.entity.UserActivity;
-import com.example.dosirakbe.domain.user_activity.repository.UserActivityRepository;
+import com.example.dosirakbe.domain.user_activity.implement.UserActivityReader;
+import com.example.dosirakbe.domain.user_activity.implement.UserActivityWriter;
 import com.example.dosirakbe.global.util.ApiException;
 import com.example.dosirakbe.global.util.ExceptionEnum;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * packageName    : com.example.dosirakbe.domain.user_activity.service<br>
@@ -32,8 +32,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserActivityService {
-    private final UserActivityRepository userActivityRepository;
-    private final UserRepository userRepository;
+    private final UserActivityReader userActivityReader;
+    private final UserActivityWriter userActivityWriter;
+    private final UserReader userReader;
     private final UserActivityMapper userActivityMapper;
 
     /**
@@ -50,16 +51,14 @@ public class UserActivityService {
      * @throws ApiException {@link ExceptionEnum#DATA_NOT_FOUND} 예외 발생 시
      */
     public List<UserActivityResponse> getUserActivityList(Long userId, YearMonth month) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(
-                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+        User user = userReader.findByUserIdButThrow(userId);
 
         LocalDate firstDay = month.atDay(1);
         LocalDate lastDay = month.atEndOfMonth();
 
-        List<UserActivity> byUserAndCreatedAtBetweenOrderByCreatedAtAsc = userActivityRepository.findByUserAndCreatedAtBetweenOrderByCreatedAtAsc(user, firstDay, lastDay);
+        List<UserActivity> userActivitiesByDate = userActivityReader.getUserActivitiesByDate(user, firstDay, lastDay);
 
-        return userActivityMapper.mapToUserActivityResponseList(byUserAndCreatedAtBetweenOrderByCreatedAtAsc);
+        return userActivityMapper.mapToUserActivityResponseList(userActivitiesByDate);
     }
 
     /**
@@ -76,19 +75,12 @@ public class UserActivityService {
      */
     @Transactional
     public void createOrIncrementUserActivity(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(
-                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+        User user = userReader.findByUserIdButThrow(userId);
 
-        Optional<UserActivity> userActivityOptional = userActivityRepository.findByUserAndCreatedAt(user, LocalDate.now());
-        UserActivity userActivity;
-        if (userActivityOptional.isPresent()) {
-            userActivity = userActivityOptional.get();
-            userActivity.addCommitCount();
-        } else {
-            userActivity = new UserActivity(user);
-            userActivityRepository.save(userActivity);
-        }
+        userActivityReader.findTodayActivityByUser(user)
+                .ifPresentOrElse(userActivityWriter::addCommitUserActivity,
+                        () -> userActivityWriter.createUserActivity(new UserActivity(user))
+                );
     }
 
 
