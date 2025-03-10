@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * packageName    : com.example.dosirakbe.domain.user_activity.controller<br>
@@ -48,11 +49,11 @@ public class UserActivityController {
      */
     @GetMapping("/monthly")
     @ApiResponseWrapper(status = HttpStatus.OK, message = "Monthly Activity summary retrieved successfully")
-    public List<UserActivityResponse> getMonthlyActivitySummary(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+    public Object getMonthlyActivitySummary(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                                 @RequestParam(value = "month", required = false) @DateTimeFormat(pattern = "yyyy-MM") YearMonth month) {
         Long userId = getUserIdByOAuth(customOAuth2User);
 
-        YearMonth targetMonth = (month != null) ? month : YearMonth.now();
+        YearMonth targetMonth = Objects.nonNull(month) ? month : YearMonth.now();
 
         return userActivityService.getUserActivityList(userId, targetMonth);
     }
