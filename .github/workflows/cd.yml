@@ -7,7 +7,7 @@ on:
 
 env:
   DOCKER_IMAGE_NAME: kanepark/app
-  SERVER_HOST: 211.117.197.184
+  SERVER_HOST: 211.47.114.99
   SERVER_SSH_USER: parkhaein
   PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
