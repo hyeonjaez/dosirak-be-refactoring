@@ -3,11 +3,12 @@ package com.example.dosirakbe.domain.user_activity.controller;
 import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.user_activity.dto.response.UserActivityResponse;
 import com.example.dosirakbe.domain.user_activity.service.UserActivityService;
-import com.example.dosirakbe.global.api.ApiResponseWrapper;
 import com.example.dosirakbe.global.util.ApiResult;
+import com.example.dosirakbe.global.util.StatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,14 +48,23 @@ public class UserActivityController {
      * @return 월간 활동 요약을 포함하는 {@link ApiResult} 형태의 {@link List} 객체
      */
     @GetMapping("/monthly")
-    @ApiResponseWrapper(status = HttpStatus.OK, message = "Monthly Activity summary retrieved successfully")
-    public List<UserActivityResponse> getMonthlyActivitySummary(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                                @RequestParam(value = "month", required = false) @DateTimeFormat(pattern = "yyyy-MM") YearMonth month) {
+    public ResponseEntity<ApiResult<List<UserActivityResponse>>> getMonthlyActivitySummary(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                                                           @RequestParam(value = "month", required = false) @DateTimeFormat(pattern = "yyyy-MM") YearMonth month) {
         Long userId = getUserIdByOAuth(customOAuth2User);
 
         YearMonth targetMonth = (month != null) ? month : YearMonth.now();
 
-        return userActivityService.getUserActivityList(userId, targetMonth);
+        List<UserActivityResponse> monthlySummary = userActivityService.getUserActivityList(userId, targetMonth);
+
+        ApiResult<List<UserActivityResponse>> result = ApiResult.<List<UserActivityResponse>>builder()
+                .status(StatusEnum.SUCCESS)
+                .message("Monthly Activity summary retrieved successfully")
+                .data(monthlySummary)
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(result);
     }
 
     /**
