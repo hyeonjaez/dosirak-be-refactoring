@@ -1,13 +1,9 @@
 package com.example.dosirakbe.domain.store.controller;
 
 
-import com.example.dosirakbe.domain.store.dto.request.StoreRequest;
 import com.example.dosirakbe.domain.store.dto.response.StoreDetailResponse;
 import com.example.dosirakbe.domain.store.dto.response.StoreResponse;
 import com.example.dosirakbe.domain.store.service.StoreService;
-import com.example.dosirakbe.global.util.ApiResult;
-import com.example.dosirakbe.global.util.StatusEnum;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

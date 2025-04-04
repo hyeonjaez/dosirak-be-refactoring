@@ -1,8 +1,6 @@
 package com.example.dosirakbe.domain.auth.service;
 
 import com.example.dosirakbe.domain.auth.dto.*;
-import com.example.dosirakbe.global.util.ApiException;
-import com.example.dosirakbe.global.util.ExceptionEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;

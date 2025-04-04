@@ -3,7 +3,6 @@ package com.example.dosirakbe.domain.salestore.controller;
 import com.example.dosirakbe.annotations.WithMockCustomUser;
 import com.example.dosirakbe.domain.salestore.entity.SaleStore;
 import com.example.dosirakbe.domain.salestore.service.SaleStoreService;
-import com.example.dosirakbe.global.util.StatusEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

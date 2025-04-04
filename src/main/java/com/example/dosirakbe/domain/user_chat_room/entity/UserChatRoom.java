@@ -2,6 +2,7 @@ package com.example.dosirakbe.domain.user_chat_room.entity;
 
 import com.example.dosirakbe.domain.chat_room.entity.ChatRoom;
 import com.example.dosirakbe.domain.user.entity.User;
+import com.example.dosirakbe.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -27,7 +28,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class UserChatRoom {
+public class UserChatRoom extends BaseEntity {
 
     /**
      * 사용자 채팅방 참여 기록의 고유 식별자입니다.
@@ -64,18 +65,6 @@ public class UserChatRoom {
     @JoinColumn(name = "users")
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
-
-    /**
-     * 사용자 채팅방 참여가 기록된 시각입니다.
-     *
-     * <p>
-     * 이 필드는 사용자가 채팅방에 참여한 날짜와 시간을 {@link LocalDateTime} 형식으로 나타냅니다.
-     * 자동으로 생성되며, 변경되지 않습니다.
-     * </p>
-     */
-    @Column(name = "created_at")
-    @CreatedDate
-    private LocalDateTime createdAt;
 
     /**
      * 사용자 채팅방 참여 기록의 생성자입니다.

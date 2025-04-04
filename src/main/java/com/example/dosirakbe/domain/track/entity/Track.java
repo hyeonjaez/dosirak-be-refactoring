@@ -1,6 +1,7 @@
 package com.example.dosirakbe.domain.track.entity;
 
 import com.example.dosirakbe.domain.user.entity.User;
+import com.example.dosirakbe.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,8 +30,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "track_record")
-@EntityListeners(AuditingEntityListener.class)
-public class Track {
+public class Track extends BaseEntity {
 
     /**
      * 트랙의 고유 식별자입니다.
@@ -73,18 +73,6 @@ public class Track {
      */
     @Column(name = "distance")
     private BigDecimal distance;
-
-    /**
-     * 트랙이 기록된 시각입니다.
-     *
-     * <p>
-     * 이 필드는 트랙이 생성된 날짜와 시간을 {@link LocalDateTime} 형식으로 나타냅니다.
-     * 자동으로 생성되며, 변경되지 않습니다.
-     * </p>
-     */
-    @CreatedDate
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
 
     /**
      * 트랙을 기록한 사용자입니다.

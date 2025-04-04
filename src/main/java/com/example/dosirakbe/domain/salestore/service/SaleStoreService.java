@@ -3,8 +3,6 @@ package com.example.dosirakbe.domain.salestore.service;
 
 import com.example.dosirakbe.domain.salestore.entity.SaleStore;
 import com.example.dosirakbe.domain.salestore.repository.SaleStoreRepository;
-import com.example.dosirakbe.global.util.ApiException;
-import com.example.dosirakbe.global.util.ExceptionEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -3,8 +3,8 @@ package com.example.dosirakbe.domain.user_activity.controller;
 import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.user_activity.dto.response.UserActivityResponse;
 import com.example.dosirakbe.domain.user_activity.service.UserActivityService;
-import com.example.dosirakbe.global.util.ApiResult;
-import com.example.dosirakbe.global.util.StatusEnum;
+import com.example.dosirakbe.global.util.ResponseUtility;
+import com.example.dosirakbe.global.util.UserUtility;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -49,37 +49,14 @@ public class UserActivityController {
      * @return 월간 활동 요약을 포함하는 {@link ApiResult} 형태의 {@link List} 객체
      */
     @GetMapping("/monthly")
-    public ResponseEntity<ApiResult<List<UserActivityResponse>>> getMonthlyActivitySummary(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                                                                           @RequestParam(value = "month", required = false) @DateTimeFormat(pattern = "yyyy-MM") YearMonth month) {
+    public ResponseEntity<?> getMonthlyActivitySummary(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                                       @RequestParam(value = "month", required = false) @DateTimeFormat(pattern = "yyyy-MM") YearMonth month) {
 
-        Long userId = getUserIdByOAuth(customOAuth2User);
+        Long userId = UserUtility.getUserIdByOAuth(customOAuth2User);
 
         YearMonth targetMonth = Objects.nonNull(month) ? month : YearMonth.now();
 
         List<UserActivityResponse> monthlySummary = userActivityService.getUserActivityList(userId, targetMonth);
 
-        ApiResult<List<UserActivityResponse>> result = ApiResult.<List<UserActivityResponse>>builder()
-                .status(StatusEnum.SUCCESS)
-                .message("Monthly Activity summary retrieved successfully")
-                .data(monthlySummary)
-                .build();
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(result);
+        return ResponseUtility.success("Monthly Activity summary retrieved successfully", monthlySummary);
     }
-
-    /**
-     * 인증된 사용자의 고유 식별자를 추출합니다.
-     *
-     * <p>
-     * 이 메서드는 {@link CustomOAuth2User} 객체에서 사용자의 고유 ID를 추출하여 반환합니다.
-     * </p>
-     *
-     * @param customOAuth2User 인증된 사용자의 정보를 포함하는 {@link CustomOAuth2User} 객체
-     * @return 사용자의 고유 식별자 {@link Long} 값
-     */
-    private Long getUserIdByOAuth(CustomOAuth2User customOAuth2User) {
-        return customOAuth2User.getUserDTO().getUserId();
-    }
-}

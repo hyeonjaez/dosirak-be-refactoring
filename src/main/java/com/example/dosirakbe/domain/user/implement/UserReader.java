@@ -2,8 +2,6 @@ package com.example.dosirakbe.domain.user.implement;
 
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
-import com.example.dosirakbe.global.util.ApiException;
-import com.example.dosirakbe.global.util.ExceptionEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

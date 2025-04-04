@@ -7,8 +7,6 @@ import com.example.dosirakbe.domain.store.dto.response.StoreResponse;
 import com.example.dosirakbe.domain.store.entity.Store;
 import com.example.dosirakbe.domain.store.repository.StoreRepository;
 import com.example.dosirakbe.global.openai.OpenAiService;
-import com.example.dosirakbe.global.util.ApiException;
-import com.example.dosirakbe.global.util.ExceptionEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

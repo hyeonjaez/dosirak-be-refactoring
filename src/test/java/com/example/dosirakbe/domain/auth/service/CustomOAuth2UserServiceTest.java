@@ -2,8 +2,6 @@ package com.example.dosirakbe.domain.auth.service;
 
 import com.example.dosirakbe.domain.auth.dto.KakaoUserInfo;
 import com.example.dosirakbe.domain.auth.dto.NaverUserInfo;
-import com.example.dosirakbe.global.util.ApiException;
-import com.example.dosirakbe.global.util.ExceptionEnum;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

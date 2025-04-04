@@ -4,22 +4,16 @@ import com.example.dosirakbe.domain.activity_log.entity.ActivityType;
 import com.example.dosirakbe.domain.green_commit.event.GreenCommitEvent;
 import com.example.dosirakbe.domain.salestore.entity.SaleStore;
 import com.example.dosirakbe.domain.salestore.repository.SaleStoreRepository;
-import com.example.dosirakbe.domain.track.dto.mapper.TrackMapper;
 import com.example.dosirakbe.domain.track.dto.request.TrackMoveRequest;
 import com.example.dosirakbe.domain.track.dto.response.TrackMoveResponse;
-import com.example.dosirakbe.domain.track.dto.response.TrackSearchResponse;
 import com.example.dosirakbe.domain.track.entity.Track;
 import com.example.dosirakbe.domain.track.repository.TrackRepository;
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
-import com.example.dosirakbe.global.util.ApiException;
-import com.example.dosirakbe.global.util.ExceptionEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * packageName    : com.example.dosirakbe.domain.track.service<br>

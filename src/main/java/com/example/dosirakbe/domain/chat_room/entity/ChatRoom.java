@@ -1,6 +1,7 @@
 package com.example.dosirakbe.domain.chat_room.entity;
 
 import com.example.dosirakbe.domain.zone_category.entity.ZoneCategory;
+import com.example.dosirakbe.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -26,8 +27,7 @@ import java.util.Objects;
 @Table(name = "chat_rooms")
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
-public class ChatRoom {
+public class ChatRoom extends BaseEntity {
 
     /**
      * 채팅방의 고유 식별자입니다.
@@ -50,17 +50,6 @@ public class ChatRoom {
      */
     @Column
     private String title;
-
-    /**
-     * 채팅방이 생성된 날짜입니다.
-     *
-     * <p>
-     * 이 필드는 채팅방이 생성된 날짜와 시간을 자동으로 기록합니다.
-     * </p>
-     */
-    @Column(name = "created_at")
-    @CreatedDate
-    private LocalDateTime createdAt;
 
     /**
      * 채팅방에 현재 참여하고 있는 사람의 수입니다.

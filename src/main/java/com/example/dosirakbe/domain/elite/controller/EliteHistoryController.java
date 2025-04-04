@@ -4,8 +4,6 @@ import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.elite.dto.EliteHistoryRequestDto;
 import com.example.dosirakbe.domain.elite.dto.EliteHistoryResponseDto;
 import com.example.dosirakbe.domain.elite.service.EliteHistoryService;
-import com.example.dosirakbe.global.util.ApiResult;
-import com.example.dosirakbe.global.util.StatusEnum;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

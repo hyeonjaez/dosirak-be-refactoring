@@ -7,7 +7,6 @@ import com.example.dosirakbe.domain.chat_room.service.ChatRoomService;
 import com.example.dosirakbe.domain.message.dto.response.MessageResponse;
 import com.example.dosirakbe.domain.message.entity.MessageType;
 import com.example.dosirakbe.domain.user.dto.response.UserChatRoomResponse;
-import com.example.dosirakbe.global.util.StatusEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

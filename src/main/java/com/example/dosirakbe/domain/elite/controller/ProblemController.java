@@ -3,8 +3,6 @@ package com.example.dosirakbe.domain.elite.controller;
 import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.elite.dto.ProblemDto;
 import com.example.dosirakbe.domain.elite.service.ProblemService;
-import com.example.dosirakbe.global.util.ApiResult;
-import com.example.dosirakbe.global.util.StatusEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -2,8 +2,6 @@ package com.example.dosirakbe.domain.seoul_bike_info.controller;
 
 import com.example.dosirakbe.domain.seoul_bike_info.dto.response.SeoulBikeInfoResponse;
 import com.example.dosirakbe.domain.seoul_bike_info.service.SeoulBikeInfoService;
-import com.example.dosirakbe.global.util.ApiResult;
-import com.example.dosirakbe.global.util.StatusEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

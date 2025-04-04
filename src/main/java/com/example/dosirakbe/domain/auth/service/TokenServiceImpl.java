@@ -6,8 +6,6 @@ import com.example.dosirakbe.domain.auth.entity.RefreshToken;
 import com.example.dosirakbe.domain.auth.repository.RefreshTokenRepository;
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
-import com.example.dosirakbe.global.util.ApiException;
-import com.example.dosirakbe.global.util.ExceptionEnum;
 import com.example.dosirakbe.global.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

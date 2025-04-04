@@ -2,6 +2,7 @@ package com.example.dosirakbe.domain.message.entity;
 
 import com.example.dosirakbe.domain.chat_room.entity.ChatRoom;
 import com.example.dosirakbe.domain.user.entity.User;
+import com.example.dosirakbe.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -26,8 +27,7 @@ import java.time.LocalDateTime;
 @Table(name = "messages")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
-public class Message {
+public class Message extends BaseEntity {
 
     /**
      * 메시지의 고유 식별자입니다.
@@ -62,17 +62,6 @@ public class Message {
     @Column(name = "type")
     @Convert(converter = MessageTypeConverter.class)
     private MessageType messageType;
-
-    /**
-     * 메시지가 생성된 시각입니다.
-     *
-     * <p>
-     * 이 필드는 메시지가 전송된 정확한 시각을 {@link LocalDateTime} 형식으로 자동으로 기록합니다.
-     * </p>
-     */
-    @CreatedDate
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
 
     /**
      * 메시지를 보낸 사용자입니다.

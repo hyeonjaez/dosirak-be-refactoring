@@ -2,6 +2,7 @@ package com.example.dosirakbe.domain.user_activity.repository;
 
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user_activity.entity.UserActivity;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -34,7 +35,7 @@ public interface UserActivityRepository extends JpaRepository<UserActivity, Long
      * @param endDate   조회 종료 날짜를 나타내는 {@link LocalDate} 객체
      * @return 지정된 기간 내의 활동 기록을 포함하는 {@link List} 형태의 {@link UserActivity} 객체 리스트
      */
-    List<UserActivity> findByUserAndCreatedAtBetweenOrderByCreatedAtAsc(User user, LocalDate startDate, LocalDate endDate);
+    List<UserActivity> findByUserAndCreatedAtBetweenOrderByCreatedAtAsc(@NotNull User user, LocalDate startDate, LocalDate endDate);
 
     /**
      * 특정 사용자의 특정 날짜에 대한 활동 기록을 조회합니다.

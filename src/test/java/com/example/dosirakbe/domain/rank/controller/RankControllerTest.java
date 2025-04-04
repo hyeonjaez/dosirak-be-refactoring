@@ -2,7 +2,6 @@ package com.example.dosirakbe.domain.rank.controller;
 import com.example.dosirakbe.annotations.WithMockCustomUser;
 import com.example.dosirakbe.domain.rank.dto.response.RankResponse;
 import com.example.dosirakbe.domain.rank.service.RankService;
-import com.example.dosirakbe.global.util.StatusEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

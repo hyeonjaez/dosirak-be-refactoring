@@ -2,8 +2,7 @@ package com.example.dosirakbe.domain.s3.controller;
 
 
 
-import com.example.dosirakbe.global.config.S3Uploader;
-import com.example.dosirakbe.global.util.CustomException;
+import com.example.dosirakbe.global.s3.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

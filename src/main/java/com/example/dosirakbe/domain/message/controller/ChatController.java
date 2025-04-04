@@ -4,8 +4,6 @@ package com.example.dosirakbe.domain.message.controller;
 import com.example.dosirakbe.domain.message.dto.request.MessageRegisterRequest;
 import com.example.dosirakbe.domain.message.dto.response.MessageResponse;
 import com.example.dosirakbe.domain.message.service.MessageService;
-import com.example.dosirakbe.global.util.ApiException;
-import com.example.dosirakbe.global.util.ExceptionEnum;
 import com.example.dosirakbe.global.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

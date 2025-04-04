@@ -4,7 +4,6 @@ import com.example.dosirakbe.annotations.WithMockCustomUser;
 import com.example.dosirakbe.domain.store.dto.response.StoreDetailResponse;
 import com.example.dosirakbe.domain.store.dto.response.StoreResponse;
 import com.example.dosirakbe.domain.store.service.StoreService;
-import com.example.dosirakbe.global.util.StatusEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

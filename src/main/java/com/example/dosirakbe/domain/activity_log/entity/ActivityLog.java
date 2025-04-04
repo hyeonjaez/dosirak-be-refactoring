@@ -1,6 +1,7 @@
 package com.example.dosirakbe.domain.activity_log.entity;
 
 import com.example.dosirakbe.domain.user.entity.User;
+import com.example.dosirakbe.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,8 +31,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "activity_logs")
-@EntityListeners(AuditingEntityListener.class)
-public class ActivityLog {
+public class ActivityLog extends BaseEntity {
 
     /**
      * 활동 로그의 고유 식별자입니다.
@@ -44,17 +44,6 @@ public class ActivityLog {
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    /**
-     * 활동 로그가 생성된 시각입니다.
-     *
-     * <p>
-     * 이 필드는 활동 로그가 생성된 날짜와 시간을 자동으로 기록합니다.
-     * </p>
-     */
-    @CreatedDate
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
 
     /**
      * 활동 로그와 관련된 콘텐츠의 ID 입니다.

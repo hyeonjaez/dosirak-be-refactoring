@@ -5,10 +5,9 @@ import com.example.dosirakbe.domain.user.implement.UserReader;
 import com.example.dosirakbe.domain.user_activity.domain.mapper.UserActivityMapper;
 import com.example.dosirakbe.domain.user_activity.dto.response.UserActivityResponse;
 import com.example.dosirakbe.domain.user_activity.entity.UserActivity;
-import com.example.dosirakbe.domain.user_activity.implement.UserActivityReader;
-import com.example.dosirakbe.domain.user_activity.implement.UserActivityWriter;
-import com.example.dosirakbe.global.util.ApiException;
-import com.example.dosirakbe.global.util.ExceptionEnum;
+import com.example.dosirakbe.domain.user_activity.helper.UserActivityReader;
+import com.example.dosirakbe.domain.user_activity.helper.UserActivityWriter;
+import com.example.dosirakbe.global.util.ObjectsUtility;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +50,8 @@ public class UserActivityService {
      * @throws ApiException {@link ExceptionEnum#DATA_NOT_FOUND} 예외 발생 시
      */
     public List<UserActivityResponse> getUserActivityList(Long userId, YearMonth month) {
+        ObjectsUtility.checkAllNotNull(userId, month);
+
         User user = userReader.findByUserIdButThrow(userId);
 
         LocalDate firstDay = month.atDay(1);
@@ -75,6 +76,8 @@ public class UserActivityService {
      */
     @Transactional
     public void createOrIncrementUserActivity(Long userId) {
+        ObjectsUtility.checkAllNotNull(userId);
+
         User user = userReader.findByUserIdButThrow(userId);
 
         userActivityReader.findTodayActivityByUser(user)

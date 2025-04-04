@@ -10,8 +10,6 @@ import com.example.dosirakbe.domain.user.generator.NickNameGenerator;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
 import com.example.dosirakbe.domain.user_activity.repository.UserActivityRepository;
 import com.example.dosirakbe.domain.user_chat_room.repository.UserChatRoomRepository;
-import com.example.dosirakbe.global.util.ApiException;
-import com.example.dosirakbe.global.util.ExceptionEnum;
 import com.example.dosirakbe.global.util.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
