@@ -3,11 +3,10 @@ package com.example.dosirakbe.domain.user_activity.controller;
 import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.user_activity.dto.response.UserActivityResponse;
 import com.example.dosirakbe.domain.user_activity.service.UserActivityService;
-import com.example.dosirakbe.global.util.ResponseUtility;
+import com.example.dosirakbe.global.util.ResponseEntityUtil;
 import com.example.dosirakbe.global.util.UserUtility;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,5 +57,6 @@ public class UserActivityController {
 
         List<UserActivityResponse> monthlySummary = userActivityService.getUserActivityList(userId, targetMonth);
 
-        return ResponseUtility.success("Monthly Activity summary retrieved successfully", monthlySummary);
+        return ResponseEntityUtil.successOk("Monthly Activity summary retrieved successfully", monthlySummary);
     }
+}

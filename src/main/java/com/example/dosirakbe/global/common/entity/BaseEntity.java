@@ -1,4 +1,4 @@
-package com.example.dosirakbe.global.entity;
+package com.example.dosirakbe.global.common.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

@@ -1,6 +1,6 @@
 package com.example.dosirakbe.global.exception;
 
-import com.example.dosirakbe.global.api.StatusEnum;
+import com.example.dosirakbe.global.common.api.StatusEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;

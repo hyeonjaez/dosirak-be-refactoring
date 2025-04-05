@@ -1,4 +1,4 @@
-package com.example.dosirakbe.global.api;
+package com.example.dosirakbe.global.common.api;
 
 /**
  * packageName    : com.example.dosirakbe.global.api<br>

@@ -2,13 +2,10 @@ package com.example.dosirakbe.domain.user_chat_room.entity;
 
 import com.example.dosirakbe.domain.chat_room.entity.ChatRoom;
 import com.example.dosirakbe.domain.user.entity.User;
-import com.example.dosirakbe.global.entity.BaseEntity;
+import com.example.dosirakbe.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
 
 /**
  * packageName    : com.example.dosirakbe.domain.user_chat_room.entity<br>

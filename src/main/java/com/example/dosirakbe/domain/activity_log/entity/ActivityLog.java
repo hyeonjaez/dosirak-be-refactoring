@@ -1,17 +1,14 @@
 package com.example.dosirakbe.domain.activity_log.entity;
 
 import com.example.dosirakbe.domain.user.entity.User;
-import com.example.dosirakbe.global.entity.BaseEntity;
+import com.example.dosirakbe.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 
 /**

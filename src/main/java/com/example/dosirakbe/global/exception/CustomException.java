@@ -1,11 +1,10 @@
-package com.example.dosirakbe.global.api;
+package com.example.dosirakbe.global.exception;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * packageName    : com.example.dosirakbe.global.api<br>
+ * packageName    : com.example.dosirakbe.global.exception<br>
  * fileName       : null.java<br>
  * author         : SSAFY<br>
  * date           : 2025-04-04<br>
@@ -17,9 +16,7 @@ import lombok.Getter;
  * <br>
  */
 @Getter
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public record ApiResponse<T>(StatusEnum status, String message, T data) {
-    @Builder
-    public ApiResponse {
-    }
+@AllArgsConstructor
+public class CustomException extends RuntimeException {
+    private final ErrorCode errorCode;
 }

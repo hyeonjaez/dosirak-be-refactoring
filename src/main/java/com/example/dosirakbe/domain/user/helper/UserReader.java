@@ -1,4 +1,4 @@
-package com.example.dosirakbe.domain.user.implement;
+package com.example.dosirakbe.domain.user.helper;
 
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;

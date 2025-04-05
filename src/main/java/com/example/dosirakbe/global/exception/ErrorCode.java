@@ -23,6 +23,10 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON-002", "서버 내부 오류가 발생했습니다."),
     NO_ENDPOINT(HttpStatus.NOT_FOUND, "COMMON-003", "존재하지 않는 엔드포인트입니다."),
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "COMMON-004", "허용되지 않는 메소드입니다."),
+    PARAMETER_NULL(HttpStatus.BAD_REQUEST, "COMMON-005", "필수 파라미터가 null 입니다."),
+    PARAMETER_ID_VALUE(HttpStatus.BAD_REQUEST, "COMMON-006", "ID 값은 0 이상이어야 합니다."),
+
+    ACTIVITY_LOG_DISTANCE_INVALID_VALUE(HttpStatus.BAD_REQUEST, "ACTIVITY-001", "distance 값의 유효성 검증에 실패했습니다.");
 
 
     private final HttpStatus httpStatus;

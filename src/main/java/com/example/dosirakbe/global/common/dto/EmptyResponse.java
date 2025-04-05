@@ -1,4 +1,4 @@
-package com.example.dosirakbe.global.util;
+package com.example.dosirakbe.global.common.dto;
 
 /**
  * packageName    : com.example.dosirakbe.global.util<br>

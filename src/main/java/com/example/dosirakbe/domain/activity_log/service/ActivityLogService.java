@@ -6,7 +6,10 @@ import com.example.dosirakbe.domain.activity_log.entity.ActivityLog;
 import com.example.dosirakbe.domain.activity_log.entity.ActivityType;
 import com.example.dosirakbe.domain.activity_log.repository.ActivityLogRepository;
 import com.example.dosirakbe.domain.user.entity.User;
-import com.example.dosirakbe.domain.user.repository.UserRepository;
+import com.example.dosirakbe.domain.user.helper.UserReader;
+import com.example.dosirakbe.global.exception.CustomException;
+import com.example.dosirakbe.global.exception.ErrorCode;
+import com.example.dosirakbe.global.util.ObjectsUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +20,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * packageName    : com.example.dosirakbe.domain.activity_log.service<br>
@@ -35,8 +37,8 @@ import java.util.Objects;
 @Transactional(readOnly = true)
 public class ActivityLogService {
     private final ActivityLogRepository activityLogRepository;
-    private final UserRepository userRepository;
     private final ActivityLogMapper activityLogMapper;
+    private final UserReader userReader;
 
     /**
      * 사용자의 지정된 날짜에 해당하는 활동 로그를 조회합니다.
@@ -47,16 +49,15 @@ public class ActivityLogService {
      * 조회하여 {@link ActivityLogResponse} DTO 리스트로 변환하여 반환합니다.
      * </p>
      *
-     * @param userId 조회할 활동 로그의 소유자 사용자 ID
-     * @param thatDay  조회할 날짜
+     * @param userId  조회할 활동 로그의 소유자 사용자 ID
+     * @param thatDay 조회할 날짜
      * @return 지정된 날짜의 활동 로그를 포함한 {@link ActivityLogResponse} DTO 리스트
-     * @throws ApiException {@link ExceptionEnum#DATA_NOT_FOUND} 예외 발생 시
      */
     public List<ActivityLogResponse> getThatDateActivityLog(Long userId, LocalDate thatDay) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(
-                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
-        if (Objects.isNull(thatDay)) {
+        ObjectsUtil.checkIdLongs(userId);
+        User user = userReader.findByUserIdButThrow(userId);
+
+        if (ObjectsUtil.isNull(thatDay)) {
             thatDay = LocalDate.now();
         }
         LocalDateTime startOfDay = thatDay.atStartOfDay();
@@ -78,12 +79,12 @@ public class ActivityLogService {
      * @param userId 조회할 활동 로그의 소유자 사용자 ID
      * @param month  조회할 월
      * @return 선택한 월의 첫째 날의 활동 로그를 포함한 {@link ActivityLogResponse} DTO 리스트
-     * @throws ApiException {@link ExceptionEnum#DATA_NOT_FOUND} 예외 발생 시
      */
     public List<ActivityLogResponse> getActivityLogForFirstDayOfMonth(Long userId, YearMonth month) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(
-                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+        ObjectsUtil.checkAllNotNull(month);
+        ObjectsUtil.checkIdLongs(userId);
+
+        User user = userReader.findByUserIdButThrow(userId);
 
         LocalDate firstDayOfMonth = month.atDay(1);
         LocalDateTime startOfDay = firstDayOfMonth.atStartOfDay();
@@ -107,18 +108,20 @@ public class ActivityLogService {
      * @param contentId    활동 로그와 관련된 콘텐츠 ID
      * @param activityType 활동의 유형 {@link ActivityType}
      * @param distance     활동 중 이동한 거리 (선택 사항)
-     * @throws ApiException {@link ExceptionEnum#DATA_NOT_FOUND} 또는 {@link ExceptionEnum#INVALID_REQUEST} 예외 발생 시
+     * @throws CustomException {@link ErrorCode#ACTIVITY_LOG_DISTANCE_INVALID_VALUE} 예외 발생 시
      */
     @Transactional
     public void addActivityLog(Long userId, Long contentId, ActivityType activityType, BigDecimal distance) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(
-                        () -> new ApiException(ExceptionEnum.DATA_NOT_FOUND));
+        ObjectsUtil.checkAllNotNull(activityType);
+        ObjectsUtil.checkIdLongs(userId, contentId);
+
+        User user = userReader.findByUserIdButThrow(userId);
 
         ActivityLog activityLog;
-        if (activityType.equals(ActivityType.LOW_CARBON_MEANS_OF_TRANSPORTATION)) {
-            if (Objects.isNull(distance) || distance.compareTo(BigDecimal.ZERO) <= 0) {
-                throw new ApiException(ExceptionEnum.INVALID_REQUEST);
+
+        if (activityType.requiresDistance()) {
+            if (ObjectsUtil.isNull(distance) || distance.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new CustomException(ErrorCode.ACTIVITY_LOG_DISTANCE_INVALID_VALUE);
             }
             activityLog = new ActivityLog(contentId, user, activityType, distance);
         } else {
