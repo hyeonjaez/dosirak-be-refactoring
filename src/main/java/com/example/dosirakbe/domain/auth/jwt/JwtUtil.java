@@ -1,4 +1,4 @@
-package com.example.dosirakbe.global.util;
+package com.example.dosirakbe.domain.auth.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;

@@ -4,7 +4,7 @@ import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.user_activity.dto.response.UserActivityResponse;
 import com.example.dosirakbe.domain.user_activity.service.UserActivityService;
 import com.example.dosirakbe.global.util.ResponseEntityUtil;
-import com.example.dosirakbe.global.util.UserUtility;
+import com.example.dosirakbe.domain.user.UserUtility;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;

@@ -10,7 +10,6 @@
 //import com.example.dosirakbe.domain.user.repository.UserRepository;
 //import com.example.dosirakbe.domain.user_activity.repository.UserActivityRepository;
 //import com.example.dosirakbe.domain.user_chat_room.repository.UserChatRoomRepository;
-//import com.example.dosirakbe.global.util.JwtUtil;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.http.HttpEntity;

@@ -1,5 +1,6 @@
 package com.example.dosirakbe.domain.activity_log.service;
 
+import com.example.dosirakbe.domain.DomainErrorCode;
 import com.example.dosirakbe.domain.activity_log.dto.mapper.ActivityLogMapper;
 import com.example.dosirakbe.domain.activity_log.dto.response.ActivityLogResponse;
 import com.example.dosirakbe.domain.activity_log.entity.ActivityLog;
@@ -8,7 +9,6 @@ import com.example.dosirakbe.domain.activity_log.repository.ActivityLogRepositor
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.helper.UserReader;
 import com.example.dosirakbe.global.exception.CustomException;
-import com.example.dosirakbe.global.exception.ErrorCode;
 import com.example.dosirakbe.global.util.ObjectsUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -108,7 +108,7 @@ public class ActivityLogService {
      * @param contentId    활동 로그와 관련된 콘텐츠 ID
      * @param activityType 활동의 유형 {@link ActivityType}
      * @param distance     활동 중 이동한 거리 (선택 사항)
-     * @throws CustomException {@link ErrorCode#ACTIVITY_LOG_DISTANCE_INVALID_VALUE} 예외 발생 시
+     * @throws CustomException {@link DomainErrorCode#ACTIVITY_LOG_DISTANCE_INVALID_VALUE} 예외 발생 시
      */
     @Transactional
     public void addActivityLog(Long userId, Long contentId, ActivityType activityType, BigDecimal distance) {
@@ -121,7 +121,7 @@ public class ActivityLogService {
 
         if (activityType.requiresDistance()) {
             if (ObjectsUtil.isNull(distance) || distance.compareTo(BigDecimal.ZERO) <= 0) {
-                throw new CustomException(ErrorCode.ACTIVITY_LOG_DISTANCE_INVALID_VALUE);
+                throw new CustomException(DomainErrorCode.ACTIVITY_LOG_DISTANCE_INVALID_VALUE);
             }
             activityLog = new ActivityLog(contentId, user, activityType, distance);
         } else {

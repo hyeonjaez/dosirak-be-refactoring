@@ -1,4 +1,4 @@
-package com.example.dosirakbe.global.util;
+package com.example.dosirakbe.domain.user;
 
 import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 

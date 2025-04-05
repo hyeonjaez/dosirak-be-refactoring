@@ -1,4 +1,4 @@
-package com.example.dosirakbe.global.config;
+package com.example.dosirakbe.config;
 
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;

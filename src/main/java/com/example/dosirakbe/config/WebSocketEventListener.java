@@ -1,4 +1,4 @@
-package com.example.dosirakbe.global.config;
+package com.example.dosirakbe.config;
 
 import com.example.dosirakbe.domain.chat_room.entity.ChatRoom;
 import com.example.dosirakbe.domain.chat_room.service.ChatRoomService;
@@ -6,7 +6,6 @@ import com.example.dosirakbe.domain.message.dto.response.MessageResponse;
 import com.example.dosirakbe.domain.message.service.MessageService;
 import com.example.dosirakbe.domain.user.entity.User;
 import com.example.dosirakbe.domain.user.repository.UserRepository;
-import com.example.dosirakbe.global.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

@@ -1,4 +1,4 @@
-package com.example.dosirakbe.global.config;
+package com.example.dosirakbe.config;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

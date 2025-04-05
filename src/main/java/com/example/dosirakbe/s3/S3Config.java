@@ -1,4 +1,4 @@
-package com.example.dosirakbe.global.s3;
+package com.example.dosirakbe.s3;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;

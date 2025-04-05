@@ -4,7 +4,6 @@
 //import com.example.dosirakbe.domain.message.dto.request.MessageRegisterRequest;
 //import com.example.dosirakbe.domain.message.dto.response.MessageResponse;
 //import com.example.dosirakbe.domain.message.service.MessageService;
-//import com.example.dosirakbe.global.util.JwtUtil;
 //import com.fasterxml.jackson.databind.ObjectMapper;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.messaging.handler.annotation.DestinationVariable;

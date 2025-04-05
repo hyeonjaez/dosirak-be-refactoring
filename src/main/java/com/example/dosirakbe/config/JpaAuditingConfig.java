@@ -1,4 +1,4 @@
-package com.example.dosirakbe.global.config;
+package com.example.dosirakbe.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

@@ -2,7 +2,6 @@ package com.example.dosirakbe.domain.auth.jwt;
 
 import com.example.dosirakbe.domain.auth.dto.response.CustomOAuth2User;
 import com.example.dosirakbe.domain.user.dto.response.UserDTO;
-import com.example.dosirakbe.global.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

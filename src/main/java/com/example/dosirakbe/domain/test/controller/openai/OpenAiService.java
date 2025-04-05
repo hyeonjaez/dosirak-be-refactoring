@@ -1,4 +1,4 @@
-package com.example.dosirakbe.global.openai;
+package com.example.dosirakbe.domain.test.controller.openai;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

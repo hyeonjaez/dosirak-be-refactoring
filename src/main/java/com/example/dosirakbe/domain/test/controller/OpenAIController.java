@@ -1,8 +1,7 @@
 package com.example.dosirakbe.domain.test.controller;
 
-import com.example.dosirakbe.global.openai.OpenAiService;
+import com.example.dosirakbe.domain.test.controller.openai.OpenAiService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

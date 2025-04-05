@@ -1,7 +1,7 @@
 package com.example.dosirakbe.global.util;
 
 import com.example.dosirakbe.global.exception.CustomException;
-import com.example.dosirakbe.global.exception.ErrorCode;
+import com.example.dosirakbe.global.exception.CommonErrorCode;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -39,20 +39,20 @@ public final class ObjectsUtil {
     private static void checkIdIntegerValid(Integer id) {
         checkNotNull(id);
         if (id <= 0) {
-            throw new CustomException(ErrorCode.PARAMETER_ID_VALUE);
+            throw new CustomException(CommonErrorCode.PARAMETER_ID_VALUE);
         }
     }
 
     private static void checkIdLongValid(Long id) {
         checkNotNull(id);
         if (id <= 0) {
-            throw new CustomException(ErrorCode.PARAMETER_ID_VALUE);
+            throw new CustomException(CommonErrorCode.PARAMETER_ID_VALUE);
         }
     }
 
     private static <T> void checkNotNull(T object) {
         if (Objects.isNull(object)) {
-            throw new CustomException(ErrorCode.PARAMETER_NULL);
+            throw new CustomException(CommonErrorCode.PARAMETER_NULL);
         }
     }
 

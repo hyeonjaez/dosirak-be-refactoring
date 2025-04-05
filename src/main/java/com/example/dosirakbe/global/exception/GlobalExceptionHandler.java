@@ -24,6 +24,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(CustomException.class)
     protected ResponseEntity<ErrorResponseEntity> handleBusinessException(final CustomException e) {
         return ErrorResponseEntity.toErrorResponseEntity(e.getErrorCode());
@@ -31,19 +32,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponseEntity> handleException() {
-        return ErrorResponseEntity.toErrorResponseEntity(ErrorCode.INTERNAL_SERVER_ERROR);
+        return ErrorResponseEntity.toErrorResponseEntity(CommonErrorCode.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorResponseEntity> handleNoResourceFoundException(NoResourceFoundException e) {
         String errorMessages = String.format("[%s] 에 해당하는 엔드포인트를 찾을 수 없습니다.", e.getResourcePath());
-        return ErrorResponseEntity.toErrorResponseEntity(ErrorCode.NO_ENDPOINT, errorMessages);
+        return ErrorResponseEntity.toErrorResponseEntity(CommonErrorCode.NO_ENDPOINT, errorMessages);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorResponseEntity> handleMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         String errorMessages = String.format("[%s] 는 허용되지 않는 메소드입니다.", e.getMethod());
-        return ErrorResponseEntity.toErrorResponseEntity(ErrorCode.METHOD_NOT_ALLOWED, errorMessages);
+        return ErrorResponseEntity.toErrorResponseEntity(CommonErrorCode.METHOD_NOT_ALLOWED, errorMessages);
     }
 
 
@@ -70,6 +71,6 @@ public class GlobalExceptionHandler {
             errorMessages = "알 수 없는 검증 오류가 발생했습니다.";
         }
 
-        return ErrorResponseEntity.toErrorResponseEntity(ErrorCode.INVALID_INPUT_VALUE, errorMessages);
+        return ErrorResponseEntity.toErrorResponseEntity(CommonErrorCode.INVALID_INPUT_VALUE, errorMessages);
     }
 }

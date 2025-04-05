@@ -1,8 +1,8 @@
-package com.example.dosirakbe.global.config;
+package com.example.dosirakbe.config;
 
 import com.example.dosirakbe.domain.auth.jwt.JwtFilter;
 import com.example.dosirakbe.domain.auth.service.CustomOAuth2UserService;
-import com.example.dosirakbe.global.util.JwtUtil;
+
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

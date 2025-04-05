@@ -24,7 +24,6 @@ import org.springframework.http.ResponseEntity;
 public class ErrorResponseEntity {
     private final StatusEnum statusEnum;
     private final HttpStatus httpStatus;
-    private final String name;
     private final String code;
     private final String message;
 
@@ -32,33 +31,30 @@ public class ErrorResponseEntity {
     private ErrorResponseEntity(StatusEnum statusEnum, HttpStatus httpStatus, String name, String code, String message) {
         this.statusEnum = statusEnum;
         this.httpStatus = httpStatus;
-        this.name = name;
         this.code = code;
         this.message = message;
     }
 
 
-    public static ResponseEntity<ErrorResponseEntity> toErrorResponseEntity(ErrorCode e) {
+    public static ResponseEntity<ErrorResponseEntity> toErrorResponseEntity(ErrorCode errorCode) {
         return ResponseEntity
-                .status(e.getHttpStatus())
+                .status(errorCode.getHttpStatus())
                 .body(ErrorResponseEntity.builder()
                         .statusEnum(StatusEnum.FAILURE)
-                        .httpStatus(e.getHttpStatus())
-                        .name(e.name())
-                        .code(e.getCode())
-                        .message(e.getMessage())
+                        .httpStatus(errorCode.getHttpStatus())
+                        .code(errorCode.getCode())
+                        .message(errorCode.getMessage())
                         .build());
     }
 
-    public static ResponseEntity<ErrorResponseEntity> toErrorResponseEntity(ErrorCode e, String message) {
+    public static ResponseEntity<ErrorResponseEntity> toErrorResponseEntity(ErrorCode errorCode, String customMessage) {
         return ResponseEntity
-                .status(e.getHttpStatus())
+                .status(errorCode.getHttpStatus())
                 .body(ErrorResponseEntity.builder()
                         .statusEnum(StatusEnum.FAILURE)
-                        .httpStatus(e.getHttpStatus())
-                        .name(e.name())
-                        .code(e.getCode())
-                        .message(message)
+                        .httpStatus(errorCode.getHttpStatus())
+                        .code(errorCode.getCode())
+                        .message(customMessage)
                         .build());
     }
 }
